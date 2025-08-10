@@ -1,5 +1,6 @@
 import Home from "./pages/home/index";
 import Anime from "./pages/anime/index";
+import Player from "./pages/player/index";
 
 const root = document.getElementById("root");
 document.root = root;
@@ -35,6 +36,8 @@ class router {
         }
       }
 
+      if (path == "/player") return handler(query);
+
       root.innerHTML = "";
       handler(query);
     } else {
@@ -48,5 +51,6 @@ document.router = Router;
 
 Router.route("/", Home);
 Router.route("/anime", Anime);
+Router.route("/player", Player);
 
 Router.navigate("/");
