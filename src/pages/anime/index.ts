@@ -1,6 +1,6 @@
 import { getAnime } from "../../lib/anilist/index";
 import { getAnimeAnizip } from "../../lib/anizip/index";
-import { getProviderEpisodes } from "../../lib/animetoast/index";
+import { getProvider } from "../../lib/animetoast/index";
 
 import Episode from "../../ui/episode/index";
 
@@ -15,7 +15,8 @@ export default async function Anime(query) {
     getAnimeAnizip(query.id),
   ]);
 
-  getProviderEpisodes(anime.title.romaji);
+  const Provider = getProvider(anime.title.romaji);
+  Provider.then((data) => console.log(data));
 
   const heroSection = document.createElement("div");
   heroSection.className = "h-fit w-full";
@@ -158,7 +159,7 @@ export default async function Anime(query) {
       handler: () => {},
     },
   ];
-  const tabOptionNodes = [];
+  const tabOptionNodes: HTMLDivElement[] = [];
 
   tabs.map((tab) => {
     const tabOption = document.createElement("div");
@@ -198,6 +199,49 @@ export default async function Anime(query) {
         const episodeCard = Episode(episode, index);
 
         episodeList.appendChild(episodeCard);
+
+        Provider.then((provider) => {
+          if (!provider) return;
+
+          const sourceProvider = provider.episodes.find(
+            (source) => source.label === "Voe",
+          );
+
+          let sourceEpisode = false;
+
+          if (sourceProvider?.episodes[0].isBundle) {
+            console.log("Episodes are bundled");
+            sourceEpisode = sourceProvider.episodes.find((sourceEpisode) => {
+              const sanitizied = sourceEpisode.label.replace("Ep.", "");
+              const bundleStart = sanitizied.substring(
+                0,
+                sanitizied.indexOf("-"),
+              );
+              const bundleEnd = sanitizied.substring(
+                sanitizied.indexOf("-") + 1,
+                sanitizied.length,
+              );
+
+              return (
+                bundleStart <= episode.episodeNumber &&
+                bundleEnd >= episode.episodeNumber
+              );
+            });
+          } else {
+            sourceEpisode = sourceProvider.episodes.find(
+              (sourceEpisode) =>
+                sourceEpisode.label.replace("Ep. ", "") ==
+                episode.episodeNumber,
+            );
+          }
+
+          if (!sourceEpisode) return episodeCard.updateSource?.(false);
+          episodeCard.updateSource?.({
+            icon: provider.icon,
+            url: sourceEpisode.url,
+            isBundle: sourceEpisode.isBundle,
+          });
+        });
       });
   }
 }
