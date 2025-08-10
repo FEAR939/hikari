@@ -1,0 +1,19 @@
+{
+  "name": "anime-app",
+  "private": true,
+  "description": "",
+  "main": "./electron/main.cjs",
+  "type": "module",
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "electron": "^37.2.6",
+    "rolldown-vite": "^7.0.12",
+    "tailwindcss": "^4.1.11"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
