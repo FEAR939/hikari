@@ -6,7 +6,8 @@ import Episode from "../../ui/episode/index";
 
 export default async function Anime(query) {
   const page = document.createElement("div");
-  page.className = "h-full w-full px-12 pb-4 space-y-4";
+  page.className =
+    "relative h-full w-full px-12 pb-4 space-y-4 overflow-y-scroll";
 
   document.root.appendChild(page);
 
@@ -193,55 +194,117 @@ export default async function Anime(query) {
 
     tabContent.appendChild(episodeList);
 
-    Object.values(anime_anizip.episodes)
-      .filter((episode) => episode.episodeNumber)
-      .map((episode, index) => {
-        const episodeCard = Episode(episode, index);
+    let page = 0;
+    let perPage = 12;
 
-        episodeList.appendChild(episodeCard);
+    const pageControls = document.createElement("div");
+    pageControls.className = "flex itens-center space-x-4 w-fit mt-4 ml-auto";
 
-        Provider.then((provider) => {
-          if (!provider) return;
+    const pageControlsPrev = document.createElement("div");
+    pageControlsPrev.className =
+      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
+    pageControlsPrev.textContent = "Prev";
 
-          const sourceProvider = provider.episodes.find(
-            (source) => source.label === "Voe",
-          );
+    const pageControlCurr = document.createElement("div");
+    pageControlCurr.className =
+      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
+    pageControlCurr.textContent = (page + 1).toString();
 
-          let sourceEpisode = false;
+    const pageControlsNext = document.createElement("div");
+    pageControlsNext.className =
+      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
+    pageControlsNext.textContent = "Next";
 
-          if (sourceProvider?.episodes[0].isBundle) {
-            console.log("Episodes are bundled");
-            sourceEpisode = sourceProvider.episodes.find((sourceEpisode) => {
-              const sanitizied = sourceEpisode.label.replace("Ep.", "");
-              const bundleStart = sanitizied.substring(
-                0,
-                sanitizied.indexOf("-"),
-              );
-              const bundleEnd = sanitizied.substring(
-                sanitizied.indexOf("-") + 1,
-                sanitizied.length,
-              );
+    pageControls.append(pageControlsPrev, pageControlCurr, pageControlsNext);
 
-              return (
-                bundleStart <= episode.episodeNumber &&
-                bundleEnd >= episode.episodeNumber
-              );
-            });
-          } else {
-            sourceEpisode = sourceProvider.episodes.find(
-              (sourceEpisode) =>
-                sourceEpisode.label.replace("Ep. ", "") ==
-                episode.episodeNumber,
+    pageControlsPrev.addEventListener("click", () => {
+      if (page == 0) return;
+
+      page--;
+      pageControlCurr.textContent = (page + 1).toString();
+      renderPage();
+    });
+
+    pageControlsNext.addEventListener("click", () => {
+      console.log(
+        Math.ceil(Object.values(anime_anizip.episodes).length / perPage) - 1,
+      );
+      if (page >= anime_anizip.episodeCount / perPage - 1) return;
+
+      page++;
+      pageControlCurr.textContent = (page + 1).toString();
+      renderPage();
+    });
+
+    tabContent.appendChild(pageControls);
+
+    renderPage();
+
+    function renderPage() {
+      episodeList.innerHTML = "";
+      Object.values(anime_anizip.episodes)
+        .filter((episode) => episode.episode)
+        .map((episode, index) => {
+          if (
+            isNaN(parseInt(episode.episode)) ||
+            page * perPage > index ||
+            index >= (page + 1) * perPage
+          )
+            return;
+          const episodeCard = Episode(episode, index);
+
+          episodeList.appendChild(episodeCard);
+
+          Provider.then((provider) => {
+            if (!provider) return;
+
+            const sourceProvider = provider.episodes.find(
+              (source) => source.label === "Voe",
             );
-          }
 
-          if (!sourceEpisode) return episodeCard.updateSource?.(false);
-          episodeCard.updateSource?.({
-            icon: provider.icon,
-            url: sourceEpisode.url,
-            isBundle: sourceEpisode.isBundle,
+            if (
+              !sourceProvider?.episodes ||
+              sourceProvider?.episodes.length == 0
+            )
+              return episodeCard.updateSource?.(false);
+
+            let sourceEpisode = false;
+
+            if (sourceProvider?.episodes[0].isBundle) {
+              console.log("Episodes are bundled");
+              sourceEpisode = sourceProvider.episodes.find((sourceEpisode) => {
+                const sanitizied = sourceEpisode.label.replace("Ep.", "");
+
+                // TODO: Handle case -> S1:E01-E20; S10:190-205;
+
+                const bundleStart = sanitizied.substring(
+                  0,
+                  sanitizied.indexOf("-"),
+                );
+                const bundleEnd = sanitizied.substring(
+                  sanitizied.indexOf("-") + 1,
+                  sanitizied.length,
+                );
+
+                return (
+                  bundleStart <= episode.episode && bundleEnd >= episode.episode
+                );
+              });
+            } else {
+              sourceEpisode = sourceProvider.episodes.find(
+                (sourceEpisode) =>
+                  sourceEpisode.label.replace("Ep. ", "") == episode.episode,
+              );
+            }
+
+            if (!sourceEpisode) return episodeCard.updateSource?.(false);
+            episodeCard.updateSource?.({
+              icon: provider.icon,
+              url: sourceEpisode.url,
+              isBundle: sourceEpisode.isBundle,
+            });
           });
         });
-      });
+    }
   }
 }
