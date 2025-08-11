@@ -17,15 +17,49 @@ interface Episode {
   isBundle: boolean;
 }
 
+const replacements = [
+  {
+    from: " ",
+    to: "-",
+  },
+  {
+    from: ":",
+    to: "",
+  },
+  {
+    from: "(",
+    to: "",
+  },
+  {
+    from: ")",
+    to: "",
+  },
+];
+
 function sanitizeTitle(title: string): string {
-  return title.replaceAll(" ", "-").replaceAll(":", "").trim() + "-ger-dub";
+  let tempString = title;
+  replacements.map(
+    (replacement) =>
+      (tempString = tempString.replaceAll(replacement.from, replacement.to)),
+  );
+
+  console.log(tempString);
+
+  return tempString.trim() + "-ger-dub";
 }
 
 export async function getProvider(
   title: string,
 ): Promise<Provider | undefined> {
-  console.log(title, sanitizeTitle(title));
-  let response = await fetch(`https://animetoast.cc/${sanitizeTitle(title)}`);
+  const sanitizedTitle = sanitizeTitle(title);
+  const combined = "https://animetoast.cc/" + sanitizeTitle(title).toString();
+  console.log(title, sanitizedTitle, combined);
+
+  let response = await fetch(combined, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
 
   if (response.status == 404 && title.includes("Season 2")) {
     response = await fetch(
