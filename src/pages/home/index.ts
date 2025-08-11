@@ -6,6 +6,17 @@ export default async function Home(query) {
 
   document.root.appendChild(page);
 
+  const randomBtn = document.createElement("div");
+  randomBtn.className =
+    "py-2 px-4 rounded-xl bg-[#0c0c0c] text-white cursor-pointer";
+  randomBtn.textContent = "Random Page";
+
+  randomBtn.addEventListener("click", () => {
+    document.router.navigate("/random");
+  });
+
+  page.appendChild(randomBtn);
+
   const categorySlider = document.createElement("div");
   categorySlider.className =
     "relative h-96 w-full overflow-hidden flex items-center";
