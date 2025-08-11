@@ -33,8 +33,7 @@ export default function Episode(episode: Episode, index: number): EpElement {
   const episodeTitle = document.createElement("h2");
   episodeTitle.className = "text-xl font-bold truncate";
   episodeTitle.textContent =
-    `${episode.episodeNumber}. ${episode.title.en || ""}` ||
-    `Episode ${index + 1}`;
+    `${episode.episode}. ${episode.title.en || ""}` || `Episode ${index + 1}`;
   episodeSide.appendChild(episodeTitle);
 
   const episodeDescription = document.createElement("p");
@@ -58,7 +57,7 @@ export default function Episode(episode: Episode, index: number): EpElement {
 
     episodeCard.addEventListener("click", async () => {
       document.router.navigate(
-        `/player?url=${source.url}&episodeNumber=${episode.episodeNumber}&isBundle=${source.isBundle}`,
+        `/player?url=${source.url}&episodeNumber=${episode.episode}&isBundle=${source.isBundle}`,
       );
     });
   };
