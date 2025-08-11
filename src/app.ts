@@ -1,20 +1,22 @@
 import Home from "./pages/home/index";
 import Anime from "./pages/anime/index";
 import Player from "./pages/player/index";
+import Random from "./pages/random/index";
 
 const root = document.getElementById("root");
 document.root = root;
 
 class router {
+  routes: Map<string, () => void>;
   constructor() {
     this.routes = new Map();
   }
 
-  route(path, handler) {
+  route(path: string, handler: () => void) {
     this.routes.set(path, handler);
   }
 
-  navigate(url) {
+  navigate(url: string) {
     const urlObj = new URL(url, window.location.origin);
     const path = urlObj.pathname;
     const searchParams = urlObj.searchParams;
@@ -46,11 +48,12 @@ class router {
   }
 }
 
-const Router = new router();
+const Router: Router = new router();
 document.router = Router;
 
 Router.route("/", Home);
 Router.route("/anime", Anime);
 Router.route("/player", Player);
+Router.route("/random", Random);
 
 Router.navigate("/");
