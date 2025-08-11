@@ -109,3 +109,29 @@ export async function getAnime(id: number) {
   const data = await response.json();
   return data.data.Media;
 }
+
+export async function getSearch(searchString: string) {
+  const response = await fetch("https://graphql.anilist.co", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+      query {
+      Page (page: 0, perPage: 10) {
+          media (search: "${searchString}", type: ANIME) {
+            id
+            title {
+              romaji
+            }
+          }
+        }
+      }
+      `,
+    }),
+  });
+  const data = await response.json();
+  return data.data.Page.media;
+}
