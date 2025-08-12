@@ -202,17 +202,17 @@ export default async function Anime(query) {
 
     const pageControlsPrev = document.createElement("div");
     pageControlsPrev.className =
-      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
+      "bg-[#0c0c0c] text-white px-4 py-2 rounded-xl cursor-pointer";
     pageControlsPrev.textContent = "Prev";
 
     const pageControlCurr = document.createElement("div");
     pageControlCurr.className =
-      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
+      "bg-[#0c0c0c] text-white px-4 py-2 rounded-xl cursor-pointer";
     pageControlCurr.textContent = (page + 1).toString();
 
     const pageControlsNext = document.createElement("div");
     pageControlsNext.className =
-      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
+      "bg-[#0c0c0c] text-white px-4 py-2 rounded-xl cursor-pointer";
     pageControlsNext.textContent = "Next";
 
     pageControls.append(pageControlsPrev, pageControlCurr, pageControlsNext);
