@@ -269,6 +269,7 @@ export default async function Anime(query) {
               return episodeCard.updateSource?.(false);
 
             let sourceEpisode = false;
+            let bundleEpisodeNumber = 0;
 
             if (sourceProvider?.episodes[0].isBundle) {
               console.log("Episodes are bundled");
@@ -280,6 +281,8 @@ export default async function Anime(query) {
                   : [0, 0];
 
                 const episodeNumber = parseInt(episode.episode);
+
+                bundleEpisodeNumber = episodeNumber - bundleStart + 1;
 
                 return (
                   bundleStart <= episodeNumber && bundleEnd >= episodeNumber
@@ -297,6 +300,7 @@ export default async function Anime(query) {
               icon: provider.icon,
               url: sourceEpisode.url,
               isBundle: sourceEpisode.isBundle,
+              bundleEpisodeNumber: bundleEpisodeNumber,
             });
           });
         });
