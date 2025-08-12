@@ -6,6 +6,7 @@ interface Source {
   icon: string;
   url: string;
   isBundle: boolean;
+  bundleEpisodeNumber: number;
 }
 
 interface Episode {
@@ -57,7 +58,7 @@ export default function Episode(episode: Episode, index: number): EpElement {
 
     episodeCard.addEventListener("click", async () => {
       document.router.navigate(
-        `/player?url=${source.url}&episodeNumber=${episode.episode}&isBundle=${source.isBundle}`,
+        `/player?url=${source.url}&episodeNumber=${episode.episode}&isBundle=${source.isBundle}${Boolean(source.isBundle) ? `&bundleEpisodeNumber=${source.bundleEpisodeNumber}` : ""}`,
       );
     });
   };
