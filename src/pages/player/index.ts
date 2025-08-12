@@ -5,7 +5,8 @@ import { extract_voe_url } from "../../lib/voe/index";
 interface PlayerQuery {
   url: string;
   episodeNumber: string;
-  isBundle: boolean;
+  isBundle: string;
+  bundleEpisodeNumber: string;
 }
 
 export default async function Player(query: PlayerQuery) {
@@ -30,24 +31,24 @@ export default async function Player(query: PlayerQuery) {
 
   let link = "";
 
-  if (Boolean(query.isBundle) == true) {
+  if (query.isBundle === "true") {
     const bundle = await getBundle(query.url);
 
-    if (!bundle) return;
+    if (!bundle) return console.warn("No bundle found");
 
     const episode = bundle.find(
       (sourceEpisode) =>
-        sourceEpisode.label.replace("Ep. ", "") == query.episodeNumber,
+        sourceEpisode.label.replace("Ep. ", "") == query.bundleEpisodeNumber,
     );
 
-    if (!episode) return;
+    if (!episode) return console.warn("No episode found");
 
     link = (await getEpisodeLink(episode.url)) || "";
   } else {
     link = (await getEpisodeLink(query.url)) || "";
   }
 
-  if (!link) return;
+  if (!link) return console.warn("No link found");
 
   console.log("INFO: stream url -> ", link);
 
