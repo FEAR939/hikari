@@ -30,7 +30,7 @@ export default async function Player(query: PlayerQuery) {
 
   let link = "";
 
-  if (query.isBundle == true) {
+  if (Boolean(query.isBundle) == true) {
     const bundle = await getBundle(query.url);
 
     if (!bundle) return;
@@ -48,6 +48,8 @@ export default async function Player(query: PlayerQuery) {
   }
 
   if (!link) return;
+
+  console.log("INFO: stream url -> ", link);
 
   const stream_link = await extract_voe_url(link);
 
