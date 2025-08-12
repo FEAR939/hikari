@@ -12,7 +12,7 @@ interface Source {
 interface Episode {
   title: { en: string };
   image: string | undefined;
-  episodeNumber: number;
+  episode: number;
   overview: string;
 }
 
