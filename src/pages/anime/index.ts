@@ -100,7 +100,10 @@ export default async function Anime(query) {
 
   const heroSectionDescription = document.createElement("div");
   heroSectionDescription.className = "text-sm text-neutral-600";
-  heroSectionDescription.innerHTML = anime.description;
+  heroSectionDescription.innerHTML = anime.description.substring(
+    0,
+    anime.description.indexOf("(Source:"),
+  );
 
   const heroSectionTags = document.createElement("div");
   heroSectionTags.className = "flex items-center space-x-4";
