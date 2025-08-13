@@ -1,7 +1,8 @@
 import Home from "./pages/home/index";
 import Anime from "./pages/anime/index";
 import Player from "./pages/player/index";
-import Random from "./pages/random/index";
+import Search from "./pages/search/index";
+import Settings from "./pages/settings/index";
 
 const root = document.getElementById("root");
 document.root = root;
@@ -54,6 +55,7 @@ document.router = Router;
 Router.route("/", Home);
 Router.route("/anime", Anime);
 Router.route("/player", Player);
-Router.route("/random", Random);
+Router.route("/search", Search);
+Router.route("/settings", Settings);
 
 Router.navigate("/");
