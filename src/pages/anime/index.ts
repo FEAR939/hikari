@@ -58,7 +58,7 @@ export default async function Anime(query) {
 
   const userListToggle = document.createElement("div");
   userListToggle.className =
-    "w-full py-2 rounded-xl bg-[#0c0c0c] text-white flex items-center justify-center";
+    "w-full py-2 rounded-xl bg-[#0d0d0d] text-white flex items-center justify-center";
   userListToggle.textContent = "Add to List";
 
   heroSectionPrimary.appendChild(userListToggle);
@@ -69,14 +69,32 @@ export default async function Anime(query) {
   heroSectionSecondary.className = "w-full h-fit mt-18 p-4 space-y-4";
 
   const heroSectionTitle = document.createElement("h1");
-  heroSectionTitle.className = "text-4xl font-bold";
+  heroSectionTitle.className = "text-4xl font-bold flex items-center space-x-4";
   heroSectionTitle.textContent = anime.title.romaji;
+
+  const heroSectionChips = document.createElement("div");
+  heroSectionChips.className = "flex items-center space-x-4";
+
+  const chips = [
+    {
+      text: `${anime.episodes} Episodes`,
+    },
+  ];
+
+  chips.map((chip) => {
+    const chipElement = document.createElement("span");
+    chipElement.textContent = chip.text;
+    chipElement.className =
+      "px-4 py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
+    heroSectionChips.appendChild(chipElement);
+  });
+
   Provider.then((data) => {
     if (data?.languages) {
       const tag = document.createElement("span");
       tag.textContent = data.languages.replace(/[()]/g, "");
-      tag.className = "ml-2 px-3 py-1 text-xs font-semibold rounded bg-gray-700 text-white";
-      heroSectionTitle.appendChild(tag);
+      tag.className = "px-4 py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
+      heroSectionChips.appendChild(tag);
     }
   });
 
@@ -84,8 +102,21 @@ export default async function Anime(query) {
   heroSectionDescription.className = "text-sm text-neutral-600";
   heroSectionDescription.innerHTML = anime.description;
 
+  const heroSectionTags = document.createElement("div");
+  heroSectionTags.className = "flex items-center space-x-4";
+
+  anime.genres.map((genre) => {
+    const tagElement = document.createElement("span");
+    tagElement.textContent = genre;
+    tagElement.className =
+      "px-4 py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
+    heroSectionTags.appendChild(tagElement);
+  });
+
   heroSectionSecondary.appendChild(heroSectionTitle);
+  heroSectionSecondary.appendChild(heroSectionChips);
   heroSectionSecondary.appendChild(heroSectionDescription);
+  heroSectionSecondary.appendChild(heroSectionTags);
 
   heroSectionContent.appendChild(heroSectionSecondary);
 
@@ -111,7 +142,7 @@ export default async function Anime(query) {
     if (relation.type !== "ANIME") return;
     const relationCard = document.createElement("div");
     relationCard.className =
-      "h-48 w-full bg-[#0c0c0c] flex overflow-hidden rounded-xl cursor-pointer";
+      "h-48 w-full bg-[#0d0d0d] flex overflow-hidden rounded-xl cursor-pointer";
 
     const relationCardImage = document.createElement("img");
     relationCardImage.src = relation.coverImage.large;
@@ -149,7 +180,7 @@ export default async function Anime(query) {
 
   const tabSelector = document.createElement("div");
   tabSelector.className =
-    "p-1 bg-[#0c0c0c] rounded-xl flex justify-center w-fit";
+    "p-1 bg-[#0d0d0d] rounded-xl flex justify-center w-fit";
 
   const tabContent = document.createElement("div");
   tabContent.className = "w-full h-fit";
@@ -210,17 +241,17 @@ export default async function Anime(query) {
 
     const pageControlsPrev = document.createElement("div");
     pageControlsPrev.className =
-      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
+      "bg-[#0d0d0d] text-white px-4 py-2 rounded-lg cursor-pointer";
     pageControlsPrev.textContent = "Prev";
 
     const pageControlCurr = document.createElement("div");
     pageControlCurr.className =
-      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
+      "bg-[#0d0d0d] text-white px-4 py-2 rounded-lg cursor-pointer";
     pageControlCurr.textContent = (page + 1).toString();
 
     const pageControlsNext = document.createElement("div");
     pageControlsNext.className =
-      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
+      "bg-[#0d0d0d] text-white px-4 py-2 rounded-lg cursor-pointer";
     pageControlsNext.textContent = "Next";
 
     pageControls.append(pageControlsPrev, pageControlCurr, pageControlsNext);
