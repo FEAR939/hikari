@@ -71,6 +71,14 @@ export default async function Anime(query) {
   const heroSectionTitle = document.createElement("h1");
   heroSectionTitle.className = "text-4xl font-bold";
   heroSectionTitle.textContent = anime.title.romaji;
+  Provider.then((data) => {
+    if (data?.languages) {
+      const tag = document.createElement("span");
+      tag.textContent = data.languages.replace(/[()]/g, "");
+      tag.className = "ml-2 px-3 py-1 text-xs font-semibold rounded bg-gray-700 text-white";
+      heroSectionTitle.appendChild(tag);
+    }
+  });
 
   const heroSectionDescription = document.createElement("div");
   heroSectionDescription.className = "text-sm text-neutral-600";
@@ -202,17 +210,17 @@ export default async function Anime(query) {
 
     const pageControlsPrev = document.createElement("div");
     pageControlsPrev.className =
-      "bg-[#0c0c0c] text-white px-4 py-2 rounded-xl cursor-pointer";
+      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
     pageControlsPrev.textContent = "Prev";
 
     const pageControlCurr = document.createElement("div");
     pageControlCurr.className =
-      "bg-[#0c0c0c] text-white px-4 py-2 rounded-xl cursor-pointer";
+      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
     pageControlCurr.textContent = (page + 1).toString();
 
     const pageControlsNext = document.createElement("div");
     pageControlsNext.className =
-      "bg-[#0c0c0c] text-white px-4 py-2 rounded-xl cursor-pointer";
+      "bg-white text-black px-4 py-2 rounded-md cursor-pointer";
     pageControlsNext.textContent = "Next";
 
     pageControls.append(pageControlsPrev, pageControlCurr, pageControlsNext);
@@ -269,23 +277,25 @@ export default async function Anime(query) {
               return episodeCard.updateSource?.(false);
 
             let sourceEpisode = false;
-            let bundleEpisodeNumber = 0;
 
             if (sourceProvider?.episodes[0].isBundle) {
               console.log("Episodes are bundled");
               sourceEpisode = sourceProvider.episodes.find((sourceEpisode) => {
-                const match = sourceEpisode.label.match(/E?(\d+)-E?(\d+)/);
+                const sanitizied = sourceEpisode.label.replace("Ep.", "");
 
-                const [bundleStart, bundleEnd] = match
-                  ? [parseInt(match[1]), parseInt(match[2])]
-                  : [0, 0];
+                // TODO: Handle case -> S1:E01-E20; S10:190-205;
 
-                const episodeNumber = parseInt(episode.episode);
-
-                bundleEpisodeNumber = episodeNumber - bundleStart + 1;
+                const bundleStart = sanitizied.substring(
+                  0,
+                  sanitizied.indexOf("-"),
+                );
+                const bundleEnd = sanitizied.substring(
+                  sanitizied.indexOf("-") + 1,
+                  sanitizied.length,
+                );
 
                 return (
-                  bundleStart <= episodeNumber && bundleEnd >= episodeNumber
+                  bundleStart <= episode.episode && bundleEnd >= episode.episode
                 );
               });
             } else {
@@ -300,7 +310,6 @@ export default async function Anime(query) {
               icon: provider.icon,
               url: sourceEpisode.url,
               isBundle: sourceEpisode.isBundle,
-              bundleEpisodeNumber: bundleEpisodeNumber,
             });
           });
         });
