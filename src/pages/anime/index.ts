@@ -311,25 +311,23 @@ export default async function Anime(query) {
               return episodeCard.updateSource?.(false);
 
             let sourceEpisode = false;
+            let bundleEpisodeNumber = 0;
 
             if (sourceProvider?.episodes[0].isBundle) {
               console.log("Episodes are bundled");
               sourceEpisode = sourceProvider.episodes.find((sourceEpisode) => {
-                const sanitizied = sourceEpisode.label.replace("Ep.", "");
+                const match = sourceEpisode.label.match(/E?(\d+)-E?(\d+)/);
 
-                // TODO: Handle case -> S1:E01-E20; S10:190-205;
+                const [bundleStart, bundleEnd] = match
+                  ? [parseInt(match[1]), parseInt(match[2])]
+                  : [0, 0];
 
-                const bundleStart = sanitizied.substring(
-                  0,
-                  sanitizied.indexOf("-"),
-                );
-                const bundleEnd = sanitizied.substring(
-                  sanitizied.indexOf("-") + 1,
-                  sanitizied.length,
-                );
+                const episodeNumber = parseInt(episode.episode);
+
+                bundleEpisodeNumber = episodeNumber - bundleStart + 1;
 
                 return (
-                  bundleStart <= episode.episode && bundleEnd >= episode.episode
+                  bundleStart <= episodeNumber && bundleEnd >= episodeNumber
                 );
               });
             } else {
@@ -344,6 +342,7 @@ export default async function Anime(query) {
               icon: provider.icon,
               url: sourceEpisode.url,
               isBundle: sourceEpisode.isBundle,
+              bundleEpisodeNumber: bundleEpisodeNumber,
             });
           });
         });
