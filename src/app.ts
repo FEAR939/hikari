@@ -3,6 +3,7 @@ import Anime from "./pages/anime/index";
 import Player from "./pages/player/index";
 import Search from "./pages/search/index";
 import Settings from "./pages/settings/index";
+import Auth from "./pages/auth/index";
 
 const root = document.getElementById("root");
 document.root = root;
@@ -57,5 +58,6 @@ Router.route("/anime", Anime);
 Router.route("/player", Player);
 Router.route("/search", Search);
 Router.route("/settings", Settings);
+Router.route("/auth", Auth);
 
 Router.navigate("/");
