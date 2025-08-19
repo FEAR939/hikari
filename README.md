@@ -10,23 +10,25 @@
 
 ### Build from source
 
-1. Clone the repository
+1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/hikari.git
+    git clone https://github.com/FEAR939/hikari.git // For stable
+
+    git clone https://github.com/FEAR939/hikari.git -b frontend-dev // For development
     ```
-2. Change directory to the cloned repository
+2. Change directory to the cloned repository:
     ```bash
     cd hikari
     ```
-3. Install dependencies
+3. Install dependencies:
     ```bash
     bun install
     ```
-4. Build the project
+4. Build the project:
     ```bash
     bun vite build
     ```
-5. Run the project
+5. Run the project:
     ```bash
     bun electron .
     ```
