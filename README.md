@@ -11,11 +11,14 @@
 ### Build from source
 
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/FEAR939/hikari.git // For stable
-
-    git clone https://github.com/FEAR939/hikari.git -b frontend-dev // For development
-    ```
+    - Stable:
+      ```bash
+      git clone https://github.com/FEAR939/hikari.git
+      ```
+    - Development (latest changes):
+      ```bash
+      git clone https://github.com/FEAR939/hikari.git -b frontend-dev
+      ```
 2. Change directory to the cloned repository:
     ```bash
     cd hikari
