@@ -63,4 +63,20 @@ Router.route("/search", Search);
 Router.route("/settings", Settings);
 Router.route("/auth", Auth);
 
+if (localStorage.getItem("token") !== null) {
+  const response = await fetch("http://localhost:5000/me", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  if (response.ok) {
+    const user = await response.json();
+    console.log(user);
+  } else {
+    console.error("Failed to fetch user data");
+  }
+}
+
 Router.navigate("/");
