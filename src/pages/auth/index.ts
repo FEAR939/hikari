@@ -1,16 +1,19 @@
+enum AuthOp {
+  SIGNUP = 0,
+  SIGNIN = 1,
+  FORGOT_PASSWORD = 2,
+  RESET_PASSWORD = 3,
+  SET_NEW_PASSWORD = 4,
+}
+
 export default async function Auth(query) {
   const page = document.createElement("div");
   page.className =
     "h-full w-full flex flex-col items-center justify-center space-y-8";
 
   document.root.appendChild(page);
-
-  // op mapping:
-  // 0 -> signup
-  // 1 -> signin
-  // 2 -> forgot password
-  // 3 -> verification sent
-  let op = 0;
+  let op: AuthOp = 0;
+  let resetToken = "";
 
   const emailbox = document.createElement("div");
   emailbox.className = "w-full max-w-96 space-y-2";
@@ -38,6 +41,33 @@ export default async function Auth(query) {
   emailbox.appendChild(emailfieldwrapper);
 
   page.appendChild(emailbox);
+
+  const usernamebox = document.createElement("div");
+  usernamebox.className = "w-full max-w-96 space-y-2";
+
+  const usernamelabel = document.createElement("div");
+  usernamelabel.textContent = "Username";
+
+  const usernamefieldwrapper = document.createElement("div");
+  usernamefieldwrapper.className =
+    "flex space-x-4 w-full max-w-96 px-6 py-4 outline-2 outline-[#141414] rounded-xl has-[:invalid:not(:placeholder-shown):not(:focus)]:outline-red-800";
+  usernamefieldwrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person size-6" viewBox="0 0 16 16">
+    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+  </svg>`;
+
+  const usernamefield = document.createElement("input");
+  usernamefield.className =
+    "w-full h-full bg-transparent text-[#c0c0c0] outline-none border-none";
+  usernamefield.type = "text";
+  usernamefield.required = true;
+  usernamefield.placeholder = "Username";
+
+  usernamefieldwrapper.appendChild(usernamefield);
+
+  usernamebox.appendChild(usernamelabel);
+  usernamebox.appendChild(usernamefieldwrapper);
+
+  page.appendChild(usernamebox);
 
   const passwordbox = document.createElement("div");
   passwordbox.className = "w-full max-w-96 space-y-2";
@@ -117,9 +147,47 @@ export default async function Auth(query) {
 
   const verificationbox = document.createElement("div");
   verificationbox.className =
-    "w-full max-w-96 text-[#c0c0c0] text-xl text-center";
-  verificationbox.textContent =
-    "Verification Email sent, please check your inbox!";
+    "w-full max-w-96 text-[#c0c0c0] text-xl text-center space-y-4";
+
+  const verificationText = document.createElement("div");
+  verificationText.textContent =
+    "We have sent a verification code to you email. Please check you inbox!";
+
+  verificationbox.appendChild(verificationText);
+
+  const verificationCodeInputWrapper = document.createElement("div");
+  verificationCodeInputWrapper.className =
+    "relative w-full max-w-96 flex justify-center space-x-2";
+
+  const codeLength = 6;
+
+  const verificationCodeInput = document.createElement("input");
+  verificationCodeInput.type = "text";
+  verificationCodeInput.maxLength = codeLength;
+  verificationCodeInput.className = "absolute inset-0 opacity-0";
+
+  const chars = [];
+
+  for (let i = 0; i < codeLength; i++) {
+    const verificationCodeChar = document.createElement("div");
+    verificationCodeChar.className =
+      "w-12 h-12 bg-[#0d0d0d] text-[#c0c0c0] rounded-xl flex items-center justify-center";
+    verificationCodeChar.textContent = "";
+    verificationCodeInputWrapper.appendChild(verificationCodeChar);
+
+    chars.push(verificationCodeChar);
+  }
+
+  verificationCodeInput.addEventListener("input", () => {
+    const value = verificationCodeInput.value;
+    for (let i = 0; i < codeLength; i++) {
+      chars[i].textContent = value[i] || "";
+    }
+  });
+
+  verificationCodeInputWrapper.appendChild(verificationCodeInput);
+
+  verificationbox.appendChild(verificationCodeInputWrapper);
 
   page.appendChild(verificationbox);
 
@@ -127,6 +195,60 @@ export default async function Auth(query) {
   submitbutton.className =
     "w-full max-w-96 px-6 py-4 bg-[#0d0d0d] text-[#c0c0c0] outline-none border-none rounded-xl flex justify-center cursor-pointer";
   submitbutton.textContent = "Sign Up";
+
+  submitbutton.addEventListener("click", async () => {
+    switch (op) {
+      case 0:
+        if (
+          emailfield.value.trim().length == 0 &&
+          usernamefield.value.trim().length == 0 &&
+          passwordfield.value.trim().length == 0 &&
+          repeatpasswordfield.value.trim().length == 0
+        )
+          break;
+        handleSignup(
+          emailfield.value.trim(),
+          usernamefield.value.trim(),
+          passwordfield.value.trim(),
+        );
+        break;
+      case 1:
+        if (
+          emailfield.value.trim().length == 0 &&
+          passwordfield.value.trim().length == 0
+        )
+          break;
+        const token = await handleSignin(
+          emailfield.value.trim(),
+          passwordfield.value.trim(),
+        );
+        localStorage.setItem("token", token);
+        document.router.navigate("/");
+        break;
+      case 2:
+        if (emailfield.value.trim().length == 0) break;
+        handleForgotPassword(emailfield.value.trim());
+        op = 3;
+        break;
+      case 3:
+        if (verificationCodeInput.value.trim().length < 6) break;
+        resetToken = await handleVerifyCode(verificationCodeInput.value.trim());
+        op = 4;
+        break;
+      case 4:
+        if (
+          passwordfield.value.trim().length == 0 &&
+          repeatpasswordfield.value.trim().length == 0 &&
+          resetToken == null
+        )
+          break;
+        handleResetPassword(resetToken, passwordfield.value.trim());
+        op = 1;
+        break;
+    }
+
+    modeHandler();
+  });
 
   page.appendChild(submitbutton);
 
@@ -148,7 +270,10 @@ export default async function Auth(query) {
         op = 1;
         break;
       case 3:
-        op = 0;
+        op = 1;
+        break;
+      case 4:
+        op = 1;
         break;
     }
     modeHandler();
@@ -158,6 +283,7 @@ export default async function Auth(query) {
 
   function modeHandler() {
     emailbox.style.display = "none";
+    usernamebox.style.display = "none";
     passwordbox.style.display = "none";
     passwordforgot.style.display = "none";
     repeatpasswordbox.style.display = "none";
@@ -167,6 +293,7 @@ export default async function Auth(query) {
       case 0:
         // signup
         emailbox.style.display = "block";
+        usernamebox.style.display = "block";
         passwordbox.style.display = "block";
         repeatpasswordbox.style.display = "block";
         submitbutton.textContent = "Sign Up";
@@ -192,8 +319,91 @@ export default async function Auth(query) {
       case 3:
         // verification sent
         verificationbox.style.display = "block";
-        submitbutton.textContent = "Back to Signin";
+        submitbutton.textContent = "Verify";
+        switchbutton.textContent = "Back to Signin";
+        break;
+      case 4:
+        // set new password
+        passwordbox.style.display = "block";
+        repeatpasswordbox.style.display = "block";
+        submitbutton.textContent = "Set New Password";
+        switchbutton.textContent = "Back to Signin";
         break;
     }
   }
+}
+
+async function handleSignup(email: string, username: string, password: string) {
+  const formData = new FormData();
+  formData.append("email", email);
+  formData.append("username", username);
+  formData.append("password", password);
+
+  const response = await fetch("http://localhost:5000/auth/register", {
+    method: "POST",
+    body: formData,
+  });
+
+  console.log(await response.json());
+}
+
+async function handleSignin(email: string, password: string) {
+  const formData = new FormData();
+  formData.append("email", email);
+  formData.append("password", password);
+
+  const response = await fetch("http://localhost:5000/auth/login", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+
+  console.log(data);
+
+  return data.token;
+}
+
+async function handleForgotPassword(email: string) {
+  const formData = new FormData();
+  formData.append("email", email);
+
+  const response = await fetch(
+    "http://localhost:5000/auth/password-reset-code",
+    {
+      method: "POST",
+      body: formData,
+    },
+  );
+
+  console.log(await response.json());
+}
+
+async function handleVerifyCode(code: string) {
+  const formData = new FormData();
+  formData.append("code", code);
+
+  const response = await fetch("http://localhost:5000/auth/verify-reset-code", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+
+  console.log(data);
+
+  return data.resetToken;
+}
+
+async function handleResetPassword(token: string, password: string) {
+  const formData = new FormData();
+  formData.append("token", token);
+  formData.append("password", password);
+
+  const response = await fetch("http://localhost:5000/auth/reset-password", {
+    method: "POST",
+    body: formData,
+  });
+
+  console.log(await response.json());
 }
