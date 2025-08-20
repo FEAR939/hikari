@@ -63,20 +63,67 @@ Router.route("/search", Search);
 Router.route("/settings", Settings);
 Router.route("/auth", Auth);
 
-if (localStorage.getItem("token") !== null) {
+Router.navigate("/");
+
+await autoLogin();
+
+async function autoLogin() {
+  if (localStorage.getItem("accessToken") == null) return;
+
+  let user = await authenticate();
+
+  if (user) return console.log(user);
+
+  console.error("accessToken expired, trying to refresh");
+
+  const refresh = await refreshToken();
+
+  if (!refresh) return document.router.navigate("/auth");
+
+  user = await authenticate();
+
+  console.log(user);
+}
+
+async function authenticate() {
+  const formData = new FormData();
+  formData.append("accessToken", localStorage.getItem("accessToken")!);
+
   const response = await fetch("http://localhost:5000/me", {
     method: "GET",
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
   });
 
   if (response.ok) {
     const user = await response.json();
-    console.log(user);
+    return user;
   } else {
-    console.error("Failed to fetch user data");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    return false;
   }
 }
 
-Router.navigate("/");
+async function refreshToken() {
+  const formData = new FormData();
+  formData.append("refreshToken", localStorage.getItem("refreshToken")!);
+
+  const response = await fetch("http://localhost:5000/auth/refresh", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (response.ok) {
+    const { accessToken, refreshToken } = await response.json();
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+
+    return true;
+  } else {
+    console.error("Failed to refresh token");
+    return false;
+  }
+}
