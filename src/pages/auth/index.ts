@@ -218,11 +218,12 @@ export default async function Auth(query) {
           passwordfield.value.trim().length == 0
         )
           break;
-        const token = await handleSignin(
+        const tokens = await handleSignin(
           emailfield.value.trim(),
           passwordfield.value.trim(),
         );
-        localStorage.setItem("token", token);
+        localStorage.setItem("accessToken", tokens.accessToken);
+        localStorage.setItem("refreshToken", tokens.refreshToken);
         document.router.navigate("/");
         break;
       case 2:
@@ -361,7 +362,7 @@ async function handleSignin(email: string, password: string) {
 
   console.log(data);
 
-  return data.token;
+  return data;
 }
 
 async function handleForgotPassword(email: string) {
