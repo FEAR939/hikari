@@ -4,6 +4,7 @@ import Player from "./pages/player/index";
 import Search from "./pages/search/index";
 import Settings from "./pages/settings/index";
 import Auth from "./pages/auth/index";
+import { topBar } from "./ui/topbar";
 
 const root = document.getElementById("root");
 document.root = root;
@@ -49,6 +50,8 @@ class router {
     }
   }
 }
+
+document.body.appendChild(topBar());
 
 const Router: Router = new router();
 document.router = Router;
