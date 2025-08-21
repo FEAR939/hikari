@@ -1,3 +1,5 @@
+import { router } from "../../lib/router/index";
+import { authService } from "../../services/AuthService";
 import { accountAvatar } from "../accountAvatar/index";
 
 export function accountMenu() {
@@ -11,6 +13,8 @@ export function accountMenu() {
 
   menu.appendChild(accountAvatar());
 
+  let state = 0;
+
   const signButton = document.createElement("div");
   signButton.className =
     "w-full px-2 py-1 rounded-md bg-white text-black cursor-pointer";
@@ -19,8 +23,29 @@ export function accountMenu() {
   menu.appendChild(signButton);
 
   signButton.addEventListener("click", () => {
-    document.router.navigate("/auth");
+    if (state == 0) return router.navigate("/auth");
+
+    // else logout
   });
+
+  signMode();
+
+  authService.subscribe((user) => {
+    if (!user) return signMode();
+
+    signMode(user);
+  });
+
+  function signMode(user?) {
+    if (!user) {
+      signButton.textContent = "Signup | Signin";
+      state = 0;
+      return;
+    }
+
+    signButton.textContent = "Signout";
+    state = 1;
+  }
 
   return menu;
 }
