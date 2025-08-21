@@ -5,7 +5,7 @@ import { accountMenu } from "../accountMenu/index";
 export function topBar() {
   const bar = document.createElement("div");
   bar.className =
-    "absolute top-0 left-0 right-0 h-12 w-full px-4 flex items-center justify-end space-x-2";
+    "absolute top-0 left-0 right-0 h-12 w-full px-4 flex items-center justify-end space-x-2 bg-gradient-to-t from-transparent to-[#0d0d0d]";
 
   const search = document.createElement("div");
   search.className =
