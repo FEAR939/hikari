@@ -88,6 +88,13 @@ class AuthService {
       return false;
     }
   }
+
+  async logout() {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+
+    this.setUser(null);
+  }
 }
 
 export const authService = new AuthService();
