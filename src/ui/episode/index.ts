@@ -1,3 +1,5 @@
+import { router } from "../../lib/router/index";
+
 interface EpElement extends HTMLDivElement {
   updateSource?: (source: Source | boolean) => void;
 }
@@ -57,7 +59,7 @@ export default function Episode(episode: Episode, index: number): EpElement {
     episodeSource.innerHTML = `<img src=${source.icon} class="size-4 object-cover">`;
 
     episodeCard.addEventListener("click", async () => {
-      document.router.navigate(
+      router.navigate(
         `/player?url=${source.url}&episodeNumber=${episode.episode}&isBundle=${source.isBundle}${Boolean(source.isBundle) ? `&bundleEpisodeNumber=${source.bundleEpisodeNumber}` : ""}`,
       );
     });

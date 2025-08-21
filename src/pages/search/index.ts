@@ -1,3 +1,4 @@
+import { router } from "../../lib/router/index";
 import { getSearch } from "../../lib/anilist/index";
 
 export default async function Search(query) {
@@ -38,7 +39,7 @@ export default async function Search(query) {
       resultContainer.appendChild(resultCard);
 
       resultCard.addEventListener("click", () => {
-        document.router.navigate(`/anime?id=${result.id}`);
+        router.navigate(`/anime?id=${result.id}`);
       });
     });
   }

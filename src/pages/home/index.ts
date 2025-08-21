@@ -1,3 +1,4 @@
+import { router } from "../../lib/router/index";
 import { getSeasonAnime } from "../../lib/anilist";
 
 export default async function Home(query) {
@@ -83,7 +84,7 @@ export default async function Home(query) {
 
     card.appendChild(cardImage);
     card.addEventListener("click", () => {
-      document.router.navigate(`/anime?id=${item.id}`);
+      router.navigate(`/anime?id=${item.id}`);
     });
 
     fragment.appendChild(card);
