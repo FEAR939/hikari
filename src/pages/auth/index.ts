@@ -154,7 +154,7 @@ export default async function Auth(query) {
 
   const verificationText = document.createElement("div");
   verificationText.textContent =
-    "We have sent a verification code to you email. Please check you inbox!";
+    "Verification code sent. Please check your inbox!";
 
   verificationbox.appendChild(verificationText);
 
@@ -174,7 +174,7 @@ export default async function Auth(query) {
   for (let i = 0; i < codeLength; i++) {
     const verificationCodeChar = document.createElement("div");
     verificationCodeChar.className =
-      "w-12 h-12 bg-[#0d0d0d] text-[#c0c0c0] rounded-xl flex items-center justify-center";
+      "w-12 h-12 bg-[#0d0d0d] text-[#c0c0c0] outline-2 outline-[#141414] rounded-xl flex items-center justify-center";
     verificationCodeChar.textContent = "";
     verificationCodeInputWrapper.appendChild(verificationCodeChar);
 
@@ -196,8 +196,25 @@ export default async function Auth(query) {
 
   const submitbutton = document.createElement("div");
   submitbutton.className =
-    "w-full max-w-96 px-6 py-4 bg-[#0d0d0d] text-[#c0c0c0] outline-none border-none rounded-xl flex justify-center cursor-pointer";
-  submitbutton.textContent = "Sign Up";
+    "group relative w-full max-w-96 px-6 py-4 bg-[#f0f0f0] hover:bg-[#e0e0e0] text-[#0a0a0a] outline-2 outline-[#141414] shadow-md rounded-xl flex justify-center cursor-pointer transition-all duration-300 ease-in-out";
+
+  submitbutton.tabIndex = 0;
+
+  page.appendChild(submitbutton);
+
+  const submitbuttonText = document.createElement("div");
+  submitbuttonText.textContent = "Sign Up";
+
+  submitbutton.appendChild(submitbuttonText);
+
+  const submitbuttonArrow = document.createElement("div");
+  submitbuttonArrow.className =
+    "absolute right-2 size-6 group-hover:-translate-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out";
+  submitbuttonArrow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short size-6" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
+  </svg>`;
+
+  submitbutton.appendChild(submitbuttonArrow);
 
   submitbutton.addEventListener("click", async () => {
     switch (op) {
@@ -253,11 +270,10 @@ export default async function Auth(query) {
     modeHandler();
   });
 
-  page.appendChild(submitbutton);
-
   const switchbutton = document.createElement("div");
   switchbutton.className = "w-full max-w-96 cursor-pointer";
   switchbutton.textContent = "Switch to Login";
+  switchbutton.tabIndex = 0;
 
   page.appendChild(switchbutton);
 
@@ -292,6 +308,12 @@ export default async function Auth(query) {
     repeatpasswordbox.style.display = "none";
     verificationbox.style.display = "none";
 
+    emailfield.value = "";
+    usernamefield.value = "";
+    passwordfield.value = "";
+    repeatpasswordfield.value = "";
+    verificationCodeInput.value = "";
+
     switch (op) {
       case 0:
         // signup
@@ -299,7 +321,7 @@ export default async function Auth(query) {
         usernamebox.style.display = "block";
         passwordbox.style.display = "block";
         repeatpasswordbox.style.display = "block";
-        submitbutton.textContent = "Sign Up";
+        submitbuttonText.textContent = "Sign Up";
         switchbutton.style.display = "block";
         switchbutton.textContent = "Already have an account? Sign In";
         break;
@@ -308,28 +330,28 @@ export default async function Auth(query) {
         emailbox.style.display = "block";
         passwordbox.style.display = "block";
         passwordforgot.style.display = "block";
-        submitbutton.textContent = "Sign In";
+        submitbuttonText.textContent = "Sign In";
         switchbutton.style.display = "block";
         switchbutton.textContent = "Don't have an account yet? Sign Up";
         break;
       case 2:
         // forgot password
         emailbox.style.display = "block";
-        submitbutton.textContent = "Reset Password";
+        submitbuttonText.textContent = "Send Code";
         switchbutton.style.display = "block";
         switchbutton.textContent = "Back to Signin";
         break;
       case 3:
         // verification sent
         verificationbox.style.display = "block";
-        submitbutton.textContent = "Verify";
+        submitbuttonText.textContent = "Verify";
         switchbutton.textContent = "Back to Signin";
         break;
       case 4:
         // set new password
         passwordbox.style.display = "block";
         repeatpasswordbox.style.display = "block";
-        submitbutton.textContent = "Set New Password";
+        submitbuttonText.textContent = "Set New Password";
         switchbutton.textContent = "Back to Signin";
         break;
     }
