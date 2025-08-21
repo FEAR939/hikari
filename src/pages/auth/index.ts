@@ -1,3 +1,6 @@
+import { authService } from "../../services/AuthService";
+import { router } from "../../lib/router/index";
+
 enum AuthOp {
   SIGNUP = 0,
   SIGNIN = 1,
@@ -222,9 +225,8 @@ export default async function Auth(query) {
           emailfield.value.trim(),
           passwordfield.value.trim(),
         );
-        localStorage.setItem("accessToken", tokens.accessToken);
-        localStorage.setItem("refreshToken", tokens.refreshToken);
-        document.router.navigate("/");
+        authService.authenticate(tokens);
+        router.navigate("/");
         break;
       case 2:
         if (emailfield.value.trim().length == 0) break;
