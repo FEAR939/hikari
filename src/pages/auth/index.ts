@@ -1,16 +1,22 @@
+import { authService } from "../../services/AuthService";
+import { router } from "../../lib/router/index";
+
+enum AuthOp {
+  SIGNUP = 0,
+  SIGNIN = 1,
+  FORGOT_PASSWORD = 2,
+  RESET_PASSWORD = 3,
+  SET_NEW_PASSWORD = 4,
+}
+
 export default async function Auth(query) {
   const page = document.createElement("div");
   page.className =
     "h-full w-full flex flex-col items-center justify-center space-y-8";
 
   document.root.appendChild(page);
-
-  // op mapping:
-  // 0 -> signup
-  // 1 -> signin
-  // 2 -> forgot password
-  // 3 -> verification sent
-  let op = 0;
+  let op: AuthOp = 0;
+  let resetToken = "";
 
   const emailbox = document.createElement("div");
   emailbox.className = "w-full max-w-96 space-y-2";
@@ -38,6 +44,33 @@ export default async function Auth(query) {
   emailbox.appendChild(emailfieldwrapper);
 
   page.appendChild(emailbox);
+
+  const usernamebox = document.createElement("div");
+  usernamebox.className = "w-full max-w-96 space-y-2";
+
+  const usernamelabel = document.createElement("div");
+  usernamelabel.textContent = "Username";
+
+  const usernamefieldwrapper = document.createElement("div");
+  usernamefieldwrapper.className =
+    "flex space-x-4 w-full max-w-96 px-6 py-4 outline-2 outline-[#141414] rounded-xl has-[:invalid:not(:placeholder-shown):not(:focus)]:outline-red-800";
+  usernamefieldwrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person size-6" viewBox="0 0 16 16">
+    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+  </svg>`;
+
+  const usernamefield = document.createElement("input");
+  usernamefield.className =
+    "w-full h-full bg-transparent text-[#c0c0c0] outline-none border-none";
+  usernamefield.type = "text";
+  usernamefield.required = true;
+  usernamefield.placeholder = "Username";
+
+  usernamefieldwrapper.appendChild(usernamefield);
+
+  usernamebox.appendChild(usernamelabel);
+  usernamebox.appendChild(usernamefieldwrapper);
+
+  page.appendChild(usernamebox);
 
   const passwordbox = document.createElement("div");
   passwordbox.className = "w-full max-w-96 space-y-2";
@@ -117,22 +150,130 @@ export default async function Auth(query) {
 
   const verificationbox = document.createElement("div");
   verificationbox.className =
-    "w-full max-w-96 text-[#c0c0c0] text-xl text-center";
-  verificationbox.textContent =
-    "Verification Email sent, please check your inbox!";
+    "w-full max-w-96 text-[#c0c0c0] text-xl text-center space-y-4";
+
+  const verificationText = document.createElement("div");
+  verificationText.textContent =
+    "Verification code sent. Please check your inbox!";
+
+  verificationbox.appendChild(verificationText);
+
+  const verificationCodeInputWrapper = document.createElement("div");
+  verificationCodeInputWrapper.className =
+    "relative w-full max-w-96 flex justify-center space-x-2";
+
+  const codeLength = 6;
+
+  const verificationCodeInput = document.createElement("input");
+  verificationCodeInput.type = "text";
+  verificationCodeInput.maxLength = codeLength;
+  verificationCodeInput.className = "absolute inset-0 opacity-0";
+
+  const chars = [];
+
+  for (let i = 0; i < codeLength; i++) {
+    const verificationCodeChar = document.createElement("div");
+    verificationCodeChar.className =
+      "w-12 h-12 bg-[#0d0d0d] text-[#c0c0c0] outline-2 outline-[#141414] rounded-xl flex items-center justify-center";
+    verificationCodeChar.textContent = "";
+    verificationCodeInputWrapper.appendChild(verificationCodeChar);
+
+    chars.push(verificationCodeChar);
+  }
+
+  verificationCodeInput.addEventListener("input", () => {
+    const value = verificationCodeInput.value;
+    for (let i = 0; i < codeLength; i++) {
+      chars[i].textContent = value[i] || "";
+    }
+  });
+
+  verificationCodeInputWrapper.appendChild(verificationCodeInput);
+
+  verificationbox.appendChild(verificationCodeInputWrapper);
 
   page.appendChild(verificationbox);
 
   const submitbutton = document.createElement("div");
   submitbutton.className =
-    "w-full max-w-96 px-6 py-4 bg-[#0d0d0d] text-[#c0c0c0] outline-none border-none rounded-xl flex justify-center cursor-pointer";
-  submitbutton.textContent = "Sign Up";
+    "group relative w-full max-w-96 px-6 py-4 bg-[#f0f0f0] hover:bg-[#e0e0e0] text-[#0a0a0a] outline-2 outline-[#141414] shadow-md rounded-xl flex justify-center cursor-pointer transition-all duration-300 ease-in-out";
+
+  submitbutton.tabIndex = 0;
 
   page.appendChild(submitbutton);
+
+  const submitbuttonText = document.createElement("div");
+  submitbuttonText.textContent = "Sign Up";
+
+  submitbutton.appendChild(submitbuttonText);
+
+  const submitbuttonArrow = document.createElement("div");
+  submitbuttonArrow.className =
+    "absolute right-2 size-6 group-hover:-translate-x-2 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out";
+  submitbuttonArrow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-short size-6" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
+  </svg>`;
+
+  submitbutton.appendChild(submitbuttonArrow);
+
+  submitbutton.addEventListener("click", async () => {
+    switch (op) {
+      case 0:
+        if (
+          emailfield.value.trim().length == 0 &&
+          usernamefield.value.trim().length == 0 &&
+          passwordfield.value.trim().length == 0 &&
+          repeatpasswordfield.value.trim().length == 0
+        )
+          break;
+        handleSignup(
+          emailfield.value.trim(),
+          usernamefield.value.trim(),
+          passwordfield.value.trim(),
+        );
+        break;
+      case 1:
+        if (
+          emailfield.value.trim().length == 0 &&
+          passwordfield.value.trim().length == 0
+        )
+          break;
+        const tokens = await handleSignin(
+          emailfield.value.trim(),
+          passwordfield.value.trim(),
+        );
+        authService.authenticate(tokens);
+        router.navigate("/");
+        break;
+      case 2:
+        if (emailfield.value.trim().length == 0) break;
+        handleForgotPassword(emailfield.value.trim());
+        op = 3;
+        break;
+      case 3:
+        if (verificationCodeInput.value.trim().length < 6) break;
+        resetToken = await handleVerifyCode(verificationCodeInput.value.trim());
+        op = 4;
+        break;
+      case 4:
+        if (
+          passwordfield.value.trim().length == 0 &&
+          repeatpasswordfield.value.trim().length == 0 &&
+          resetToken == null
+        )
+          break;
+        handleResetPassword(resetToken, passwordfield.value.trim());
+        op = 1;
+        break;
+    }
+
+    modeHandler();
+  });
 
   const switchbutton = document.createElement("div");
   switchbutton.className = "w-full max-w-96 cursor-pointer";
   switchbutton.textContent = "Switch to Login";
+  switchbutton.tabIndex = 0;
 
   page.appendChild(switchbutton);
 
@@ -148,7 +289,10 @@ export default async function Auth(query) {
         op = 1;
         break;
       case 3:
-        op = 0;
+        op = 1;
+        break;
+      case 4:
+        op = 1;
         break;
     }
     modeHandler();
@@ -158,18 +302,26 @@ export default async function Auth(query) {
 
   function modeHandler() {
     emailbox.style.display = "none";
+    usernamebox.style.display = "none";
     passwordbox.style.display = "none";
     passwordforgot.style.display = "none";
     repeatpasswordbox.style.display = "none";
     verificationbox.style.display = "none";
 
+    emailfield.value = "";
+    usernamefield.value = "";
+    passwordfield.value = "";
+    repeatpasswordfield.value = "";
+    verificationCodeInput.value = "";
+
     switch (op) {
       case 0:
         // signup
         emailbox.style.display = "block";
+        usernamebox.style.display = "block";
         passwordbox.style.display = "block";
         repeatpasswordbox.style.display = "block";
-        submitbutton.textContent = "Sign Up";
+        submitbuttonText.textContent = "Sign Up";
         switchbutton.style.display = "block";
         switchbutton.textContent = "Already have an account? Sign In";
         break;
@@ -178,22 +330,105 @@ export default async function Auth(query) {
         emailbox.style.display = "block";
         passwordbox.style.display = "block";
         passwordforgot.style.display = "block";
-        submitbutton.textContent = "Sign In";
+        submitbuttonText.textContent = "Sign In";
         switchbutton.style.display = "block";
         switchbutton.textContent = "Don't have an account yet? Sign Up";
         break;
       case 2:
         // forgot password
         emailbox.style.display = "block";
-        submitbutton.textContent = "Reset Password";
+        submitbuttonText.textContent = "Send Code";
         switchbutton.style.display = "block";
         switchbutton.textContent = "Back to Signin";
         break;
       case 3:
         // verification sent
         verificationbox.style.display = "block";
-        submitbutton.textContent = "Back to Signin";
+        submitbuttonText.textContent = "Verify";
+        switchbutton.textContent = "Back to Signin";
+        break;
+      case 4:
+        // set new password
+        passwordbox.style.display = "block";
+        repeatpasswordbox.style.display = "block";
+        submitbuttonText.textContent = "Set New Password";
+        switchbutton.textContent = "Back to Signin";
         break;
     }
   }
+}
+
+async function handleSignup(email: string, username: string, password: string) {
+  const formData = new FormData();
+  formData.append("email", email);
+  formData.append("username", username);
+  formData.append("password", password);
+
+  const response = await fetch("http://localhost:5000/auth/register", {
+    method: "POST",
+    body: formData,
+  });
+
+  console.log(await response.json());
+}
+
+async function handleSignin(email: string, password: string) {
+  const formData = new FormData();
+  formData.append("email", email);
+  formData.append("password", password);
+
+  const response = await fetch("http://localhost:5000/auth/login", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+
+  console.log(data);
+
+  return data;
+}
+
+async function handleForgotPassword(email: string) {
+  const formData = new FormData();
+  formData.append("email", email);
+
+  const response = await fetch(
+    "http://localhost:5000/auth/password-reset-code",
+    {
+      method: "POST",
+      body: formData,
+    },
+  );
+
+  console.log(await response.json());
+}
+
+async function handleVerifyCode(code: string) {
+  const formData = new FormData();
+  formData.append("code", code);
+
+  const response = await fetch("http://localhost:5000/auth/verify-reset-code", {
+    method: "POST",
+    body: formData,
+  });
+
+  const data = await response.json();
+
+  console.log(data);
+
+  return data.resetToken;
+}
+
+async function handleResetPassword(token: string, password: string) {
+  const formData = new FormData();
+  formData.append("token", token);
+  formData.append("password", password);
+
+  const response = await fetch("http://localhost:5000/auth/reset-password", {
+    method: "POST",
+    body: formData,
+  });
+
+  console.log(await response.json());
 }

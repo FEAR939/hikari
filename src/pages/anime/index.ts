@@ -1,3 +1,4 @@
+import { router } from "../../lib/router/index";
 import { getAnime } from "../../lib/anilist/index";
 import { getAnimeAnizip } from "../../lib/anizip/index";
 import { getProvider } from "../../lib/animetoast/index";
@@ -170,7 +171,7 @@ export default async function Anime(query) {
     relationCard.appendChild(relationCardContent);
 
     relationCard.addEventListener("click", () => {
-      document.router.navigate(`/anime?id=${relation.id}`);
+      router.navigate(`/anime?id=${relation.id}`);
     });
 
     relationsList.appendChild(relationCard);
