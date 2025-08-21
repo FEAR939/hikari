@@ -26,6 +26,7 @@ export function accountMenu() {
     if (state == 0) return router.navigate("/auth");
 
     // else logout
+    authService.logout();
   });
 
   signMode();
