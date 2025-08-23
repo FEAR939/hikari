@@ -18,7 +18,7 @@ export default async function Anime(query) {
   ]);
 
   const Provider = getProvider(anime.title.romaji);
-  Provider.then((data) => console.log(data));
+  Provider.then((data) => console.debug(data));
 
   const heroSection = document.createElement("div");
   heroSection.className = "h-fit w-full";

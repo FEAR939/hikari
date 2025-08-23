@@ -3,7 +3,6 @@ interface Provider {
   url: string;
   icon: string;
   episodes: StreamProvider[];
-  languages: string;
 }
 
 interface StreamProvider {
@@ -20,20 +19,16 @@ interface Episode {
 
 const replacements = [
   {
-    from: " ",
-    to: "-",
-  },
-  {
     from: ":",
     to: "",
   },
   {
-    from: "(",
-    to: "",
+    from: "Season 2",
+    to: "2nd Season",
   },
   {
-    from: ")",
-    to: "",
+    from: "Part 2",
+    to: "2nd Season",
   },
 ];
 
@@ -49,48 +44,52 @@ function sanitizeTitle(title: string): string {
   return tempString.trim();
 }
 
-async function streamFallback(
+export async function getProvider(
   title: string,
-  suffixes: string[]
-): Promise<{ html: string; suffix: string } | undefined> {
+): Promise<Provider | undefined> {
   const sanitized = sanitizeTitle(title);
+  const url = `https://animetoast.cc/?s=${sanitized} Ger Dub`;
 
-  for (const suffix of suffixes) {
-    let url = `https://animetoast.cc/${sanitized}${suffix}`;
-    let res = await fetch(url, { headers: { "Content-Type": "application/x-www-form-urlencoded" } });
+  const res = await fetch(url);
 
-    if (res.status === 404 && title.includes("Season 2")) {
-      url = `https://animetoast.cc/${sanitizeTitle(title.replace("Season 2", "2nd Season"))}${suffix}`;
-      res = await fetch(url, { headers: { "Content-Type": "application/x-www-form-urlencoded" } });
-    }
+  if (!res.ok) return;
 
-	if (res.ok) {
-       return { html: await res.text(), suffix };
-    }
-  }
-  return undefined;
-}
+  const data = await res.text();
 
-export async function getProvider(title: string): Promise<Provider | undefined> {
-  const result = await streamFallback(title, ["-ger-dub", "-ger-sub"]);
-  if (!result) return;
+  const search_html = new DOMParser().parseFromString(data, "text/html");
 
-  const { html: htmlString, suffix } = result;
-  const html = new DOMParser().parseFromString(htmlString, "text/html");
+  const search_result = search_html.querySelector(".blog-item .item-head h3 a");
 
-  const episodes: StreamProvider[] = Array.from(html.querySelectorAll(".nav-tabs li"))
+  if (!search_result) return;
+
+  const seriesUrl = search_result.getAttribute("href")!;
+
+  console.debug("Found URL for series: ", seriesUrl);
+
+  const series_res = await fetch(seriesUrl);
+
+  if (!series_res.ok) return;
+
+  const series_data = await series_res.text();
+
+  const series_html = new DOMParser().parseFromString(series_data, "text/html");
+
+  const episodes: StreamProvider[] = Array.from(
+    series_html.querySelectorAll(".nav-tabs li"),
+  )
     .filter((provider) => provider.querySelector("a"))
     .map((provider) => {
       const element = provider.querySelector("a");
       const label = element?.textContent?.trim() || "";
       const tab = element?.getAttribute("href")!;
 
-      const eps = Array.from(html.querySelectorAll(`.tab-content ${tab} a`))
-        .map((episode) => ({
-          label: episode?.textContent?.trim() || "",
-          url: episode?.getAttribute("href")!,
-          isBundle: (episode?.textContent || "").includes("-"),
-        }));
+      const eps = Array.from(
+        series_html.querySelectorAll(`.tab-content ${tab} a`),
+      ).map((episode) => ({
+        label: episode?.textContent?.trim() || "",
+        url: episode?.getAttribute("href")!,
+        isBundle: (episode?.textContent || "").includes("-"),
+      }));
 
       return { label, tab, episodes: eps };
     });
@@ -98,9 +97,11 @@ export async function getProvider(title: string): Promise<Provider | undefined> 
   return {
     label: "AnimeToast",
     url: "animetoast.cc",
-    icon: html.querySelector('head link[rel="icon"]')?.getAttribute("href") || "",
+    icon:
+      series_html
+        .querySelector('head link[rel="icon"]')
+        ?.getAttribute("href") || "",
     episodes,
-	languages: /dub/i.test(suffix) ? "(DUB/SUB)" : "(SUB ONLY)"
   };
 }
 
