@@ -4,6 +4,7 @@ import { router } from "../../lib/router/index";
 enum AuthOp {
   SIGNUP = 0,
   SIGNIN = 1,
+  SIGNIN_VERIFICATION = 5,
   FORGOT_PASSWORD = 2,
   RESET_PASSWORD = 3,
   SET_NEW_PASSWORD = 4,
@@ -15,7 +16,7 @@ export default async function Auth(query) {
     "h-full w-full flex flex-col items-center justify-center space-y-8";
 
   document.root.appendChild(page);
-  let op: AuthOp = 0;
+  let op: AuthOp = AuthOp.SIGNUP;
   let resetToken = "";
 
   const emailbox = document.createElement("div");
@@ -192,6 +193,21 @@ export default async function Auth(query) {
 
   verificationbox.appendChild(verificationCodeInputWrapper);
 
+  const resendbutton = document.createElement("div");
+  resendbutton.className =
+    "flex items-center justify-center space-x-2 text-sm text-[#c0c0c0] cursor-pointer";
+  resendbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat size-4" viewBox="0 0 16 16">
+    <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9"/>
+    <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5 5 0 0 0 8 3M3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9z"/>
+  </svg>
+  <span>Resend Verification Code</span>`;
+
+  resendbutton.addEventListener("click", () => {
+    // Implement resend functionality here
+  });
+
+  verificationbox.appendChild(resendbutton);
+
   page.appendChild(verificationbox);
 
   const submitbutton = document.createElement("div");
@@ -231,6 +247,7 @@ export default async function Auth(query) {
           usernamefield.value.trim(),
           passwordfield.value.trim(),
         );
+        op = 5;
         break;
       case 1:
         if (
@@ -252,7 +269,10 @@ export default async function Auth(query) {
         break;
       case 3:
         if (verificationCodeInput.value.trim().length < 6) break;
-        resetToken = await handleVerifyCode(verificationCodeInput.value.trim());
+        resetToken = await handleVerifyCode(
+          verificationCodeInput.value.trim(),
+          1,
+        );
         op = 4;
         break;
       case 4:
@@ -263,6 +283,14 @@ export default async function Auth(query) {
         )
           break;
         handleResetPassword(resetToken, passwordfield.value.trim());
+        op = 1;
+        break;
+      case 5:
+        if (verificationCodeInput.value.trim().length < 6) break;
+        resetToken = await handleVerifyCode(
+          verificationCodeInput.value.trim(),
+          2,
+        );
         op = 1;
         break;
     }
@@ -292,6 +320,9 @@ export default async function Auth(query) {
         op = 1;
         break;
       case 4:
+        op = 1;
+        break;
+      case 5:
         op = 1;
         break;
     }
@@ -354,6 +385,13 @@ export default async function Auth(query) {
         submitbuttonText.textContent = "Set New Password";
         switchbutton.textContent = "Back to Signin";
         break;
+      case 5:
+        // signin verification
+        verificationbox.style.display = "block";
+        submitbuttonText.textContent = "Verify";
+        switchbutton.style.display = "block";
+        switchbutton.textContent = "Back to Signin";
+        break;
     }
   }
 }
@@ -404,11 +442,19 @@ async function handleForgotPassword(email: string) {
   console.log(await response.json());
 }
 
-async function handleVerifyCode(code: string) {
+async function handleVerifyCode(code: string, mode: number) {
   const formData = new FormData();
   formData.append("code", code);
 
-  const response = await fetch("http://localhost:5000/auth/verify-reset-code", {
+  let url = "";
+
+  if (mode === 1) {
+    url = "http://localhost:5000/auth/verify-reset-code";
+  } else if (mode === 2) {
+    url = "http://localhost:5000/auth/verify-email";
+  }
+
+  const response = await fetch(url, {
     method: "POST",
     body: formData,
   });
