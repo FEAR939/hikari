@@ -2,6 +2,15 @@ import { getBundle } from "../../lib/animetoast";
 import { getEpisodeLink } from "../../lib/animetoast";
 import { extract_voe_url } from "../../lib/voe/index";
 
+declare global {
+  interface Window {
+    electronAPI?: {
+      enterFullscreen: () => void;
+      exitFullscreen: () => void;
+    };
+  }
+}
+
 interface PlayerQuery {
   url: string;
   episodeNumber: string;
@@ -25,9 +34,138 @@ export default async function Player(query: PlayerQuery) {
 
   const video = document.createElement("video");
   video.className = "h-full w-full";
-  video.controls = true;
+  video.autoplay = true;
 
   player.appendChild(video);
+
+  const controls = document.createElement("div");
+  controls.className =
+    "absolute bottom-0 left-0 right-0 h-24 bg-black bg-opacity-50 p-4 space-y-1";
+
+  player.appendChild(controls);
+
+  let timeout;
+  let canPlay = false;
+
+  video.addEventListener("canplay", () => {
+    canPlay = true;
+  });
+
+  player.addEventListener("mousemove", () => {
+    controls.classList.remove("hidden");
+    timeout = null;
+
+    if (!canPlay || video.paused) return;
+    timeout = setTimeout(() => {
+      controls.classList.add("hidden");
+    }, 3000);
+  });
+
+  const titleAndTime = document.createElement("div");
+  titleAndTime.className = "h-fit flex items-center justify-between space-x-2";
+
+  const title = document.createElement("div");
+  title.className = "text-white text-sm font-bold";
+  title.textContent = "Episode title";
+
+  const time = document.createElement("div");
+  time.className = "text-white text-sm font-bold";
+  time.textContent = "00:00 | 00:00";
+
+  titleAndTime.appendChild(title);
+  titleAndTime.appendChild(time);
+
+  controls.appendChild(titleAndTime);
+
+  const seekbar = document.createElement("div");
+  seekbar.className = "relative h-1.5 w-full bg-gray-300 rounded";
+
+  const seekbarbufferProgress = document.createElement("div");
+  seekbarbufferProgress.className = "absolute h-full bg-gray-500 rounded";
+
+  video.addEventListener("progress", () => {
+    if (video.buffered.length > 0) {
+      const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+      const duration = video.duration;
+      const bufferProgress = (bufferedEnd / duration) * 100;
+      seekbarbufferProgress.style.width = `${bufferProgress}%`;
+    }
+  });
+
+  const seekbarProgress = document.createElement("div");
+  seekbarProgress.className = "absolute h-full bg-white rounded";
+
+  video.addEventListener("timeupdate", () => {
+    const currentTime = video.currentTime;
+    const duration = video.duration;
+
+    time.textContent = `${new Date(video.currentTime * 1000).toISOString().substring(14, 19)} | ${new Date(video.duration * 1000).toISOString().substring(14, 19)}`;
+
+    const progress = (currentTime / duration) * 100;
+    seekbarProgress.style.width = `${progress}%`;
+  });
+
+  seekbar.appendChild(seekbarbufferProgress);
+  seekbar.appendChild(seekbarProgress);
+
+  controls.appendChild(seekbar);
+
+  const buttonRow = document.createElement("div");
+  buttonRow.className = "flex items-center space-x-2";
+
+  const playbutton = document.createElement("div");
+  playbutton.className = "size-6";
+  playbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause size-6" viewBox="0 0 16 16">
+    <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5m4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5"/>
+  </svg>`;
+
+  buttonRow.appendChild(playbutton);
+
+  function handlePlayState() {
+    if (video.paused) {
+      video.play();
+      playbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause size-6" viewBox="0 0 16 16">
+        <path d="M6 3.5a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5m4 0a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-1 0V4a.5.5 0 0 1 .5-.5"/>
+      </svg>`;
+    } else {
+      video.pause();
+      playbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play size-6" viewBox="0 0 16 16">
+        <path d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z"/>
+      </svg>`;
+    }
+  }
+
+  playbutton.addEventListener("click", handlePlayState);
+  video.addEventListener("click", handlePlayState);
+
+  const spacer = document.createElement("div");
+  spacer.className = "w-full";
+
+  buttonRow.appendChild(spacer);
+
+  const fullscreenbutton = document.createElement("div");
+  fullscreenbutton.className = "size-5";
+  fullscreenbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fullscreen size-5" viewBox="0 0 16 16">
+    <path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5M.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5"/>
+  </svg>`;
+
+  buttonRow.appendChild(fullscreenbutton);
+
+  let fullscreenstate = false;
+
+  fullscreenbutton.addEventListener("click", () => {
+    console.log("fullscreenbutton clicked");
+    if (!fullscreenstate) {
+      window.electronAPI?.enterFullscreen();
+      fullscreenstate = true;
+      return;
+    }
+
+    window.electronAPI?.exitFullscreen();
+    fullscreenstate = false;
+  });
+
+  controls.appendChild(buttonRow);
 
   let link = "";
 
