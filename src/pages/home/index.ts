@@ -3,17 +3,17 @@ import { getSeasonAnime } from "../../lib/anilist";
 
 export default async function Home(query) {
   const page = document.createElement("div");
-  page.className = "h-full w-full p-4";
+  page.className = "h-full w-full p-4 pt-12";
 
   document.root.appendChild(page);
 
   const categorySlider = document.createElement("div");
   categorySlider.className =
-    "relative h-96 w-full overflow-hidden flex items-center";
+    "relative h-fit w-full overflow-hidden flex items-center";
 
   const categorySliderInner = document.createElement("div");
   categorySliderInner.className =
-    "absolute h-fit w-full flex space-x-4 transition-transform duration-300";
+    "h-fit w-full flex space-x-2 md:space-x-4 transition-transform duration-300";
   categorySlider.appendChild(categorySliderInner);
 
   const categorySliderPrev = document.createElement("div");
@@ -32,8 +32,13 @@ export default async function Home(query) {
   categorySlider.appendChild(categorySliderNext);
 
   let index = 0;
-  const cardWidth = 256; // w-48 = 192px
-  const gap = 16; // space-x-4 = 16px
+  let cardWidth = 192; // w-48 = 192px
+  let gap = 8; // space-x-4 = 16px
+
+  if (window.matchMedia("(min-width: 768px)").matches) {
+    cardWidth = 256;
+    gap = 16;
+  }
 
   // Calculate how many cards are visible at once
   const getVisibleCards = () =>
@@ -75,7 +80,7 @@ export default async function Home(query) {
 
   anime.forEach((item) => {
     const card = document.createElement("div");
-    card.className = "h-fit w-64 shrink-0";
+    card.className = "h-fit w-48 md:w-64 shrink-0";
 
     const cardImage = document.createElement("img");
     cardImage.src = item.coverImage.large;

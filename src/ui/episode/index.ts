@@ -21,7 +21,7 @@ interface Episode {
 export default function Episode(episode: Episode, index: number): EpElement {
   const episodeCard: EpElement = document.createElement("div");
   episodeCard.className =
-    "relative h-32 w-full bg-[#0c0c0c] flex overflow-hidden rounded-xl cursor-pointer";
+    "relative h-24 md:h-32 w-full bg-[#0c0c0c] flex overflow-hidden rounded-xl cursor-pointer";
 
   if (episode.image) {
     const episodeCardImage = document.createElement("img");
@@ -31,10 +31,11 @@ export default function Episode(episode: Episode, index: number): EpElement {
   }
 
   const episodeSide = document.createElement("div");
-  episodeSide.className = "h-full w-full space-y-4 p-4 overflow-hidden";
+  episodeSide.className =
+    "h-full w-full space-y-1 md:space-y-4 p-4 overflow-hidden";
 
   const episodeTitle = document.createElement("h2");
-  episodeTitle.className = "text-xl font-bold truncate";
+  episodeTitle.className = "text-l md:text-xl font-bold truncate";
   episodeTitle.textContent =
     `${episode.episode}. ${episode.title.en || ""}` || `Episode ${index + 1}`;
   episodeSide.appendChild(episodeTitle);

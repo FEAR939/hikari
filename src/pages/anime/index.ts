@@ -8,9 +8,22 @@ import Episode from "../../ui/episode/index";
 export default async function Anime(query) {
   const page = document.createElement("div");
   page.className =
-    "relative h-full w-full px-12 pb-4 space-y-4 overflow-y-scroll";
+    "relative h-full w-full px-4 md:px-12 pb-4 space-y-4 overflow-y-scroll";
 
   document.root.appendChild(page);
+
+  const pageback = document.createElement("div");
+  pageback.className =
+    "absolute z-10 top-2 left-4 size-8 flex items-center justify-center";
+  pageback.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short size-8" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
+  </svg>`;
+
+  page.appendChild(pageback);
+
+  pageback.addEventListener("click", () => {
+    router.navigate("/");
+  });
 
   const [anime, anime_anizip] = await Promise.all([
     getAnime(query.id),
@@ -25,7 +38,7 @@ export default async function Anime(query) {
 
   const heroSectionBannerWrapper = document.createElement("div");
   heroSectionBannerWrapper.className =
-    "absolute -z-1 top-0 left-0 right-0 w-full h-96 object-cover";
+    "absolute -z-1 top-0 left-0 right-0 w-full h-48 md:h-96 object-cover";
 
   const heroSectionBanner = document.createElement("img");
   heroSectionBanner.className =
@@ -45,10 +58,11 @@ export default async function Anime(query) {
   heroSection.appendChild(heroSectionBannerWrapper);
 
   const heroSectionContent = document.createElement("div");
-  heroSectionContent.className = "h-fit w-full space-y-4 mt-64 flex";
+  heroSectionContent.className = "h-fit w-full space-y-4 mt-32 md:mt-64 flex";
 
   const heroSectionPrimary = document.createElement("div");
-  heroSectionPrimary.className = "w-56 h-fit shrink-0 space-y-6";
+  heroSectionPrimary.className =
+    "w-24 md:w-56 h-fit shrink-0 space-y-3 md:space-y-6";
 
   const heroSectionImage = document.createElement("img");
   heroSectionImage.src = anime.coverImage.large;
@@ -59,7 +73,7 @@ export default async function Anime(query) {
 
   const userListToggle = document.createElement("div");
   userListToggle.className =
-    "w-full py-2 rounded-xl bg-[#0d0d0d] text-white flex items-center justify-center";
+    "w-full py-2 rounded-xl bg-[#0d0d0d] text-sm md:text-base text-white flex items-center justify-center";
   userListToggle.textContent = "Add to List";
 
   heroSectionPrimary.appendChild(userListToggle);
@@ -67,14 +81,17 @@ export default async function Anime(query) {
   heroSectionContent.appendChild(heroSectionPrimary);
 
   const heroSectionSecondary = document.createElement("div");
-  heroSectionSecondary.className = "w-full h-fit mt-18 p-4 space-y-4";
+  heroSectionSecondary.className =
+    "flex-1 h-fit md:mt-18 p-4 space-y-2 md:space-y-4 overflow-hidden";
 
   const heroSectionTitle = document.createElement("h1");
-  heroSectionTitle.className = "text-4xl font-bold flex items-center space-x-4";
+  heroSectionTitle.className =
+    "w-full text-xl md:text-4xl font-bold flex items-center space-x-4 truncate";
   heroSectionTitle.textContent = anime.title.romaji;
 
   const heroSectionChips = document.createElement("div");
-  heroSectionChips.className = "flex items-center space-x-4";
+  heroSectionChips.className =
+    "w-full flex items-center space-x-2 md:space-x-4 overflow-hidden";
 
   const chips = [
     {
@@ -86,7 +103,7 @@ export default async function Anime(query) {
     const chipElement = document.createElement("span");
     chipElement.textContent = chip.text;
     chipElement.className =
-      "px-4 py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
+      "px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
     heroSectionChips.appendChild(chipElement);
   });
 
@@ -94,26 +111,29 @@ export default async function Anime(query) {
     if (data?.languages) {
       const tag = document.createElement("span");
       tag.textContent = data.languages.replace(/[()]/g, "");
-      tag.className = "px-4 py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
+      tag.className =
+        "px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
       heroSectionChips.appendChild(tag);
     }
   });
 
   const heroSectionDescription = document.createElement("div");
-  heroSectionDescription.className = "text-sm text-neutral-600";
+  heroSectionDescription.className =
+    "w-full text-sm text-neutral-600 line-clamp-3";
   heroSectionDescription.innerHTML = anime.description.substring(
     0,
     anime.description.indexOf("(Source:"),
   );
 
   const heroSectionTags = document.createElement("div");
-  heroSectionTags.className = "flex items-center space-x-4";
+  heroSectionTags.className =
+    "w-full flex items-center space-x-2 md:space-x-4 overflow-hidden";
 
   anime.genres.map((genre) => {
     const tagElement = document.createElement("span");
     tagElement.textContent = genre;
     tagElement.className =
-      "px-4 py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
+      "px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
     heroSectionTags.appendChild(tagElement);
   });
 
@@ -138,15 +158,20 @@ export default async function Anime(query) {
   relationsSection.appendChild(relationsTitle);
 
   const relationsList = document.createElement("div");
-  relationsList.className = "grid grid-cols-3 gap-4";
+  relationsList.className = "grid grid-cols-2 md:grid-cols-3 gap-4";
 
   relationsSection.appendChild(relationsList);
 
   anime.relations.nodes.map((relation, index) => {
-    if (relation.type !== "ANIME") return;
+    if (
+      relation.type !== "ANIME" ||
+      (anime.relations.edges[index].relationType !== "PREQUEL" &&
+        anime.relations.edges[index].relationType !== "SEQUEL")
+    )
+      return;
     const relationCard = document.createElement("div");
     relationCard.className =
-      "h-48 w-full bg-[#0d0d0d] flex overflow-hidden rounded-xl cursor-pointer";
+      "h-24 md:h-48 w-full bg-[#0d0d0d] flex overflow-hidden rounded-xl cursor-pointer";
 
     const relationCardImage = document.createElement("img");
     relationCardImage.src = relation.coverImage.large;
@@ -157,11 +182,11 @@ export default async function Anime(query) {
     relationCardContent.className = "w-3/4 h-full p-4 space-y-4";
 
     const relationType = document.createElement("h3");
-    relationType.className = "text-xl text-gray-400";
+    relationType.className = "text-l md:text-xl text-gray-400";
     relationType.textContent = anime.relations.edges[index].relationType;
 
     const relationCardTitle = document.createElement("h3");
-    relationCardTitle.className = "text-xl font-bold";
+    relationCardTitle.className = "text-l md:text-xl font-bold";
     relationCardTitle.textContent = relation.title.romaji;
 
     relationCardContent.appendChild(relationType);
@@ -233,7 +258,8 @@ export default async function Anime(query) {
 
   function episodeHandler() {
     const episodeList = document.createElement("div");
-    episodeList.className = "h-fit w-full grid grid-cols-2 gap-4";
+    episodeList.className =
+      "h-fit w-full grid grid-cols-1 md:grid-cols-2 gap-4";
 
     tabContent.appendChild(episodeList);
 
