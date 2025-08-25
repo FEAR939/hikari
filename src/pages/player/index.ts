@@ -32,9 +32,23 @@ export default async function Player(query: PlayerQuery) {
 
   player.classList.add("z-10");
 
+  const pageback = document.createElement("div");
+  pageback.className =
+    "absolute z-10 top-2 left-4 size-8 flex items-center justify-center";
+  pageback.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short size-8" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
+  </svg>`;
+
+  player.appendChild(pageback);
+
+  pageback.addEventListener("click", () => {
+    player.remove();
+  });
+
+  const isMobileDevice = /Mobi/i.test(window.navigator.userAgent);
+
   const video = document.createElement("video");
   video.className = "h-full w-full";
-  video.autoplay = true;
 
   player.appendChild(video);
 
@@ -44,22 +58,29 @@ export default async function Player(query: PlayerQuery) {
 
   player.appendChild(controls);
 
-  let timeout;
+  let timeout: NodeJS.Timeout | null = null;
   let canPlay = false;
 
   video.addEventListener("canplay", () => {
     canPlay = true;
+    video.play();
+    controls.classList.add("hidden");
+    pageback.classList.add("hidden");
   });
 
-  player.addEventListener("mousemove", () => {
+  function handleMove() {
     controls.classList.remove("hidden");
-    timeout = null;
+    pageback.classList.remove("hidden");
+    if (timeout) clearTimeout(timeout);
 
-    if (!canPlay || video.paused) return;
     timeout = setTimeout(() => {
+      if (!canPlay || video.paused) return;
       controls.classList.add("hidden");
+      pageback.classList.add("hidden");
     }, 3000);
-  });
+  }
+
+  player.addEventListener("mousemove", handleMove);
 
   const titleAndTime = document.createElement("div");
   titleAndTime.className = "h-fit flex items-center justify-between space-x-2";
@@ -79,6 +100,14 @@ export default async function Player(query: PlayerQuery) {
 
   const seekbar = document.createElement("div");
   seekbar.className = "relative h-1.5 w-full bg-gray-300 rounded";
+
+  seekbar.addEventListener("click", (event) => {
+    const rect = seekbar.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const duration = video.duration;
+    const seekTime = (offsetX / rect.width) * duration;
+    video.currentTime = seekTime;
+  });
 
   const seekbarbufferProgress = document.createElement("div");
   seekbarbufferProgress.className = "absolute h-full bg-gray-500 rounded";
@@ -136,7 +165,19 @@ export default async function Player(query: PlayerQuery) {
   }
 
   playbutton.addEventListener("click", handlePlayState);
-  video.addEventListener("click", handlePlayState);
+
+  let touched = false;
+  let touchtimeout: NodeJS.Timeout | null = null;
+  video.addEventListener("click", () => {
+    if (!isMobileDevice) return handlePlayState();
+    if (touchtimeout) clearTimeout(touchtimeout);
+
+    touchtimeout = setTimeout(() => (touched = false), 3000);
+
+    if (!touched) return (touched = true);
+
+    handlePlayState();
+  });
 
   const spacer = document.createElement("div");
   spacer.className = "w-full";
