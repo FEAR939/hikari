@@ -23,11 +23,15 @@ const replacements = [
     to: "",
   },
   {
-    from: "Season 2",
+    from: /\bSeason 2\b/g,
     to: "2nd Season",
   },
   {
-    from: "Part 2",
+    from: /\bPart 2\b/g,
+    to: "2nd Season",
+  },
+  {
+    from: /\bII\b/g,
     to: "2nd Season",
   },
 ];
