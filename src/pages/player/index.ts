@@ -1,5 +1,6 @@
 import { getBundle } from "../../lib/animetoast";
 import { getEpisodeLink } from "../../lib/animetoast";
+import { getAnimeChapters } from "../../lib/aniskip";
 import { extract_voe_url } from "../../lib/voe/index";
 
 declare global {
@@ -14,6 +15,7 @@ declare global {
 interface PlayerQuery {
   url: string;
   episodeNumber: string;
+  mal_id: string;
   isBundle: string;
   bundleEpisodeNumber: string;
 }
@@ -99,7 +101,7 @@ export default async function Player(query: PlayerQuery) {
   controls.appendChild(titleAndTime);
 
   const seekbar = document.createElement("div");
-  seekbar.className = "relative h-1.5 w-full bg-gray-300 rounded";
+  seekbar.className = "relative h-1.5 w-full bg-gray-500 rounded";
 
   seekbar.addEventListener("click", (event) => {
     const rect = seekbar.getBoundingClientRect();
@@ -134,8 +136,37 @@ export default async function Player(query: PlayerQuery) {
     seekbarProgress.style.width = `${progress}%`;
   });
 
+  const seekbarChapters = document.createElement("div");
+  seekbarChapters.className = "absolute z-5 flex h-full w-full space-x-0.5";
+
+  video.addEventListener("loadedmetadata", async () => {
+    const chapters = await getAnimeChapters(
+      parseInt(query.mal_id),
+      parseInt(query.episodeNumber),
+      video.duration,
+    );
+
+    if (chapters.length == 0) {
+      const chapterElement = document.createElement("div");
+      chapterElement.className = "h-full bg-black/25";
+      chapterElement.style.width = `100%`;
+
+      seekbarChapters.appendChild(chapterElement);
+      return;
+    }
+
+    chapters.forEach((chapter) => {
+      const chapterElement = document.createElement("div");
+      chapterElement.className = "h-full bg-black/25";
+      chapterElement.style.width = `${((chapter.end / 1000 - chapter.start / 1000) / video.duration) * 100}%`;
+
+      seekbarChapters.appendChild(chapterElement);
+    });
+  });
+
   seekbar.appendChild(seekbarbufferProgress);
   seekbar.appendChild(seekbarProgress);
+  seekbar.appendChild(seekbarChapters);
 
   controls.appendChild(seekbar);
 
