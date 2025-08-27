@@ -23,36 +23,56 @@ const replacements = [
     to: "",
   },
   {
-    from: /\bSeason 2\b/g,
-    to: "2nd Season",
+    from: "-",
+    to: "",
   },
   {
-    from: /\bPart 2\b/g,
-    to: "2nd Season",
+    from: /\bSeason 2\b/g,
+    to: "2",
   },
   {
     from: /\bII\b/g,
-    to: "2nd Season",
+    to: "2",
+  },
+  {
+    from: /\bIII\b/g,
+    to: "3",
+  },
+  {
+    from: /\bIV\b/g,
+    to: "4",
+  },
+  {
+    from: /\bV\b/g,
+    to: "5",
   },
 ];
 
 function sanitizeTitle(title: string): string {
   let tempString = title;
-  replacements.map(
-    (replacement) =>
-      (tempString = tempString.replaceAll(replacement.from, replacement.to)),
-  );
+  replacements.map((replacement) => {
+    if (!tempString.includes("Season"))
+      tempString = tempString.replace(/\bPart\b/g, "");
 
-  console.log(tempString);
+    return (tempString = tempString.replaceAll(
+      replacement.from,
+      replacement.to,
+    ));
+  });
 
   return tempString.trim();
 }
 
-export async function getProvider(
-  title: string,
-): Promise<Provider | undefined> {
-  const sanitized = sanitizeTitle(title);
+export async function getProvider(title: {
+  romaji: string;
+  english: string;
+}): Promise<Provider | undefined> {
+  const sanitized = sanitizeTitle(title.romaji);
+
   const url = `https://animetoast.cc/?s=${sanitized} Ger Dub`;
+  const seasonNumber =
+    sanitized.match(/(?<!^)(?<!\d)\d{1,2}/)?.[0] || undefined;
+  const lang = "Ger Dub";
 
   const res = await fetch(url);
 
@@ -62,11 +82,43 @@ export async function getProvider(
 
   const search_html = new DOMParser().parseFromString(data, "text/html");
 
-  const search_result = search_html.querySelector(".blog-item .item-head h3 a");
+  let search_results = Array.from(
+    search_html.querySelectorAll(".blog-item .item-head h3 a"),
+  );
 
-  if (!search_result) return;
+  if (seasonNumber) {
+    search_results = search_results.filter((result) => {
+      const sanitized = sanitizeTitle(result.textContent!);
 
-  const seriesUrl = search_result.getAttribute("href")!;
+      return sanitized.includes(seasonNumber) && sanitized.includes(lang);
+    });
+  } else if (!seasonNumber) {
+    search_results = search_results.filter((result) => {
+      const sanitized = sanitizeTitle(result.textContent!);
+
+      return (
+        !sanitized.match(/(?<!^)(?<!\d)\d{1,2}/)?.[0] &&
+        sanitized.includes(lang)
+      );
+    });
+  }
+
+  const simularities = search_results.map((result, i) => {
+    const sim = levenshtein(title.romaji, result.textContent!);
+    // console.log(`result: ${result.textContent}, similarity: ${sim}`);
+
+    return { similarity: sim, index: i };
+  });
+
+  if (!simularities.length) return;
+
+  const bestMatch = simularities.reduce((prev, curr) => {
+    return prev.similarity < curr.similarity ? prev : curr;
+  });
+
+  if (!search_results.length) return;
+
+  const seriesUrl = search_results[bestMatch.index].getAttribute("href")!;
 
   console.debug("Found URL for series: ", seriesUrl);
 
@@ -150,4 +202,39 @@ export async function getBundle(url: string) {
   });
 
   return episodes;
+}
+
+function levenshtein(a: string, b: string) {
+  const an = a.length;
+  const bn = b.length;
+  if (an == 0) {
+    return bn;
+  }
+  if (bn == 0) {
+    return an;
+  }
+  const matrix = new Array<number[]>(bn + 1);
+  for (let i = 0; i <= bn; ++i) {
+    const row = (matrix[i] = new Array<number>(an + 1));
+    row[0] = i;
+  }
+  const firstRow = matrix[0];
+  for (let j = 1; j <= an; ++j) {
+    firstRow![j] = j;
+  }
+  for (let i = 1; i <= bn; ++i) {
+    for (let j = 1; j <= an; ++j) {
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i]![j] = matrix[i - 1]![j - 1]!;
+      } else {
+        matrix[i]![j] =
+          Math.min(
+            matrix[i - 1]![j - 1]!, // substitution
+            matrix[i]![j - 1]!, // insertion
+            matrix[i - 1]![j]!, // deletion
+          ) + 1;
+      }
+    }
+  }
+  return matrix[bn]![an]!;
 }
