@@ -30,7 +30,10 @@ export default async function Anime(query) {
     getAnimeAnizip(query.id),
   ]);
 
-  const Provider = getProvider(anime.title.romaji);
+  const Provider = getProvider({
+    romaji: anime.title.romaji,
+    english: anime.title.english,
+  });
   Provider.then((data) => console.debug(data));
 
   const heroSection = document.createElement("div");
@@ -320,6 +323,9 @@ export default async function Anime(query) {
             index >= (page + 1) * perPage
           )
             return;
+
+          episode.mal_id = anime.idMal || 0;
+
           const episodeCard = Episode(episode, index);
 
           episodeList.appendChild(episodeCard);
