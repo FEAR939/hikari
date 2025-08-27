@@ -16,6 +16,7 @@ interface Episode {
   image: string | undefined;
   episode: number;
   overview: string;
+  mal_id: number;
 }
 
 export default function Episode(episode: Episode, index: number): EpElement {
@@ -64,7 +65,7 @@ export default function Episode(episode: Episode, index: number): EpElement {
 
     episodeCard.addEventListener("click", async () => {
       router.navigate(
-        `/player?url=${source.url}&episodeNumber=${episode.episode}&isBundle=${source.isBundle}${Boolean(source.isBundle) ? `&bundleEpisodeNumber=${source.bundleEpisodeNumber}` : ""}`,
+        `/player?url=${source.url}&episodeNumber=${episode.episode}&mal_id=${episode.mal_id}&isBundle=${source.isBundle}${Boolean(source.isBundle) ? `&bundleEpisodeNumber=${source.bundleEpisodeNumber}` : ""}`,
       );
     });
   };
