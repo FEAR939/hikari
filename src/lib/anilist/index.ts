@@ -64,6 +64,7 @@ export async function getAnime(id: number) {
       query {
         Media (id: ${id}, type: ANIME) {
           id
+          idMal
           title {
             romaji
             english
