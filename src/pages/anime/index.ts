@@ -172,14 +172,15 @@ export default async function Anime(query) {
       "h-full aspect-[1/1.35] object-cover object-center";
 
     const relationCardContent = document.createElement("div");
-    relationCardContent.className = "w-3/4 h-full p-4 space-y-4";
+    relationCardContent.className = "w-3/4 h-full p-4 space-y-2 md:space-y-4";
 
     const relationType = document.createElement("h3");
-    relationType.className = "text-l md:text-xl text-gray-400";
+    relationType.className = "text-base md:text-l md:text-xl text-gray-400";
     relationType.textContent = anime.relations.edges[index].relationType;
 
     const relationCardTitle = document.createElement("h3");
-    relationCardTitle.className = "text-l md:text-xl font-bold";
+    relationCardTitle.className =
+      "text-base md:text-l md:text-xl font-bold truncate";
     relationCardTitle.textContent = relation.title.romaji;
 
     relationCardContent.appendChild(relationType);
