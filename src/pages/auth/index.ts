@@ -263,7 +263,6 @@ export default async function Auth(query) {
         );
 
         if (!signup) {
-          console.log("Signup failed");
           emailfield.setCustomValidity("Invalid email");
           usernamefield.setCustomValidity("Invalid username");
           passwordfield.setCustomValidity("Invalid password");
