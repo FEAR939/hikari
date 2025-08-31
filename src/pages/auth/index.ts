@@ -256,11 +256,27 @@ export default async function Auth(query) {
           repeatpasswordfield.value.trim().length == 0
         )
           break;
-        handleSignup(
+        const signup = await handleSignup(
           emailfield.value.trim(),
           usernamefield.value.trim(),
           passwordfield.value.trim(),
         );
+
+        if (!signup) {
+          console.log("Signup failed");
+          emailfield.setCustomValidity("Invalid email");
+          usernamefield.setCustomValidity("Invalid username");
+          passwordfield.setCustomValidity("Invalid password");
+          repeatpasswordfield.setCustomValidity("Invalid password");
+          setTimeout(() => {
+            emailfield.setCustomValidity("");
+            usernamefield.setCustomValidity("");
+            passwordfield.setCustomValidity("");
+            repeatpasswordfield.setCustomValidity("");
+          }, 3000);
+          return;
+        }
+
         op = AuthOp.SIGNIN_VERIFICATION;
         break;
       case AuthOp.SIGNIN:
@@ -273,12 +289,32 @@ export default async function Auth(query) {
           emailfield.value.trim(),
           passwordfield.value.trim(),
         );
+
+        if (!tokens) {
+          emailfield.setCustomValidity("Invalid email");
+          passwordfield.setCustomValidity("Invalid password");
+          setTimeout(() => {
+            emailfield.setCustomValidity("");
+            passwordfield.setCustomValidity("");
+          }, 3000);
+          return;
+        }
+
         authService.authenticate(tokens);
         router.navigate("/");
         break;
       case AuthOp.FORGOT_PASSWORD:
         if (emailfield.value.trim().length == 0) break;
-        handleForgotPassword(emailfield.value.trim());
+        const forgot = handleForgotPassword(emailfield.value.trim());
+
+        if (!forgot) {
+          emailfield.setCustomValidity("Invalid email");
+          setTimeout(() => {
+            emailfield.setCustomValidity("");
+          }, 3000);
+          return;
+        }
+
         op = AuthOp.RESET_PASSWORD;
         break;
       case AuthOp.RESET_PASSWORD:
@@ -287,6 +323,15 @@ export default async function Auth(query) {
           verificationCodeInput.value.trim(),
           1,
         );
+
+        if (!resetToken) {
+          verificationCodeInput.setCustomValidity("Invalid code");
+          setTimeout(() => {
+            verificationCodeInput.setCustomValidity("");
+          }, 3000);
+          return;
+        }
+
         op = AuthOp.SET_NEW_PASSWORD;
         break;
       case AuthOp.SET_NEW_PASSWORD:
@@ -296,7 +341,21 @@ export default async function Auth(query) {
           resetToken == null
         )
           break;
-        handleResetPassword(resetToken, passwordfield.value.trim());
+        const set = await handleResetPassword(
+          resetToken,
+          passwordfield.value.trim(),
+        );
+
+        if (!set) {
+          passwordfield.setCustomValidity("Invalid password");
+          repeatpasswordfield.setCustomValidity("Invalid password");
+          setTimeout(() => {
+            passwordfield.setCustomValidity("");
+            repeatpasswordfield.setCustomValidity("");
+          }, 3000);
+          return;
+        }
+
         op = AuthOp.SIGNIN;
         break;
       case AuthOp.SIGNIN_VERIFICATION:
@@ -305,6 +364,15 @@ export default async function Auth(query) {
           verificationCodeInput.value.trim(),
           2,
         );
+
+        if (!resetToken) {
+          verificationCodeInput.setCustomValidity("Invalid verification code");
+          setTimeout(() => {
+            verificationCodeInput.setCustomValidity("");
+          }, 3000);
+          return;
+        }
+
         op = AuthOp.SIGNIN;
         break;
     }
@@ -416,12 +484,21 @@ async function handleSignup(email: string, username: string, password: string) {
   formData.append("username", username);
   formData.append("password", password);
 
-  const response = await fetch("http://localhost:5000/auth/register", {
-    method: "POST",
-    body: formData,
-  });
+  try {
+    const response = await fetch("http://localhost:5000/auth/register", {
+      method: "POST",
+      body: formData,
+    });
 
-  console.log(await response.json());
+    if (!response.ok) {
+      return false;
+    }
+  } catch (error) {
+    console.warn(error);
+    return false;
+  }
+
+  return true;
 }
 
 async function handleSignin(email: string, password: string) {
@@ -429,31 +506,47 @@ async function handleSignin(email: string, password: string) {
   formData.append("email", email);
   formData.append("password", password);
 
-  const response = await fetch("http://localhost:5000/auth/login", {
-    method: "POST",
-    body: formData,
-  });
+  try {
+    const response = await fetch("http://localhost:5000/auth/login", {
+      method: "POST",
+      body: formData,
+    });
 
-  const data = await response.json();
+    if (!response.ok) {
+      return false;
+    }
 
-  console.log(data);
+    const data = await response.json();
 
-  return data;
+    return data;
+  } catch (error) {
+    console.warn(error);
+    return false;
+  }
 }
 
 async function handleForgotPassword(email: string) {
   const formData = new FormData();
   formData.append("email", email);
 
-  const response = await fetch(
-    "http://localhost:5000/auth/password-reset-code",
-    {
-      method: "POST",
-      body: formData,
-    },
-  );
+  try {
+    const response = await fetch(
+      "http://localhost:5000/auth/password-reset-code",
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
 
-  console.log(await response.json());
+    if (!response.ok) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.warn(error);
+    return false;
+  }
 }
 
 async function handleVerifyCode(code: string, mode: number) {
@@ -468,16 +561,23 @@ async function handleVerifyCode(code: string, mode: number) {
     url = "http://localhost:5000/auth/verify-email";
   }
 
-  const response = await fetch(url, {
-    method: "POST",
-    body: formData,
-  });
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      body: formData,
+    });
 
-  const data = await response.json();
+    if (!response.ok) {
+      return false;
+    }
 
-  console.log(data);
+    const data = await response.json();
 
-  return data.resetToken;
+    return data.resetToken;
+  } catch (error) {
+    console.warn(error);
+    return false;
+  }
 }
 
 async function handleResetPassword(token: string, password: string) {
@@ -485,10 +585,19 @@ async function handleResetPassword(token: string, password: string) {
   formData.append("token", token);
   formData.append("password", password);
 
-  const response = await fetch("http://localhost:5000/auth/reset-password", {
-    method: "POST",
-    body: formData,
-  });
+  try {
+    const response = await fetch("http://localhost:5000/auth/reset-password", {
+      method: "POST",
+      body: formData,
+    });
 
-  console.log(await response.json());
+    if (!response.ok) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.warn(error);
+    return false;
+  }
 }
