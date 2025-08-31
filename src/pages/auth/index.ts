@@ -13,9 +13,23 @@ enum AuthOp {
 export default async function Auth(query) {
   const page = document.createElement("div");
   page.className =
-    "h-full w-full flex flex-col items-center justify-center space-y-8";
+    "h-full w-full p-4 flex flex-col items-center justify-center space-y-8";
 
   document.root.appendChild(page);
+
+  const pageback = document.createElement("div");
+  pageback.className =
+    "absolute z-10 top-2 left-4 size-8 flex items-center justify-center";
+  pageback.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short size-8" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
+  </svg>`;
+
+  page.appendChild(pageback);
+
+  pageback.addEventListener("click", () => {
+    router.navigate("/");
+  });
+
   let op: AuthOp = AuthOp.SIGNUP;
   let resetToken = "";
 
@@ -37,7 +51,7 @@ export default async function Auth(query) {
     "w-full h-full bg-transparent text-[#c0c0c0] outline-none border-none";
   emailfield.type = "email";
   emailfield.required = true;
-  emailfield.placeholder = "you@example.com";
+  emailfield.placeholder = "Enter you email";
 
   emailfieldwrapper.appendChild(emailfield);
 
@@ -64,7 +78,7 @@ export default async function Auth(query) {
     "w-full h-full bg-transparent text-[#c0c0c0] outline-none border-none";
   usernamefield.type = "text";
   usernamefield.required = true;
-  usernamefield.placeholder = "Username";
+  usernamefield.placeholder = "Enter your username";
 
   usernamefieldwrapper.appendChild(usernamefield);
 
@@ -104,7 +118,7 @@ export default async function Auth(query) {
     "w-full h-full bg-transparent text-[#c0c0c0] outline-none border-none";
   passwordfield.type = "password";
   passwordfield.required = true;
-  passwordfield.placeholder = "Password";
+  passwordfield.placeholder = "Enter your password";
 
   passwordfieldwrapper.appendChild(passwordfield);
 
@@ -132,7 +146,7 @@ export default async function Auth(query) {
     "w-full h-full bg-transparent text-[#c0c0c0] outline-none border-none";
   repeatpasswordfield.type = "password";
   repeatpasswordfield.required = true;
-  repeatpasswordfield.placeholder = "Password";
+  repeatpasswordfield.placeholder = "Enter your password again";
 
   repeatpasswordfieldwrapper.appendChild(repeatpasswordfield);
 
@@ -234,7 +248,7 @@ export default async function Auth(query) {
 
   submitbutton.addEventListener("click", async () => {
     switch (op) {
-      case 0:
+      case AuthOp.SIGNUP:
         if (
           emailfield.value.trim().length == 0 &&
           usernamefield.value.trim().length == 0 &&
@@ -247,9 +261,9 @@ export default async function Auth(query) {
           usernamefield.value.trim(),
           passwordfield.value.trim(),
         );
-        op = 5;
+        op = AuthOp.SIGNIN_VERIFICATION;
         break;
-      case 1:
+      case AuthOp.SIGNIN:
         if (
           emailfield.value.trim().length == 0 &&
           passwordfield.value.trim().length == 0
@@ -262,20 +276,20 @@ export default async function Auth(query) {
         authService.authenticate(tokens);
         router.navigate("/");
         break;
-      case 2:
+      case AuthOp.FORGOT_PASSWORD:
         if (emailfield.value.trim().length == 0) break;
         handleForgotPassword(emailfield.value.trim());
-        op = 3;
+        op = AuthOp.RESET_PASSWORD;
         break;
-      case 3:
+      case AuthOp.RESET_PASSWORD:
         if (verificationCodeInput.value.trim().length < 6) break;
         resetToken = await handleVerifyCode(
           verificationCodeInput.value.trim(),
           1,
         );
-        op = 4;
+        op = AuthOp.SET_NEW_PASSWORD;
         break;
-      case 4:
+      case AuthOp.SET_NEW_PASSWORD:
         if (
           passwordfield.value.trim().length == 0 &&
           repeatpasswordfield.value.trim().length == 0 &&
@@ -283,15 +297,15 @@ export default async function Auth(query) {
         )
           break;
         handleResetPassword(resetToken, passwordfield.value.trim());
-        op = 1;
+        op = AuthOp.SIGNIN;
         break;
-      case 5:
+      case AuthOp.SIGNIN_VERIFICATION:
         if (verificationCodeInput.value.trim().length < 6) break;
         resetToken = await handleVerifyCode(
           verificationCodeInput.value.trim(),
           2,
         );
-        op = 1;
+        op = AuthOp.SIGNIN;
         break;
     }
 
@@ -307,22 +321,22 @@ export default async function Auth(query) {
 
   switchbutton.addEventListener("click", () => {
     switch (op) {
-      case 0:
+      case AuthOp.SIGNUP:
         op = 1;
         break;
-      case 1:
+      case AuthOp.SIGNIN:
         op = 0;
         break;
-      case 2:
+      case AuthOp.FORGOT_PASSWORD:
         op = 1;
         break;
-      case 3:
+      case AuthOp.RESET_PASSWORD:
         op = 1;
         break;
-      case 4:
+      case AuthOp.SET_NEW_PASSWORD:
         op = 1;
         break;
-      case 5:
+      case AuthOp.SIGNIN_VERIFICATION:
         op = 1;
         break;
     }
