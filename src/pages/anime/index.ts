@@ -322,7 +322,7 @@ export default async function Anime(query) {
           episodeList.appendChild(episodeCard);
 
           Provider.then((provider) => {
-            if (!provider) return;
+            if (!provider) return episodeCard.updateSource?.(false);
 
             const sourceProvider = provider.episodes.find(
               (source) => source.label === "Voe",
