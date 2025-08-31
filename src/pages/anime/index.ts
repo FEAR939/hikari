@@ -110,16 +110,6 @@ export default async function Anime(query) {
     heroSectionChips.appendChild(chipElement);
   });
 
-  Provider.then((data) => {
-    if (data?.languages) {
-      const tag = document.createElement("span");
-      tag.textContent = data.languages.replace(/[()]/g, "");
-      tag.className =
-        "px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
-      heroSectionChips.appendChild(tag);
-    }
-  });
-
   const heroSectionDescription = document.createElement("div");
   heroSectionDescription.className =
     "w-full text-sm text-neutral-600 line-clamp-3";
