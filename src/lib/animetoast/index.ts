@@ -23,11 +23,15 @@ const replacements = [
     to: "",
   },
   {
-    from: "-",
+    from: "- ",
     to: "",
   },
   {
-    from: /\bSeason 2\b/g,
+    from: /\bSeason 2.*[^Ger Dub]\b/g,
+    to: "2",
+  },
+  {
+    from: /\b2nd Season.*[^Ger Dub]\b/g,
     to: "2",
   },
   {
