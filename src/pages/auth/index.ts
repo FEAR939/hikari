@@ -304,7 +304,7 @@ export default async function Auth(query) {
         break;
       case AuthOp.FORGOT_PASSWORD:
         if (emailfield.value.trim().length == 0) break;
-        const forgot = handleForgotPassword(emailfield.value.trim());
+        const forgot = await handleForgotPassword(emailfield.value.trim());
 
         if (!forgot) {
           emailfield.setCustomValidity("Invalid email");
