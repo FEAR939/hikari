@@ -45,6 +45,7 @@ export default async function Player(query: PlayerQuery) {
 
   pageback.addEventListener("click", () => {
     player.remove();
+    window.electronAPI?.exitFullscreen();
   });
 
   const isMobileDevice = /Mobi/i.test(window.navigator.userAgent);
