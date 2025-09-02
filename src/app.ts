@@ -1,5 +1,5 @@
 import { router } from "./lib/router/index";
-import { authService } from "./services/AuthService";
+import { authService } from "./services/auth";
 
 import Home from "./pages/home/index";
 import Anime from "./pages/anime/index";
