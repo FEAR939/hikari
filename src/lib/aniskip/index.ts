@@ -29,7 +29,7 @@ export async function getAnimeChapters(
   duration: number,
 ): Promise<Chapter[]> {
   const resAccurate = await fetch(
-    `https://api.aniskip.com/v2/skip-times/${idMal}/${episode}/?episodeLength=${duration}&types=op&types=ed&types=recap`,
+    `https://api.aniskip.com/v2/skip-times/${idMal}/${episode}/?episodeLength=${duration.toFixed(3)}&types=op&types=ed&types=recap`,
   );
   const jsonAccurate = (await resAccurate.json()) as AniSkip;
 
