@@ -1,4 +1,4 @@
-import { authService } from "../../services/AuthService";
+import { authService } from "../../services/auth";
 import { router } from "../../lib/router/index";
 
 enum AuthOp {

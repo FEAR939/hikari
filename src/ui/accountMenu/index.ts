@@ -1,5 +1,5 @@
 import { router } from "../../lib/router/index";
-import { authService } from "../../services/AuthService";
+import { authService } from "../../services/auth";
 import { accountAvatar } from "../accountAvatar/index";
 
 export function accountMenu() {
