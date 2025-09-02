@@ -2,6 +2,7 @@ import { router } from "../../lib/router/index";
 import { getAnime } from "../../lib/anilist/index";
 import { getAnimeAnizip } from "../../lib/anizip/index";
 import { getProvider } from "../../lib/animetoast/index";
+import { SourcePanel } from "../../ui/sourcePanel/index";
 
 import Episode from "../../ui/episode/index";
 
@@ -30,11 +31,11 @@ export default async function Anime(query) {
     getAnimeAnizip(query.id),
   ]);
 
-  const Provider = getProvider({
-    romaji: anime.title.romaji,
-    english: anime.title.english,
-  });
-  Provider.then((data) => console.debug(data));
+  // const Provider = getProvider({
+  //   romaji: anime.title.romaji,
+  //   english: anime.title.english,
+  // });
+  // Provider.then((data) => console.debug(data));
 
   const heroSection = document.createElement("div");
   heroSection.className = "h-fit w-full";
@@ -257,8 +258,8 @@ export default async function Anime(query) {
 
     tabContent.appendChild(episodeList);
 
-    let page = 0;
-    let perPage = 12;
+    let episodesPage = 0;
+    let episodesPerPage = 12;
 
     const pageControls = document.createElement("div");
     pageControls.className = "flex itens-center space-x-4 w-fit mt-4 ml-auto";
@@ -271,7 +272,7 @@ export default async function Anime(query) {
     const pageControlCurr = document.createElement("div");
     pageControlCurr.className =
       "bg-[#0d0d0d] text-white px-4 py-2 rounded-lg cursor-pointer";
-    pageControlCurr.textContent = (page + 1).toString();
+    pageControlCurr.textContent = (episodesPage + 1).toString();
 
     const pageControlsNext = document.createElement("div");
     pageControlsNext.className =
@@ -281,21 +282,24 @@ export default async function Anime(query) {
     pageControls.append(pageControlsPrev, pageControlCurr, pageControlsNext);
 
     pageControlsPrev.addEventListener("click", () => {
-      if (page == 0) return;
+      if (episodesPage == 0) return;
 
-      page--;
-      pageControlCurr.textContent = (page + 1).toString();
+      episodesPage--;
+      pageControlCurr.textContent = (episodesPage + 1).toString();
       renderPage();
     });
 
     pageControlsNext.addEventListener("click", () => {
       console.log(
-        Math.ceil(Object.values(anime_anizip.episodes).length / perPage) - 1,
+        Math.ceil(
+          Object.values(anime_anizip.episodes).length / episodesPerPage,
+        ) - 1,
       );
-      if (page >= anime_anizip.episodeCount / perPage - 1) return;
+      if (episodesPage >= anime_anizip.episodeCount / episodesPerPage - 1)
+        return;
 
-      page++;
-      pageControlCurr.textContent = (page + 1).toString();
+      episodesPage++;
+      pageControlCurr.textContent = (episodesPage + 1).toString();
       renderPage();
     });
 
@@ -310,8 +314,8 @@ export default async function Anime(query) {
         .map((episode, index) => {
           if (
             isNaN(parseInt(episode.episode)) ||
-            page * perPage > index ||
-            index >= (page + 1) * perPage
+            episodesPage * episodesPerPage > index ||
+            index >= (episodesPage + 1) * episodesPerPage
           )
             return;
 
@@ -321,54 +325,59 @@ export default async function Anime(query) {
 
           episodeList.appendChild(episodeCard);
 
-          Provider.then((provider) => {
-            if (!provider) return episodeCard.updateSource?.(false);
-
-            const sourceProvider = provider.episodes.find(
-              (source) => source.label === "Voe",
-            );
-
-            if (
-              !sourceProvider?.episodes ||
-              sourceProvider?.episodes.length == 0
-            )
-              return episodeCard.updateSource?.(false);
-
-            let sourceEpisode = false;
-            let bundleEpisodeNumber = 0;
-
-            if (sourceProvider?.episodes[0].isBundle) {
-              console.log("Episodes are bundled");
-              sourceEpisode = sourceProvider.episodes.find((sourceEpisode) => {
-                const match = sourceEpisode.label.match(/E?(\d+)-E?(\d+)/);
-
-                const [bundleStart, bundleEnd] = match
-                  ? [parseInt(match[1]), parseInt(match[2])]
-                  : [0, 0];
-
-                const episodeNumber = parseInt(episode.episode);
-
-                bundleEpisodeNumber = episodeNumber - bundleStart + 1;
-
-                return (
-                  bundleStart <= episodeNumber && bundleEnd >= episodeNumber
-                );
-              });
-            } else {
-              sourceEpisode = sourceProvider.episodes.find(
-                (sourceEpisode) =>
-                  sourceEpisode.label.replace("Ep. ", "") == episode.episode,
-              );
-            }
-
-            if (!sourceEpisode) return episodeCard.updateSource?.(false);
-            episodeCard.updateSource?.({
-              icon: provider.icon,
-              url: sourceEpisode.url,
-              isBundle: sourceEpisode.isBundle,
-              bundleEpisodeNumber: bundleEpisodeNumber,
-            });
+          episodeCard.addEventListener("click", () => {
+            const sourcepanel = SourcePanel(anime, episode);
+            page.appendChild(sourcepanel);
           });
+
+          // Provider.then((provider) => {
+          //   if (!provider) return episodeCard.updateSource?.(false);
+
+          //   const sourceProvider = provider.episodes.find(
+          //     (source) => source.label === "Voe",
+          //   );
+
+          //   if (
+          //     !sourceProvider?.episodes ||
+          //     sourceProvider?.episodes.length == 0
+          //   )
+          //     return episodeCard.updateSource?.(false);
+
+          //   let sourceEpisode = false;
+          //   let bundleEpisodeNumber = 0;
+
+          //   if (sourceProvider?.episodes[0].isBundle) {
+          //     console.log("Episodes are bundled");
+          //     sourceEpisode = sourceProvider.episodes.find((sourceEpisode) => {
+          //       const match = sourceEpisode.label.match(/E?(\d+)-E?(\d+)/);
+
+          //       const [bundleStart, bundleEnd] = match
+          //         ? [parseInt(match[1]), parseInt(match[2])]
+          //         : [0, 0];
+
+          //       const episodeNumber = parseInt(episode.episode);
+
+          //       bundleEpisodeNumber = episodeNumber - bundleStart + 1;
+
+          //       return (
+          //         bundleStart <= episodeNumber && bundleEnd >= episodeNumber
+          //       );
+          //     });
+          //   } else {
+          //     sourceEpisode = sourceProvider.episodes.find(
+          //       (sourceEpisode) =>
+          //         sourceEpisode.label.replace("Ep. ", "") == episode.episode,
+          //     );
+          //   }
+
+          //   if (!sourceEpisode) return episodeCard.updateSource?.(false);
+          //   episodeCard.updateSource?.({
+          //     icon: provider.icon,
+          //     url: sourceEpisode.url,
+          //     isBundle: sourceEpisode.isBundle,
+          //     bundleEpisodeNumber: bundleEpisodeNumber,
+          //   });
+          // });
         });
     }
   }
