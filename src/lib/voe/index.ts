@@ -1,4 +1,4 @@
-export async function extract_voe_url(video_redirect: string) {
+export async function getMetadata(video_redirect: string) {
   function rot13(str: string) {
     return str.replace(/[a-zA-Z]/g, function (char) {
       const charCode = char.charCodeAt(0);
@@ -67,6 +67,12 @@ export async function extract_voe_url(video_redirect: string) {
     "text/html",
   );
 
+  const quality = redirecthtml
+    .querySelector(
+      "html body div.container.mt-3.mb-5 div.paper.mt-5 div.row.gx-0.small.bg-athens-gray div.col-8.px-3.py-2 div.mt-2 b",
+    )
+    ?.textContent?.trim();
+
   const htmlString = redirecthtml.querySelector(
     "script[type='application/json']",
   )?.innerHTML;
@@ -103,10 +109,10 @@ export async function extract_voe_url(video_redirect: string) {
       const parsedJson = JSON.parse(decoded);
 
       if ("direct_access_url" in parsedJson) {
-        sourceJson = { mp4: parsedJson["direct_access_url"] };
+        sourceJson = { mp4: parsedJson["direct_access_url"], res: quality };
         console.log("[+] Found direct .mp4 URL in JSON.");
       } else if ("source" in parsedJson) {
-        sourceJson = { hls: parsedJson["source"] };
+        sourceJson = { hls: parsedJson["source"], res: quality };
         console.log("[+] Found fallback .m3u8 URL in JSON.");
       } else {
         console.log(
@@ -128,10 +134,10 @@ export async function extract_voe_url(video_redirect: string) {
       const m3u8Match = decoded.match(m3u8Regex);
 
       if (mp4Match) {
-        sourceJson = { mp4: mp4Match[0] }; // match[0] is the full matched URL
+        sourceJson = { mp4: mp4Match[0], res: quality }; // match[0] is the full matched URL
         console.log("[+] Found base64 encoded MP4 URL via regex.");
       } else if (m3u8Match) {
-        sourceJson = { hls: m3u8Match[0] }; // match[0] is the full matched URL
+        sourceJson = { hls: m3u8Match[0], res: quality }; // match[0] is the full matched URL
         console.log("[+] Found base64 encoded HLS (m3u8) URL via regex.");
       } else {
         console.log(
@@ -148,6 +154,5 @@ export async function extract_voe_url(video_redirect: string) {
     console.log("[-] Could not extract any source URL.");
   }
 
-  console.log(sourceJson);
   return sourceJson;
 }

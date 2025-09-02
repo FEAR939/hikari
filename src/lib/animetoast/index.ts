@@ -1,8 +1,10 @@
+import { cache } from "../../services/cache";
+
 interface Provider {
   label: string;
   url: string;
   icon: string;
-  episodes: StreamProvider[];
+  hosters: StreamProvider[];
 }
 
 interface StreamProvider {
@@ -71,6 +73,13 @@ export async function getProvider(title: {
   romaji: string;
   english: string;
 }): Promise<Provider | undefined> {
+  if (
+    cache.get("extension.animetoast") !== null &&
+    JSON.parse(cache.get("extension.animetoast")!).anime === title.romaji
+  ) {
+    return JSON.parse(cache.get("extension.animetoast")!);
+  }
+
   const sanitized = sanitizeTitle(title.romaji);
 
   const url = `https://animetoast.cc/?s=${sanitized} Ger Dub`;
@@ -134,7 +143,7 @@ export async function getProvider(title: {
 
   const series_html = new DOMParser().parseFromString(series_data, "text/html");
 
-  const episodes: StreamProvider[] = Array.from(
+  const hosters: StreamProvider[] = Array.from(
     series_html.querySelectorAll(".nav-tabs li"),
   )
     .filter((provider) => provider.querySelector("a"))
@@ -154,15 +163,20 @@ export async function getProvider(title: {
       return { label, tab, episodes: eps };
     });
 
-  return {
+  const source = {
     label: "AnimeToast",
+    anime: title.romaji,
     url: "animetoast.cc",
     icon:
       series_html
         .querySelector('head link[rel="icon"]')
         ?.getAttribute("href") || "",
-    episodes,
+    hosters,
   };
+
+  cache.set("extension.animetoast", JSON.stringify(source), 0.5 * 60 * 1000);
+
+  return source;
 }
 
 export async function getEpisodeLink(url: string) {
@@ -177,6 +191,47 @@ export async function getEpisodeLink(url: string) {
     html.querySelector("#player-embed a")?.getAttribute("href") || "";
 
   return link;
+}
+
+export async function getEpisode(source_hoster, episode) {
+  let sourceEpisode = false;
+  let bundleEpisodeNumber = -1;
+
+  if (source_hoster.episodes[0].isBundle) {
+    console.log("Episodes are bundled");
+    sourceEpisode = source_hoster.episodes.find((sourceEpisode) => {
+      const match = sourceEpisode.label.match(/E?(\d+)-E?(\d+)/);
+
+      const [bundleStart, bundleEnd] = match
+        ? [parseInt(match[1]), parseInt(match[2])]
+        : [0, 0];
+
+      const episodeNumber = parseInt(episode.episode);
+
+      bundleEpisodeNumber = episodeNumber - bundleStart + 1;
+
+      return bundleStart <= episodeNumber && bundleEnd >= episodeNumber;
+    });
+  } else {
+    sourceEpisode = source_hoster.episodes.find(
+      (sourceEpisode) =>
+        sourceEpisode.label.replace("Ep. ", "") == episode.episode,
+    );
+  }
+
+  if (bundleEpisodeNumber === -1) {
+    const streamlink = await getEpisodeLink(sourceEpisode.url);
+
+    return streamlink;
+  }
+
+  const bundle = await getBundle(sourceEpisode.url);
+
+  const bundleEpisode = bundle![bundleEpisodeNumber - 1];
+
+  const streamlink = await getEpisodeLink(bundleEpisode.url);
+
+  return streamlink;
 }
 
 export async function getBundle(url: string) {
