@@ -1,7 +1,8 @@
 import { router } from "../../lib/router/index";
+import { authService } from "../../services/auth";
 
 interface EpElement extends HTMLDivElement {
-  updateSource?: (source: Source | boolean) => void;
+  updateProgress?: (progress: number) => void;
 }
 
 interface Source {
@@ -22,7 +23,8 @@ interface Episode {
 export default function Episode(episode: Episode, index: number): EpElement {
   const episodeCard: EpElement = document.createElement("div");
   episodeCard.className =
-    "h-24 md:h-32 w-full bg-[#0c0c0c] flex overflow-hidden rounded-xl cursor-pointer";
+    "h-20 md:h-28 w-full bg-[#0c0c0c] flex overflow-hidden rounded-xl cursor-pointer";
+  episodeCard.updateProgress = (progress) => renderProgress(progress);
 
   if (episode.image) {
     const episodeCardImage = document.createElement("img");
@@ -33,22 +35,40 @@ export default function Episode(episode: Episode, index: number): EpElement {
 
   const episodeSide = document.createElement("div");
   episodeSide.className =
-    "relative h-full w-full space-y-1 md:space-y-4 p-4 overflow-hidden";
+    "relative h-full w-full space-y-1 md:space-y-2 p-2 md:p-4 overflow-hidden";
 
   const episodeTitle = document.createElement("h2");
-  episodeTitle.className = "text-sm md:text-xl font-bold truncate";
+  episodeTitle.className = "text-xs font-semibold truncate";
   episodeTitle.textContent =
     `${episode.episode}. ${episode.title.en || ""}` || `Episode ${index + 1}`;
   episodeSide.appendChild(episodeTitle);
 
+  const progress = document.createElement("div");
+  progress.className = "h-0.5 bg-[#2c2c2c] rounded hidden";
+
+  const progbar = document.createElement("div");
+  progbar.className = "h-full bg-indigo-400";
+
+  progress.appendChild(progbar);
+
+  episodeSide.appendChild(progress);
+
+  function renderProgress(prog) {
+    const duration = (prog / (episode.length * 60)) * 100;
+    console.log(prog, episode.length * 60, duration);
+    progress.style.width = `${duration}%`;
+
+    progress.classList.remove("hidden");
+  }
+
   const episodeDescription = document.createElement("p");
-  episodeDescription.className = "text-[10px] text-neutral-600 truncate";
+  episodeDescription.className = "text-[9px] text-[#a4a4a4] line-clamp-2";
   episodeDescription.textContent = episode.overview;
   episodeSide.appendChild(episodeDescription);
 
   const episodeAirDate = document.createElement("div");
   episodeAirDate.className =
-    "absolute bottom-4 left-4 text-xs m-0 text-[#6f6f6f]";
+    "absolute bottom-2 md:bottom-4 left-2 md:left-4 text-[9px] m-0 text-[#fcfcfc]";
 
   const inFuture = episode.airdate > new Date().toISOString().split("T")[0];
 
