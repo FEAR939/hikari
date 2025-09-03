@@ -5,7 +5,13 @@ import { router } from "../../lib/router/index";
 export function SourcePanel(anime, episode) {
   const container = document.createElement("div");
   container.className =
-    "fixed inset-0 m-auto w-full max-w-4xl h-2/3 p-4 pt-12 overflow-y-scroll bg-[#0d0d0d] rounded-xl";
+    "fixed inset-0 p-4 flex items-center justify-center backdrop-brightness-50 backdrop-blur-md";
+
+  const panel = document.createElement("div");
+  panel.className =
+    "relative w-full max-w-4xl h-2/3 p-4 pt-12 overflow-y-scroll bg-[#080808] rounded-xl";
+
+  container.appendChild(panel);
 
   const containerClose = document.createElement("div");
   containerClose.className =
@@ -14,7 +20,7 @@ export function SourcePanel(anime, episode) {
     <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
   </svg>`;
 
-  container.appendChild(containerClose);
+  panel.appendChild(containerClose);
 
   containerClose.addEventListener("click", () => {
     container.remove();
@@ -36,12 +42,11 @@ export function SourcePanel(anime, episode) {
   const sourceElementList = document.createElement("div");
   sourceElementList.className = "w-full h-fit space-y-2";
 
-  container.appendChild(sourceElementList);
+  panel.appendChild(sourceElementList);
 
   extensions.source.map(async (source_extension) => {
     const sourceElement = document.createElement("div");
-    sourceElement.className =
-      "relative h-32 w-full bg-[#1a1a1a] rounded-lg p-4 space-y-2";
+    sourceElement.className = "relative h-32 w-full p-4 space-y-2";
 
     const sourceName = document.createElement("div");
     sourceName.className = "text-white font-bold";
@@ -67,6 +72,8 @@ export function SourcePanel(anime, episode) {
 
     console.log(source);
 
+    sourceLoad.remove();
+
     if (!source) return;
 
     source.hosters.map(async (source_hoster) => {
@@ -86,11 +93,16 @@ export function SourcePanel(anime, episode) {
 
       const hosterElement = document.createElement("div");
       hosterElement.className =
-        "relative w-full h-16 p-2 bg-[#222222] rounded-md";
+        "relative w-full h-28 p-4 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2";
 
       const hosterTitle = document.createElement("div");
-      hosterTitle.className = "text-white";
-      hosterTitle.textContent = source_hoster.label;
+      hosterTitle.className =
+        "flex items-center space-x-2 text-white font-bold";
+      hosterTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cast size-4" viewBox="0 0 16 16">
+        <path d="m7.646 9.354-3.792 3.792a.5.5 0 0 0 .353.854h7.586a.5.5 0 0 0 .354-.854L8.354 9.354a.5.5 0 0 0-.708 0"/>
+        <path d="M11.414 11H14.5a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.5-.5h-13a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .5.5h3.086l-1 1H1.5A1.5 1.5 0 0 1 0 10.5v-7A1.5 1.5 0 0 1 1.5 2h13A1.5 1.5 0 0 1 16 3.5v7a1.5 1.5 0 0 1-1.5 1.5h-2.086z"/>
+      </svg>
+      <span>${source_hoster.label}</span>`;
 
       hosterElement.appendChild(hosterTitle);
 
@@ -102,16 +114,29 @@ export function SourcePanel(anime, episode) {
 
       console.log(stream);
 
+      const hosterFileName = document.createElement("div");
+      hosterFileName.className = "text-[#a2a2a2] text-xs";
+      hosterFileName.textContent = stream.name;
+
+      hosterElement.appendChild(hosterFileName);
+
+      const hosterSize = document.createElement("div");
+      hosterSize.className =
+        "absolute left-4 bottom-4 text-[#f0f0f0] text-xs py-1 m-0";
+      hosterSize.textContent = stream.size;
+
+      hosterElement.appendChild(hosterSize);
+
       const hosterQuality = document.createElement("div");
       hosterQuality.className =
-        "absolute right-2 bottom-2 px-2 py-1 bg-[#FFBF00] rounded";
-      hosterQuality.textContent = stream.res;
+        "absolute right-4 bottom-4 px-2 py-1 text-xs text-black bg-[#FFBF00] rounded";
+      hosterQuality.textContent = stream.quality;
 
       hosterElement.appendChild(hosterQuality);
 
       hosterElement.addEventListener("click", () => {
         router.navigate(
-          `/player?streamurl=${encodeURIComponent(stream.mp4)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${episode}`,
+          `/player?streamurl=${encodeURIComponent(stream.mp4)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episode)}&anilist_id=${anime.id}`,
         );
       });
     });
