@@ -1,6 +1,7 @@
 import { getBundle } from "../../lib/animetoast";
 import { getEpisodeLink } from "../../lib/animetoast";
 import { getAnimeChapters } from "../../lib/aniskip";
+import { authService } from "../../services/auth";
 
 declare global {
   interface Window {
@@ -43,6 +44,7 @@ export default async function Player(query: PlayerQuery) {
   player.appendChild(pageback);
 
   pageback.addEventListener("click", () => {
+    handleBeforeClose();
     player.remove();
     window.electronAPI?.exitFullscreen();
   });
@@ -88,8 +90,8 @@ export default async function Player(query: PlayerQuery) {
   titleAndTime.className = "h-fit flex items-center justify-between space-x-2";
 
   const title = document.createElement("div");
-  title.className = "text-white text-sm font-bold";
-  title.textContent = "Episode title";
+  title.className = "text-white text-sm font-bold truncate";
+  title.textContent = JSON.parse(query.episode).title.en;
 
   const time = document.createElement("div");
   time.className = "text-white text-sm font-bold";
@@ -240,4 +242,55 @@ export default async function Player(query: PlayerQuery) {
   controls.appendChild(buttonRow);
 
   video.src = query.streamurl;
+
+  if (authService.getUser()) {
+    try {
+      const formData = new FormData();
+      formData.append("anilist_id", query.anilist_id);
+      formData.append(
+        "episode_filter",
+        `${JSON.parse(query.episode).episode}-${JSON.parse(query.episode).episode}`,
+      );
+
+      const response = await fetch("http://localhost:5000/get-leftoff-at", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        console.warn("Failed to get leftoff time");
+        return;
+      }
+
+      const data = await response.json();
+
+      video.currentTime = data[0].leftoff;
+    } catch (error) {
+      console.warn("Error getting leftoff time:", error);
+    }
+  }
+
+  async function handleBeforeClose() {
+    if (!authService.getUser()) return;
+
+    const formData = new FormData();
+    formData.append("anilist_id", query.anilist_id);
+    formData.append("episode", JSON.parse(query.episode).episode);
+    formData.append("leftoff", Math.floor(video.currentTime));
+
+    const response = await fetch("http://localhost:5000/set-leftoff-at", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      console.error("Failed to update leftoff time");
+    }
+  }
 }
