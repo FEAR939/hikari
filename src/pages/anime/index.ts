@@ -1,7 +1,7 @@
 import { router } from "../../lib/router/index";
 import { getAnime } from "../../lib/anilist/index";
 import { getAnimeAnizip } from "../../lib/anizip/index";
-import { getProvider } from "../../lib/animetoast/index";
+import { authService } from "../../services/auth";
 import { SourcePanel } from "../../ui/sourcePanel/index";
 
 import Episode from "../../ui/episode/index";
@@ -165,7 +165,7 @@ export default async function Anime(query) {
       return;
     const relationCard = document.createElement("div");
     relationCard.className =
-      "h-24 md:h-48 w-full bg-[#0d0d0d] flex overflow-hidden rounded-xl cursor-pointer";
+      "h-24 md:h-36 w-full bg-[#0d0d0d] flex overflow-hidden rounded-xl cursor-pointer";
 
     const relationCardImage = document.createElement("img");
     relationCardImage.src = relation.coverImage.large;
@@ -176,12 +176,21 @@ export default async function Anime(query) {
     relationCardContent.className = "w-3/4 h-full p-4 space-y-2 md:space-y-4";
 
     const relationType = document.createElement("h3");
-    relationType.className = "text-base md:text-l md:text-xl text-gray-400";
-    relationType.textContent = anime.relations.edges[index].relationType;
+    relationType.className =
+      "text-base text-indigo-400 font-semibold text-gray-400";
+    relationType.textContent =
+      anime.relations.edges[index].relationType
+        .toString()
+        .toLowerCase()
+        .charAt(0)
+        .toUpperCase() +
+      anime.relations.edges[index].relationType
+        .toString()
+        .toLowerCase()
+        .slice(1);
 
     const relationCardTitle = document.createElement("h3");
-    relationCardTitle.className =
-      "text-base md:text-l md:text-xl font-bold truncate";
+    relationCardTitle.className = "text-base text-white font-semibold truncate";
     relationCardTitle.textContent = relation.title.romaji;
 
     relationCardContent.appendChild(relationType);
@@ -262,12 +271,13 @@ export default async function Anime(query) {
     let episodesPerPage = 12;
 
     const pageControls = document.createElement("div");
-    pageControls.className = "flex itens-center space-x-4 w-fit mt-4 ml-auto";
+    pageControls.className = "flex items-center space-x-4 w-fit mt-4 ml-auto";
 
     const pageControlsPrev = document.createElement("div");
-    pageControlsPrev.className =
-      "bg-[#0d0d0d] text-white px-4 py-2 rounded-lg cursor-pointer";
-    pageControlsPrev.textContent = "Prev";
+    pageControlsPrev.className = "text-[#c1c1c1] size-4 cursor-pointer";
+    pageControlsPrev.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-left size-4" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+    </svg>`;
 
     const pageControlCurr = document.createElement("div");
     pageControlCurr.className =
@@ -275,9 +285,10 @@ export default async function Anime(query) {
     pageControlCurr.textContent = (episodesPage + 1).toString();
 
     const pageControlsNext = document.createElement("div");
-    pageControlsNext.className =
-      "bg-[#0d0d0d] text-white px-4 py-2 rounded-lg cursor-pointer";
-    pageControlsNext.textContent = "Next";
+    pageControlsNext.className = "text-[#c1c1c1] size-4 cursor-pointer";
+    pageControlsNext.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-right size-4" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
+    </svg>`;
 
     pageControls.append(pageControlsPrev, pageControlCurr, pageControlsNext);
 
@@ -290,11 +301,6 @@ export default async function Anime(query) {
     });
 
     pageControlsNext.addEventListener("click", () => {
-      console.log(
-        Math.ceil(
-          Object.values(anime_anizip.episodes).length / episodesPerPage,
-        ) - 1,
-      );
       if (episodesPage >= anime_anizip.episodeCount / episodesPerPage - 1)
         return;
 
@@ -307,9 +313,9 @@ export default async function Anime(query) {
 
     renderPage();
 
-    function renderPage() {
+    async function renderPage() {
       episodeList.innerHTML = "";
-      Object.values(anime_anizip.episodes)
+      const episodes = Object.values(anime_anizip.episodes)
         .filter((episode) => episode.episode)
         .map((episode, index) => {
           if (
@@ -330,55 +336,47 @@ export default async function Anime(query) {
             page.appendChild(sourcepanel);
           });
 
-          // Provider.then((provider) => {
-          //   if (!provider) return episodeCard.updateSource?.(false);
-
-          //   const sourceProvider = provider.episodes.find(
-          //     (source) => source.label === "Voe",
-          //   );
-
-          //   if (
-          //     !sourceProvider?.episodes ||
-          //     sourceProvider?.episodes.length == 0
-          //   )
-          //     return episodeCard.updateSource?.(false);
-
-          //   let sourceEpisode = false;
-          //   let bundleEpisodeNumber = 0;
-
-          //   if (sourceProvider?.episodes[0].isBundle) {
-          //     console.log("Episodes are bundled");
-          //     sourceEpisode = sourceProvider.episodes.find((sourceEpisode) => {
-          //       const match = sourceEpisode.label.match(/E?(\d+)-E?(\d+)/);
-
-          //       const [bundleStart, bundleEnd] = match
-          //         ? [parseInt(match[1]), parseInt(match[2])]
-          //         : [0, 0];
-
-          //       const episodeNumber = parseInt(episode.episode);
-
-          //       bundleEpisodeNumber = episodeNumber - bundleStart + 1;
-
-          //       return (
-          //         bundleStart <= episodeNumber && bundleEnd >= episodeNumber
-          //       );
-          //     });
-          //   } else {
-          //     sourceEpisode = sourceProvider.episodes.find(
-          //       (sourceEpisode) =>
-          //         sourceEpisode.label.replace("Ep. ", "") == episode.episode,
-          //     );
-          //   }
-
-          //   if (!sourceEpisode) return episodeCard.updateSource?.(false);
-          //   episodeCard.updateSource?.({
-          //     icon: provider.icon,
-          //     url: sourceEpisode.url,
-          //     isBundle: sourceEpisode.isBundle,
-          //     bundleEpisodeNumber: bundleEpisodeNumber,
-          //   });
-          // });
+          return episodeCard;
         });
+
+      if (!authService.getUser()) return;
+
+      const episodeProgress = await getEpisodeProgress(
+        anime.id,
+        episodesPage * episodesPerPage + 1,
+        (episodesPage + 1) * episodesPerPage,
+      );
+
+      episodeProgress.map((episodeProg) => {
+        episodes[episodeProg.episode - 1].updateProgress(episodeProg.leftoff);
+      });
     }
   }
+}
+
+async function getEpisodeProgress(
+  anilist_id: string,
+  episode_start: number,
+  episode_end: number,
+) {
+  const formData = new FormData();
+  formData.append("anilist_id", anilist_id);
+  formData.append("episode_filter", `${episode_start}-${episode_end}`);
+
+  const response = await fetch("http://localhost:5000/get-leftoff-at", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    console.error("Failed to fetch episode progress");
+    return;
+  }
+
+  const data = await response.json();
+
+  return data;
 }
