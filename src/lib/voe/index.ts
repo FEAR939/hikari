@@ -67,11 +67,22 @@ export async function getMetadata(video_redirect: string) {
     "text/html",
   );
 
-  const quality = redirecthtml
+  const file_name = redirecthtml
+    .querySelector(
+      "html body div.container.mt-3.mb-5 div.paper.mt-5 div.row.gx-0.small div.col-8.px-3.py-2",
+    )
+    ?.textContent?.trim();
+  const file_quality = redirecthtml
     .querySelector(
       "html body div.container.mt-3.mb-5 div.paper.mt-5 div.row.gx-0.small.bg-athens-gray div.col-8.px-3.py-2 div.mt-2 b",
     )
     ?.textContent?.trim();
+  const file_size = redirecthtml
+    .querySelector(
+      "html body div.container.mt-3.mb-5 div.paper.mt-5 div.row.gx-0.small.bg-athens-gray div.col-8.px-3.py-2 div.mt-2",
+    )
+    ?.textContent?.trim()
+    .match(/(\d+(?:\.\d+)?\s*[KMGT]?B)$/)?.[0];
 
   const htmlString = redirecthtml.querySelector(
     "script[type='application/json']",
@@ -109,10 +120,20 @@ export async function getMetadata(video_redirect: string) {
       const parsedJson = JSON.parse(decoded);
 
       if ("direct_access_url" in parsedJson) {
-        sourceJson = { mp4: parsedJson["direct_access_url"], res: quality };
+        sourceJson = {
+          mp4: parsedJson["direct_access_url"],
+          name: file_name,
+          quality: file_quality,
+          size: file_size,
+        };
         console.log("[+] Found direct .mp4 URL in JSON.");
       } else if ("source" in parsedJson) {
-        sourceJson = { hls: parsedJson["source"], res: quality };
+        sourceJson = {
+          hls: parsedJson["source"],
+          name: file_name,
+          quality: file_quality,
+          size: file_size,
+        };
         console.log("[+] Found fallback .m3u8 URL in JSON.");
       } else {
         console.log(
@@ -134,10 +155,20 @@ export async function getMetadata(video_redirect: string) {
       const m3u8Match = decoded.match(m3u8Regex);
 
       if (mp4Match) {
-        sourceJson = { mp4: mp4Match[0], res: quality }; // match[0] is the full matched URL
+        sourceJson = {
+          mp4: mp4Match[0],
+          name: file_name,
+          quality: file_quality,
+          size: file_size,
+        }; // match[0] is the full matched URL
         console.log("[+] Found base64 encoded MP4 URL via regex.");
       } else if (m3u8Match) {
-        sourceJson = { hls: m3u8Match[0], res: quality }; // match[0] is the full matched URL
+        sourceJson = {
+          hls: m3u8Match[0],
+          name: file_name,
+          quality: file_quality,
+          size: file_size,
+        }; // match[0] is the full matched URL
         console.log("[+] Found base64 encoded HLS (m3u8) URL via regex.");
       } else {
         console.log(
