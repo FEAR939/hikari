@@ -47,23 +47,30 @@ class AuthService {
   }
 
   async access() {
-    const formData = new FormData();
-    formData.append("accessToken", localStorage.getItem("accessToken")!);
+    try {
+      const formData = new FormData();
+      formData.append("accessToken", localStorage.getItem("accessToken")!);
 
-    const response = await fetch("http://localhost:5000/me", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
+      const response = await fetch("http://localhost:5000/me", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
 
-    if (response.ok) {
+      if (!response.ok) return false;
+
+      if (response.status === 401) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+
+        return false;
+      }
+
       const user = await response.json();
       return user;
-    } else {
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-
+    } catch (error) {
+      console.warn("Could not pull user data from server! -> ", error);
       return false;
     }
   }
