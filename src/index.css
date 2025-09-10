@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: "Roboto";
+    src: url("/src/fonts/Roboto-VariableFont_wdth,wght.ttf") format("truetype");
+}
+
+html,
+body {
+    scroll-behavior: smooth;
+    overscroll-behavior: none;
+    user-select: none;
+    font-family: "Roboto";
+}
+
 ::-webkit-scrollbar {
     display: none;
 }
