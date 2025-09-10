@@ -1,86 +1,157 @@
 import { router } from "../../lib/router/index";
-import { getSeasonAnime } from "../../lib/anilist";
+import {
+  getTrendingAnime,
+  getSeasonAnime,
+  getMultipleAnime,
+} from "../../lib/anilist";
+import CategorySlider from "../../ui/Slider";
 
 export default async function Home(query) {
   const page = document.createElement("div");
-  page.className = "h-full w-full p-4 pt-12";
+  page.className = "h-full w-full space-y-4";
 
   document.root.appendChild(page);
 
-  const categorySlider = document.createElement("div");
-  categorySlider.className =
-    "relative h-fit w-full overflow-hidden flex items-center";
+  const trendingCarousel = document.createElement("div");
+  trendingCarousel.className = "relative 0 w-full h-48 md:h-96";
 
-  const categorySliderInner = document.createElement("div");
-  categorySliderInner.className =
-    "h-fit w-full flex space-x-2 md:space-x-4 transition-transform duration-300";
-  categorySlider.appendChild(categorySliderInner);
+  page.appendChild(trendingCarousel);
 
-  const categorySliderPrev = document.createElement("div");
-  categorySliderPrev.className =
-    "absolute left-1 h-12 w-12 flex items-center justify-center bg-[#000000]/50 rounded-full cursor-pointer";
-  categorySliderPrev.innerHTML =
-    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>';
+  const trendingCarouselIndicator = document.createElement("div");
+  trendingCarouselIndicator.className =
+    "absolute z-1 bottom-4 left-4 h-1 w-fit flex space-x-1";
 
-  const categorySliderNext = document.createElement("div");
-  categorySliderNext.className =
-    "absolute right-1 h-12 w-12 flex items-center justify-center bg-[#000000]/50 rounded-full cursor-pointer";
-  categorySliderNext.innerHTML =
-    '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>';
+  trendingCarousel.appendChild(trendingCarouselIndicator);
 
-  categorySlider.appendChild(categorySliderPrev);
-  categorySlider.appendChild(categorySliderNext);
+  const trendingAnime = await getTrendingAnime();
 
-  let index = 0;
-  let cardWidth = 192; // w-48 = 192px
-  let gap = 8; // space-x-4 = 16px
+  const trendingCarouselBanner = document.createElement("img");
+  trendingCarouselBanner.className =
+    "w-full h-full object-cover brightness-50 mask-b-from-50% bg-[#080808]";
 
-  if (window.matchMedia("(min-width: 768px)").matches) {
-    cardWidth = 256;
-    gap = 16;
+  trendingCarousel.appendChild(trendingCarouselBanner);
+
+  const trendingCarouselTitle = document.createElement("div");
+  trendingCarouselTitle.className =
+    "absolute z-1 top-20 md:top-48 left-4 text-white text-sm md:text-3xl font-bold max-w-1/2 truncate";
+
+  trendingCarousel.appendChild(trendingCarouselTitle);
+
+  const trendingCarouselDescription = document.createElement("div");
+  trendingCarouselDescription.className =
+    "absolute z-1 top-24 md:top-58 left-4 text-neutral-400 text-xs md:text-sm max-w-1/2 line-clamp-2";
+
+  trendingCarousel.appendChild(trendingCarouselDescription);
+
+  const trendingCarouselWatchButton = document.createElement("button");
+  trendingCarouselWatchButton.className =
+    "absolute z-1 top-34 md:top-72 left-4 flex items-center space-x-2 bg-white text-black text-xs px-10 py-1.5 rounded-md cursor-pointer";
+  trendingCarouselWatchButton.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play size-3"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
+    <div class="h-fit">Watch Now</div>
+  `;
+
+  trendingCarousel.appendChild(trendingCarouselWatchButton);
+
+  let slideIndex = 0;
+
+  trendingCarouselWatchButton.addEventListener("click", () => {
+    router.navigate(`/anime?id=${trendingAnime[slideIndex].id}`);
+  });
+
+  let timeout = null;
+
+  const indicators = trendingAnime.map((anime, i) => {
+    const indicator = document.createElement("div");
+    indicator.className =
+      "w-6 h-full bg-neutral-700 rounded-lg transition-all duration-300 cursor-pointer overflow-hidden";
+
+    trendingCarouselIndicator.appendChild(indicator);
+
+    const indicatorProgress = document.createElement("div");
+    indicatorProgress.className = "h-full bg-white";
+    indicatorProgress.style.width = "0%";
+
+    indicator.timer = () => {
+      indicatorProgress.style.transition = "width 10s linear";
+      indicatorProgress.style.width = "100%";
+      setTimeout(() => {
+        indicatorProgress.style.transition = "none";
+        indicatorProgress.style.width = "0%";
+      }, 10000);
+    };
+
+    indicator.stopTimer = () => {
+      indicatorProgress.style.transition = "none";
+      indicatorProgress.style.width = "0%";
+    };
+
+    indicator.appendChild(indicatorProgress);
+
+    indicator.addEventListener("click", () => {
+      if (slideIndex === i) return;
+      indicators.forEach((indicator) => {
+        indicator.stopTimer();
+      });
+
+      nextSlide(i);
+    });
+
+    return indicator;
+  });
+
+  function nextSlide(index) {
+    clearTimeout(timeout);
+
+    trendingCarouselBanner.src =
+      trendingAnime[index].bannerImage ||
+      trendingAnime[index].trailer.thumbnail;
+
+    trendingCarouselTitle.textContent = trendingAnime[index].title.romaji;
+    trendingCarouselDescription.textContent = trendingAnime[index].description
+      .substring(0, trendingAnime[index].description.indexOf("(Source:"))
+      .replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, "");
+
+    indicators.map((indicator, i) => {
+      if (i !== index) {
+        indicator.classList.replace("w-12", "w-6");
+        return;
+      }
+
+      indicator.classList.replace("w-6", "w-12");
+      indicator.timer();
+    });
+
+    timeout = setTimeout(
+      () => nextSlide((index + 1) % trendingAnime.length),
+      10000,
+    );
   }
 
-  // Calculate how many cards are visible at once
-  const getVisibleCards = () =>
-    Math.floor(categorySlider.offsetWidth / (cardWidth + gap));
+  setTimeout(() => nextSlide(0), 250);
 
-  // Update slider position
-  const updateSlider = () => {
-    const translateX = index * (cardWidth + gap);
-    categorySliderInner.style.transform = `translateX(-${translateX}px)`;
-  };
-
-  categorySliderNext.addEventListener("click", () => {
-    const visibleCards = getVisibleCards();
-    const maxIndex = Math.max(
-      0,
-      categorySliderInner.children.length - visibleCards,
+  async function getContinueAnime() {
+    const response = await fetch(
+      `${localStorage.getItem("app_server_adress")}/get-last-watched`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      },
     );
+    const data = await response.json();
 
-    if (index < maxIndex) {
-      index = Math.min(index + visibleCards, maxIndex);
-      updateSlider();
-    }
-  });
+    const list = await getMultipleAnime(data.map((item) => item.anilist_id));
 
-  categorySliderPrev.addEventListener("click", () => {
-    if (index > 0) {
-      const visibleCards = getVisibleCards();
-      index = Math.max(index - visibleCards, 0);
-      updateSlider();
-    }
-  });
+    return list;
+  }
 
-  page.appendChild(categorySlider);
+  const continueAnime = await getContinueAnime();
 
-  const anime = await getSeasonAnime();
-
-  // Use DocumentFragment for better performance when adding multiple cards
-  const fragment = document.createDocumentFragment();
-
-  anime.forEach((item) => {
+  const continueCards = Object.values(continueAnime).map((item) => {
     const card = document.createElement("div");
-    card.className = "h-fit w-48 md:w-64 shrink-0";
+    card.className = "h-fit w-36 md:w-64 shrink-0";
 
     const cardImage = document.createElement("img");
     cardImage.src = item.coverImage.large;
@@ -92,8 +163,31 @@ export default async function Home(query) {
       router.navigate(`/anime?id=${item.id}`);
     });
 
-    fragment.appendChild(card);
+    return card;
   });
 
-  categorySliderInner.appendChild(fragment);
+  const continueSlider = CategorySlider("Continue Watching", continueCards);
+  page.appendChild(continueSlider);
+
+  const anime = await getSeasonAnime();
+
+  const animeCards = anime.map((item) => {
+    const card = document.createElement("div");
+    card.className = "h-fit w-36 md:w-64 shrink-0";
+
+    const cardImage = document.createElement("img");
+    cardImage.src = item.coverImage.large;
+    cardImage.className = "w-full aspect-[1/1.35] object-cover rounded-lg";
+    cardImage.loading = "lazy"; // Add lazy loading
+
+    card.appendChild(cardImage);
+    card.addEventListener("click", () => {
+      router.navigate(`/anime?id=${item.id}`);
+    });
+
+    return card;
+  });
+
+  const animeSlider = CategorySlider("Popular this Season", animeCards);
+  page.appendChild(animeSlider);
 }
