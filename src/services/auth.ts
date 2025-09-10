@@ -51,12 +51,15 @@ class AuthService {
       const formData = new FormData();
       formData.append("accessToken", localStorage.getItem("accessToken")!);
 
-      const response = await fetch("http://localhost:5000/me", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      const response = await fetch(
+        `${localStorage.getItem("app_server_adress")}/me`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
         },
-      });
+      );
 
       if (!response.ok) return false;
 
@@ -79,10 +82,13 @@ class AuthService {
     const formData = new FormData();
     formData.append("refreshToken", localStorage.getItem("refreshToken")!);
 
-    const response = await fetch("http://localhost:5000/auth/refresh", {
-      method: "POST",
-      body: formData,
-    });
+    const response = await fetch(
+      `${localStorage.getItem("app_server_adress")}/auth/refresh`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
 
     if (response.ok) {
       const { accessToken, refreshToken } = await response.json();

@@ -27,7 +27,7 @@ export function accountAvatar() {
       return;
     }
 
-    avatarContainer.innerHTML = `<img src="http://localhost:5000${user.avatar}" alt="Avatar" class="absolute inset-0 w-full h-full object-cover object-center rounded-full" />`;
+    avatarContainer.innerHTML = `<img src="${localStorage.getItem("app_server_adress")}${user.avatar}" alt="Avatar" class="absolute inset-0 w-full h-full object-cover object-center rounded-full" />`;
   }
 
   return avatar;
