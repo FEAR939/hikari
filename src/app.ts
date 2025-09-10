@@ -21,6 +21,10 @@ function main() {
 
   document.body.appendChild(topBar());
 
+  if (localStorage.getItem("app_server_adress") === null) {
+    localStorage.setItem("app_server_adress", "http://localhost:5000");
+  }
+
   router.route("/", Home);
   router.route("/anime", Anime);
   router.route("/player", Player);
