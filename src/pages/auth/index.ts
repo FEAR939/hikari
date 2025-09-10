@@ -467,10 +467,13 @@ async function handleSignup(email: string, username: string, password: string) {
   formData.append("password", password);
 
   try {
-    const response = await fetch("http://localhost:5000/auth/register", {
-      method: "POST",
-      body: formData,
-    });
+    const response = await fetch(
+      `${localStorage.getItem("app_server_adress")}/auth/register`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
 
     if (!response.ok) {
       return false;
@@ -489,10 +492,13 @@ async function handleSignin(email: string, password: string) {
   formData.append("password", password);
 
   try {
-    const response = await fetch("http://localhost:5000/auth/login", {
-      method: "POST",
-      body: formData,
-    });
+    const response = await fetch(
+      `${localStorage.getItem("app_server_adress")}/auth/login`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
 
     if (!response.ok) {
       return false;
@@ -513,7 +519,7 @@ async function handleForgotPassword(email: string) {
 
   try {
     const response = await fetch(
-      "http://localhost:5000/auth/password-reset-code",
+      `${localStorage.getItem("app_server_adress")}/auth/password-reset-code`,
       {
         method: "POST",
         body: formData,
@@ -538,9 +544,9 @@ async function handleVerifyCode(code: string, mode: number) {
   let url = "";
 
   if (mode === 1) {
-    url = "http://localhost:5000/auth/verify-reset-code";
+    url = `${localStorage.getItem("app_server_adress")}/auth/verify-reset-code`;
   } else if (mode === 2) {
-    url = "http://localhost:5000/auth/verify-email";
+    url = `${localStorage.getItem("app_server_adress")}/auth/verify-email`;
   }
 
   try {
@@ -568,10 +574,13 @@ async function handleResetPassword(token: string, password: string) {
   formData.append("password", password);
 
   try {
-    const response = await fetch("http://localhost:5000/auth/reset-password", {
-      method: "POST",
-      body: formData,
-    });
+    const response = await fetch(
+      `${localStorage.getItem("app_server_adress")}/auth/reset-password`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
 
     if (!response.ok) {
       return false;
