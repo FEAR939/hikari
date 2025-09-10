@@ -174,7 +174,7 @@ export async function getProvider(title: {
     hosters,
   };
 
-  cache.set("extension.animetoast", JSON.stringify(source), 0.5 * 60 * 1000);
+  cache.set("extension.animetoast", JSON.stringify(source), 60 * 60 * 1000); // 1 hour cache lifetime
 
   return source;
 }
