@@ -1,9 +1,10 @@
 import { router } from "../../lib/router/index";
+import GeneralSettings from "../../ui/generalSettings/index";
 
 const settingsTree = [
   {
     label: "General",
-    handler: () => {},
+    handler: GeneralSettings,
   },
   {
     label: "Account ",
@@ -17,7 +18,7 @@ const settingsTree = [
 
 export default async function Settings(query) {
   const page = document.createElement("div");
-  page.className = "relative h-full w-full p-4 pt-12 space-y-4";
+  page.className = "relative h-full w-full p-4 pt-12 space-x-2 space-y-4 flex";
 
   document.root.appendChild(page);
 
@@ -41,10 +42,18 @@ export default async function Settings(query) {
       "w-full px-4 py-2 bg-[#0d0d0d] text-white rounded-md text-left cursor-pointer";
     option.textContent = item.label;
 
-    // option.addEventListener("click", item.handler);
+    option.addEventListener("click", () => {
+      const tabPage = item.handler();
+      content.innerHTML = "";
+      content.appendChild(tabPage);
+    });
 
     nav.appendChild(option);
   });
 
+  const content = document.createElement("div");
+  content.className = "h-full w-full overflow-y-hidden";
+
   page.appendChild(nav);
+  page.appendChild(content);
 }
