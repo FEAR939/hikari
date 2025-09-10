@@ -29,11 +29,17 @@ export default async function Anime(query) {
     getAnimeAnizip(query.id),
   ]);
 
-  // const Provider = getProvider({
-  //   romaji: anime.title.romaji,
-  //   english: anime.title.english,
-  // });
-  // Provider.then((data) => console.debug(data));
+  let episodeProgress = null;
+
+  if (authService.getUser()) {
+    episodeProgress = await getEpisodeProgress(
+      anime.id,
+      1,
+      Object.values(anime_anizip.episodes).filter(
+        (episode) => episode.episode && !isNaN(parseInt(episode.episode)),
+      ).length,
+    );
+  }
 
   const heroSection = document.createElement("div");
   heroSection.className = "h-fit w-full";
@@ -73,12 +79,47 @@ export default async function Anime(query) {
 
   heroSectionPrimary.appendChild(heroSectionImage);
 
-  const userListToggle = document.createElement("div");
-  userListToggle.className =
-    "w-full py-2 rounded-xl bg-[#0d0d0d] text-sm md:text-base text-white flex items-center justify-center";
-  userListToggle.textContent = "Add to List";
+  const watchButton = document.createElement("div");
+  watchButton.className =
+    "w-full py-1 md:py-3 rounded-md md:rounded-xl bg-[#FFBF00] text-xs md:text-base font-semibold text-black flex items-center justify-center space-x-2 cursor-pointer";
+  watchButton.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play size-2 md:size-4"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
+    <div class="h-fit">${episodeProgress ? "Continue" : "Watch Now"}</div>
+  `;
 
-  heroSectionPrimary.appendChild(userListToggle);
+  heroSectionPrimary.appendChild(watchButton);
+
+  watchButton.addEventListener("click", () => {
+    if (
+      Object.values(anime_anizip.episodes).filter(
+        (episode) => episode.episode && !isNaN(parseInt(episode.episode)),
+      ).length === 0
+    )
+      return;
+
+    const episodes = Object.values(anime_anizip.episodes)
+      .filter((episode) => episode.episode && !isNaN(parseInt(episode.episode)))
+      .map((episode) => {
+        episode.mal_id = anime.idMal || 0;
+        return episode;
+      });
+
+    if (!authService.getUser() || !episodeProgress) {
+      const sourcePanel = SourcePanel(anime, episodes, 0);
+      page.appendChild(sourcePanel);
+      return;
+    }
+
+    const lastProgress = episodeProgress.reduce((acc, episode) => {
+      if (episode.episode > acc) return episode.episode;
+      return acc;
+    }, 0);
+
+    console.log(lastProgress);
+
+    const sourcePanel = SourcePanel(anime, episodes, lastProgress - 1);
+    page.appendChild(sourcePanel);
+  });
 
   heroSectionContent.appendChild(heroSectionPrimary);
 
@@ -105,17 +146,24 @@ export default async function Anime(query) {
     const chipElement = document.createElement("span");
     chipElement.textContent = chip.text;
     chipElement.className =
-      "px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
+      "px-2 md:px-4 py-1 md:py-2 text-sm font-semibold rounded-md bg-[#FFBF00] text-black";
     heroSectionChips.appendChild(chipElement);
   });
 
   const heroSectionDescription = document.createElement("div");
   heroSectionDescription.className =
     "w-full text-sm text-neutral-600 line-clamp-3";
-  heroSectionDescription.innerHTML = anime.description.substring(
-    0,
-    anime.description.indexOf("(Source:"),
-  );
+  heroSectionDescription.innerHTML = anime.description
+    .substring(0, anime.description.indexOf("(Source:"))
+    .replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, "");
+
+  heroSectionSecondary.appendChild(heroSectionTitle);
+  heroSectionSecondary.appendChild(heroSectionChips);
+  heroSectionSecondary.appendChild(heroSectionDescription);
+
+  heroSectionContent.appendChild(heroSectionSecondary);
+
+  heroSection.appendChild(heroSectionContent);
 
   const heroSectionTags = document.createElement("div");
   heroSectionTags.className =
@@ -129,14 +177,7 @@ export default async function Anime(query) {
     heroSectionTags.appendChild(tagElement);
   });
 
-  heroSectionSecondary.appendChild(heroSectionTitle);
-  heroSectionSecondary.appendChild(heroSectionChips);
-  heroSectionSecondary.appendChild(heroSectionDescription);
-  heroSectionSecondary.appendChild(heroSectionTags);
-
-  heroSectionContent.appendChild(heroSectionSecondary);
-
-  heroSection.appendChild(heroSectionContent);
+  heroSection.appendChild(heroSectionTags);
 
   page.appendChild(heroSection);
 
@@ -269,11 +310,11 @@ export default async function Anime(query) {
     let episodesPerPage = 12;
 
     const pageControls = document.createElement("div");
-    pageControls.className = "flex items-center space-x-4 w-fit mt-4 ml-auto";
+    pageControls.className = "flex items-center space-x-2 w-fit mt-4 ml-auto";
 
     const pageControlsPrev = document.createElement("div");
-    pageControlsPrev.className = "text-[#c1c1c1] size-4 cursor-pointer";
-    pageControlsPrev.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left-icon lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>`;
+    pageControlsPrev.className = "text-[#c1c1c1] cursor-pointer";
+    pageControlsPrev.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left-icon lucide-chevron-left size-4"><path d="m15 18-6-6 6-6"/></svg>`;
 
     const pageControlCurr = document.createElement("div");
     pageControlCurr.className =
@@ -281,8 +322,8 @@ export default async function Anime(query) {
     pageControlCurr.textContent = (episodesPage + 1).toString();
 
     const pageControlsNext = document.createElement("div");
-    pageControlsNext.className = "text-[#c1c1c1] size-4 cursor-pointer";
-    pageControlsNext.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>`;
+    pageControlsNext.className = "text-[#c1c1c1] cursor-pointer";
+    pageControlsNext.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right size-4"><path d="m9 18 6-6-6-6"/></svg>`;
 
     pageControls.append(pageControlsPrev, pageControlCurr, pageControlsNext);
 
@@ -326,22 +367,27 @@ export default async function Anime(query) {
           episodeList.appendChild(episodeCard);
 
           episodeCard.addEventListener("click", () => {
-            const sourcepanel = SourcePanel(anime, episode);
+            const sourcepanel = SourcePanel(
+              anime,
+              Object.values(anime_anizip.episodes).filter(
+                (episode) => episode.episode,
+              ),
+              index,
+            );
             page.appendChild(sourcepanel);
           });
 
           return episodeCard;
         });
 
-      if (!authService.getUser()) return;
+      if (!authService.getUser() || !episodeProgress) return;
 
-      const episodeProgress = await getEpisodeProgress(
-        anime.id,
-        episodesPage * episodesPerPage + 1,
+      const episodeProgressPart = episodeProgress.slice(
+        episodesPage * episodesPerPage,
         (episodesPage + 1) * episodesPerPage,
       );
 
-      episodeProgress.map((episodeProg) => {
+      episodeProgressPart.map((episodeProg) => {
         episodes[episodeProg.episode - 1].updateProgress(episodeProg.leftoff);
       });
     }
@@ -357,13 +403,16 @@ async function getEpisodeProgress(
   formData.append("anilist_id", anilist_id);
   formData.append("episode_filter", `${episode_start}-${episode_end}`);
 
-  const response = await fetch("http://localhost:5000/get-leftoff-at", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+  const response = await fetch(
+    `${localStorage.getItem("app_server_adress")}/get-leftoff-at`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: formData,
     },
-    body: formData,
-  });
+  );
 
   if (!response.ok) {
     console.error("Failed to fetch episode progress");
