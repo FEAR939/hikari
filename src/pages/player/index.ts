@@ -51,6 +51,7 @@ export default async function Player(query: PlayerQuery) {
 
   const video = document.createElement("video");
   video.className = "h-full w-full";
+  video.preload = "auto";
 
   player.appendChild(video);
 
@@ -62,13 +63,6 @@ export default async function Player(query: PlayerQuery) {
 
   let timeout: NodeJS.Timeout | null = null;
   let canPlay = false;
-
-  video.addEventListener("loadedmetadata", () => {
-    canPlay = true;
-    video.play();
-    controls.classList.add("hidden");
-    pageback.classList.add("hidden");
-  });
 
   function handleMove() {
     controls.classList.remove("hidden");
@@ -139,31 +133,6 @@ export default async function Player(query: PlayerQuery) {
   const seekbarChapters = document.createElement("div");
   seekbarChapters.className = "absolute z-5 flex h-full w-full space-x-0.5";
 
-  video.addEventListener("loadedmetadata", async () => {
-    const chapters = await getAnimeChapters(
-      parseInt(query.mal_id),
-      parseInt(query.episodeNumber),
-      video.duration,
-    );
-
-    if (chapters.length == 0) {
-      const chapterElement = document.createElement("div");
-      chapterElement.className = "h-full bg-black/25";
-      chapterElement.style.width = `100%`;
-
-      seekbarChapters.appendChild(chapterElement);
-      return;
-    }
-
-    chapters.forEach((chapter) => {
-      const chapterElement = document.createElement("div");
-      chapterElement.className = "h-full bg-black/25";
-      chapterElement.style.width = `${((chapter.end / 1000 - chapter.start / 1000) / video.duration) * 100}%`;
-
-      seekbarChapters.appendChild(chapterElement);
-    });
-  });
-
   seekbar.appendChild(seekbarbufferProgress);
   seekbar.appendChild(seekbarProgress);
   seekbar.appendChild(seekbarChapters);
@@ -182,14 +151,18 @@ export default async function Player(query: PlayerQuery) {
   function handlePlayState() {
     if (video.paused) {
       video.play();
-      playbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause-icon lucide-pause"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>`;
     } else {
       video.pause();
-      playbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>`;
     }
   }
 
   playbutton.addEventListener("click", handlePlayState);
+  video.addEventListener("play", () => {
+    playbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause-icon lucide-pause"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>`;
+  });
+  video.addEventListener("pause", () => {
+    playbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>`;
+  });
 
   let touched = false;
   let touchtimeout: NodeJS.Timeout | null = null;
@@ -233,6 +206,36 @@ export default async function Player(query: PlayerQuery) {
 
   controls.appendChild(buttonRow);
 
+  video.addEventListener("loadedmetadata", async () => {
+    canPlay = true;
+    video.play();
+    controls.classList.add("hidden");
+    pageback.classList.add("hidden");
+
+    const chapters = await getAnimeChapters(
+      parseInt(JSON.parse(query.episode).mal_id),
+      parseInt(JSON.parse(query.episode).episode),
+      video.duration,
+    );
+
+    if (chapters.length == 0) {
+      const chapterElement = document.createElement("div");
+      chapterElement.className = "h-full bg-black/25";
+      chapterElement.style.width = `100%`;
+
+      seekbarChapters.appendChild(chapterElement);
+      return;
+    }
+
+    chapters.forEach((chapter) => {
+      const chapterElement = document.createElement("div");
+      chapterElement.className = "h-full bg-black/25";
+      chapterElement.style.width = `${((chapter.end / 1000 - chapter.start / 1000) / video.duration) * 100}%`;
+
+      seekbarChapters.appendChild(chapterElement);
+    });
+  });
+
   video.src = query.streamurl;
 
   if (authService.getUser()) {
@@ -244,13 +247,16 @@ export default async function Player(query: PlayerQuery) {
         `${JSON.parse(query.episode).episode}-${JSON.parse(query.episode).episode}`,
       );
 
-      const response = await fetch("http://localhost:5000/get-leftoff-at", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      const response = await fetch(
+        `${localStorage.getItem("app_server_adress")}/get-leftoff-at`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
+          body: formData,
         },
-        body: formData,
-      });
+      );
 
       if (!response.ok) {
         console.warn("Failed to get leftoff time");
@@ -273,13 +279,16 @@ export default async function Player(query: PlayerQuery) {
     formData.append("episode", JSON.parse(query.episode).episode);
     formData.append("leftoff", Math.floor(video.currentTime));
 
-    const response = await fetch("http://localhost:5000/set-leftoff-at", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    const response = await fetch(
+      `${localStorage.getItem("app_server_adress")}/set-leftoff-at`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: formData,
       },
-      body: formData,
-    });
+    );
 
     if (!response.ok) {
       console.error("Failed to update leftoff time");
