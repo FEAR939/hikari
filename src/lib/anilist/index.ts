@@ -1,4 +1,9 @@
+import { cache } from "../../services/cache";
+
 export async function getSeasonAnime() {
+  if (cache.get("anilist_seasonanime")) {
+    return JSON.parse(cache.get("anilist_seasonanime") || "");
+  }
   const response = await fetch("https://graphql.anilist.co", {
     method: "POST",
     headers: {
@@ -49,6 +54,12 @@ export async function getSeasonAnime() {
     }),
   });
   const data = await response.json();
+
+  cache.set(
+    "anilist_seasonanime",
+    JSON.stringify(data.data.Page.media),
+    60 * 60 * 1000,
+  ); // 1 hour cache lifetime
   return data.data.Page.media;
 }
 
@@ -135,4 +146,65 @@ export async function getSearch(searchString: string) {
   });
   const data = await response.json();
   return data.data.Page.media;
+}
+
+export async function getTrendingAnime() {
+  const response = await fetch("https://graphql.anilist.co", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+        query {
+          Page(page: 0, perPage: 5) {
+            media(type: ANIME, sort: TRENDING_DESC) {
+              id
+              title {
+                romaji
+              }
+              description
+              bannerImage
+              trailer {
+                thumbnail
+              }
+            }
+          }
+        }`,
+    }),
+  });
+  const data = await response.json();
+  return data.data.Page.media;
+}
+
+export async function getMultipleAnime(ids) {
+  const response = await fetch("https://graphql.anilist.co", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      query: `
+      query {
+          ${ids
+            .map(
+              (id) => `id${id}: Media(id: ${id}) {
+            id
+            title {
+              romaji
+            }
+            coverImage {
+              large
+            }
+          }`,
+            )
+            .join("\n")}
+      }`,
+    }),
+  });
+
+  const data = await response.json();
+  return data.data;
 }
