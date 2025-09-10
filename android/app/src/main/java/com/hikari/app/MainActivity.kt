@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    isAlgorithmicDarkeningAllowed = true  // Support for dark mode
+                    isAlgorithmicDarkeningAllowed = false  // Support for dark mode
                 }
 
                 // Support for modern web features
