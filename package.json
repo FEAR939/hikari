@@ -1,19 +1,39 @@
 {
-  "name": "anime-app",
+  "name": "hikari",
   "private": true,
-  "description": "",
-  "main": "./electron/main.cjs",
+  "description": "Hikari is an app for watching anime from your favorite sources",
+  "version": "1.0.0",
+  "main": "./electron/main.js",
   "type": "module",
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
-    "electron": "^37.2.6",
     "rolldown-vite": "^7.0.12",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "electron": "^37.2.6",
+    "electron-builder": "^26.0.12"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "build": {
+    "appId": "com.example.hikari",
+    "productName": "Hikari",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "electron/**/*"
+    ],
+    "asar": true,
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }
