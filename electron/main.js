@@ -1,16 +1,19 @@
-const { app, BrowserWindow, ipcMain } = require("electron/main");
-const path = require("node:path");
+import { app, BrowserWindow, ipcMain } from "electron";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const dirname = fileURLToPath(new URL(".", import.meta.url));
 
 function createWindow() {
   const win = new BrowserWindow({
     width: 1600,
     height: 900,
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(dirname, "preload.js"),
     },
   });
 
-  win.loadFile(path.join(__dirname, "../dist/index.html"));
+  win.loadFile(path.join(dirname, "../dist/index.html"));
 
   win.webContents.openDevTools();
 
