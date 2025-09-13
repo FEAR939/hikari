@@ -8,7 +8,7 @@ import CategorySlider from "../../ui/Slider";
 
 export default async function Home(query) {
   const page = document.createElement("div");
-  page.className = "h-full w-full space-y-4";
+  page.className = "h-full w-full space-y-4 overflow-y-scroll";
 
   document.root.appendChild(page);
 
@@ -131,43 +131,55 @@ export default async function Home(query) {
   setTimeout(() => nextSlide(0), 250);
 
   async function getContinueAnime() {
-    const response = await fetch(
-      `${localStorage.getItem("app_server_adress")}/get-last-watched`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    try {
+      const response = await fetch(
+        `${localStorage.getItem("app_server_adress")}/get-last-watched`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
         },
-      },
-    );
-    const data = await response.json();
+      );
 
-    const list = await getMultipleAnime(data.map((item) => item.anilist_id));
+      if (!response.ok || response.status !== 200) {
+        throw new Error("Failed to fetch continue anime");
+      }
 
-    return list;
+      const data = await response.json();
+
+      const list = await getMultipleAnime(data.map((item) => item.anilist_id));
+
+      return list;
+    } catch (error) {
+      console.warn(error);
+      return false;
+    }
   }
 
   const continueAnime = await getContinueAnime();
 
-  const continueCards = Object.values(continueAnime).map((item) => {
-    const card = document.createElement("div");
-    card.className = "h-fit w-36 md:w-64 shrink-0";
+  if (continueAnime !== false) {
+    const continueCards = Object.values(continueAnime).map((item) => {
+      const card = document.createElement("div");
+      card.className = "h-fit w-36 md:w-64 shrink-0";
 
-    const cardImage = document.createElement("img");
-    cardImage.src = item.coverImage.large;
-    cardImage.className = "w-full aspect-[1/1.35] object-cover rounded-lg";
-    cardImage.loading = "lazy"; // Add lazy loading
+      const cardImage = document.createElement("img");
+      cardImage.src = item.coverImage.large;
+      cardImage.className = "w-full aspect-[1/1.35] object-cover rounded-lg";
+      cardImage.loading = "lazy"; // Add lazy loading
 
-    card.appendChild(cardImage);
-    card.addEventListener("click", () => {
-      router.navigate(`/anime?id=${item.id}`);
+      card.appendChild(cardImage);
+      card.addEventListener("click", () => {
+        router.navigate(`/anime?id=${item.id}`);
+      });
+
+      return card;
     });
 
-    return card;
-  });
-
-  const continueSlider = CategorySlider("Continue Watching", continueCards);
-  page.appendChild(continueSlider);
+    const continueSlider = CategorySlider("Continue Watching", continueCards);
+    page.appendChild(continueSlider);
+  }
 
   const anime = await getSeasonAnime();
 
