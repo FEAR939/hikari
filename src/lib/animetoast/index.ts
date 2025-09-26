@@ -219,6 +219,11 @@ export async function getEpisode(source_hoster, episode) {
     );
   }
 
+  if (!sourceEpisode) {
+    console.log("Episode not found");
+    return;
+  }
+
   if (bundleEpisodeNumber === -1) {
     const streamlink = await getEpisodeLink(sourceEpisode.url);
 
