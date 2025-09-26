@@ -163,11 +163,11 @@ export default async function Home(query) {
   if (continueAnime !== false) {
     const continueCards = Object.values(continueAnime).map((item) => {
       const card = document.createElement("div");
-      card.className = "h-fit w-36 md:w-64 shrink-0";
+      card.className = "h-fit w-36 md:w-48 shrink-0";
 
       const cardImage = document.createElement("img");
       cardImage.src = item.coverImage.large;
-      cardImage.className = "w-full aspect-[1/1.35] object-cover rounded-lg";
+      cardImage.className = "w-full aspect-[5/7] object-cover rounded-lg";
       cardImage.loading = "lazy"; // Add lazy loading
 
       card.appendChild(cardImage);
@@ -186,11 +186,11 @@ export default async function Home(query) {
 
   const animeCards = anime.map((item) => {
     const card = document.createElement("div");
-    card.className = "h-fit w-36 md:w-64 shrink-0";
+    card.className = "h-fit w-36 md:w-48 shrink-0";
 
     const cardImage = document.createElement("img");
     cardImage.src = item.coverImage.large;
-    cardImage.className = "w-full aspect-[1/1.35] object-cover rounded-lg";
+    cardImage.className = "w-full aspect-[5/7] object-cover rounded-lg";
     cardImage.loading = "lazy"; // Add lazy loading
 
     card.appendChild(cardImage);
