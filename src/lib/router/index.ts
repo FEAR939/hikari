@@ -8,6 +8,10 @@ class Router {
     this.routes.set(path, handler);
   }
 
+  removeRoute(path: string) {
+    this.routes.delete(path);
+  }
+
   navigate(url: string) {
     const urlObj = new URL(url, window.location.origin);
     const path = urlObj.pathname;
@@ -30,7 +34,8 @@ class Router {
         }
       }
 
-      if (path == "/player") return handler(query);
+      if (path == "/player" || path == "/anime/updateEpisodeProgress")
+        return handler(query);
 
       root.innerHTML = "";
       handler(query);
