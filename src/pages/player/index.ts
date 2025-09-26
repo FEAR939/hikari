@@ -1,3 +1,4 @@
+import { router } from "../../lib/router/index";
 import { getBundle } from "../../lib/animetoast";
 import { getEpisodeLink } from "../../lib/animetoast";
 import { getAnimeChapters } from "../../lib/aniskip";
@@ -15,7 +16,7 @@ declare global {
 interface PlayerQuery {
   url: string;
   episodeNumber: string;
-  mal_id: string;
+  anilist_id: string;
   isBundle: string;
   bundleEpisodeNumber: string;
   episode: string;
@@ -307,6 +308,10 @@ export default async function Player(query: PlayerQuery) {
   }
 
   async function handleBeforeClose() {
+    router.navigate(
+      `/anime/updateEpisodeProgress?anilist_id=${query.anilist_id}&episode=${JSON.parse(query.episode).episode}&leftoff=${Math.floor(video.currentTime)}`,
+    );
+
     if (!authService.getUser()) return;
 
     const formData = new FormData();
