@@ -8,6 +8,10 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 1600,
     height: 900,
+    autoHideMenuBar: true,
+    fullscreenable: true,
+    title: "Hikari",
+    backgroundColor: "#000000",
     webPreferences: {
       preload: path.join(dirname, "preload.js"),
     },
