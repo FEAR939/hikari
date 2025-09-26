@@ -37,7 +37,7 @@ export default function CategorySlider(label, children) {
   let gap = 8; // space-x-4 = 16px
 
   if (window.matchMedia("(min-width: 768px)").matches) {
-    cardWidth = 256;
+    cardWidth = 192;
     gap = 16;
   }
 
