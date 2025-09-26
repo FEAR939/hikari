@@ -21,6 +21,7 @@ export default async function Anime(query) {
   page.appendChild(pageback);
 
   pageback.addEventListener("click", () => {
+    router.removeRoute("/anime/updateEpisodeProgress");
     router.navigate("/");
   });
 
@@ -74,8 +75,7 @@ export default async function Anime(query) {
 
   const heroSectionImage = document.createElement("img");
   heroSectionImage.src = anime.coverImage.large;
-  heroSectionImage.className =
-    "w-full aspect-[1/1.35] object-center rounded-xl";
+  heroSectionImage.className = "w-full aspect-[5/7] object-cover rounded-xl";
 
   heroSectionPrimary.appendChild(heroSectionImage);
 
@@ -379,6 +379,12 @@ export default async function Anime(query) {
 
           return episodeCard;
         });
+
+      router.route("/anime/updateEpisodeProgress", (query) => {
+        if (parseInt(query.anilist_id) !== anime.id) return;
+
+        episodes[query.episode - 1].updateProgress(query.leftoff);
+      });
 
       if (!authService.getUser() || !episodeProgress) return;
 
