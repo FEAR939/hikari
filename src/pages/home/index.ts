@@ -19,7 +19,7 @@ export default async function Home(query) {
 
   const trendingCarouselIndicator = document.createElement("div");
   trendingCarouselIndicator.className =
-    "absolute z-1 bottom-4 left-4 h-1 w-fit flex space-x-1";
+    "absolute z-1 bottom-4 left-4 h-0.75 w-fit flex space-x-1";
 
   trendingCarousel.appendChild(trendingCarouselIndicator);
 
@@ -43,9 +43,9 @@ export default async function Home(query) {
 
   trendingCarousel.appendChild(trendingCarouselDescription);
 
-  const trendingCarouselWatchButton = document.createElement("button");
+  const trendingCarouselWatchButton = document.createElement("div");
   trendingCarouselWatchButton.className =
-    "absolute z-1 top-34 md:top-72 left-4 flex items-center space-x-2 bg-white text-black text-xs px-10 py-1.5 rounded-md cursor-pointer";
+    "absolute z-1 top-34 md:top-72 left-4 flex items-center justify-center space-x-2 bg-white text-black text-xs px-10 py-1.5 rounded-md cursor-pointer";
   trendingCarouselWatchButton.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play size-3"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
     <div class="h-fit">Watch Now</div>
@@ -94,6 +94,7 @@ export default async function Home(query) {
         indicator.stopTimer();
       });
 
+      slideIndex = i;
       nextSlide(i);
     });
 
