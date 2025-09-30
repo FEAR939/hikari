@@ -361,6 +361,7 @@ export default async function Anime(query) {
             return;
 
           episode.mal_id = anime.idMal || 0;
+          episode.anilist_id = anime.id || 0;
 
           const episodeCard = Episode(episode, index);
 
