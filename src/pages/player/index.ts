@@ -36,6 +36,7 @@ export default async function Player(query: PlayerQuery) {
   }
 
   player.innerHTML = "";
+  player.focus();
 
   player.classList.add("z-10");
 
@@ -55,7 +56,7 @@ export default async function Player(query: PlayerQuery) {
   const isMobileDevice = /Mobi/i.test(window.navigator.userAgent);
 
   const video = document.createElement("video");
-  video.className = "h-full w-full";
+  video.className = "h-full w-full bg-[#000000]";
   video.preload = "auto";
 
   player.appendChild(video);
@@ -172,6 +173,69 @@ export default async function Player(query: PlayerQuery) {
     playbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>`;
   });
 
+  const volumeIcons = {
+    high: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>`,
+    mid: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume1-icon lucide-volume-1"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg>`,
+    low: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-icon lucide-volume"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/></svg>`,
+    off: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-off-icon lucide-volume-off"><path d="M16 9a5 5 0 0 1 .95 2.293"/><path d="M19.364 5.636a9 9 0 0 1 1.889 9.96"/><path d="m2 2 20 20"/><path d="m7 7-.587.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298V11"/><path d="M9.828 4.172A.686.686 0 0 1 11 4.657v.686"/></svg>`,
+  };
+
+  const volumeArea = document.createElement("div");
+  volumeArea.className = "group flex items-center space-x-2";
+
+  const volumebutton = document.createElement("div");
+  volumebutton.className =
+    "flex items-center justify-center size-5 cursor-pointer";
+
+  const volumeSlider = document.createElement("div");
+  volumeSlider.className =
+    "h-0.75 w-0 group-hover:w-16 bg-gray-500 rounded-full cursor-pointer transition-all duration-300";
+
+  const volumeProgress = document.createElement("div");
+  volumeProgress.className = "h-full bg-gray-300 rounded-full";
+
+  volumeSlider.appendChild(volumeProgress);
+  volumeArea.appendChild(volumebutton);
+  volumeArea.appendChild(volumeSlider);
+  buttonRow.appendChild(volumeArea);
+
+  function updateVolumeUI(volume: number) {
+    volumeProgress.style.width = `${volume * 100}%`;
+    if (volume === 0.0) {
+      volumebutton.innerHTML = volumeIcons.off;
+    } else if (volume < 0.25) {
+      volumebutton.innerHTML = volumeIcons.low;
+    } else if (volume < 0.75) {
+      volumebutton.innerHTML = volumeIcons.mid;
+    } else {
+      volumebutton.innerHTML = volumeIcons.high;
+    }
+  }
+
+  volumeSlider.addEventListener("click", (event) => {
+    const rect = volumeSlider.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const volume = offsetX / rect.width;
+    video.volume = volume;
+  });
+
+  video.addEventListener("volumechange", () => {
+    const volume = parseFloat(video.volume.toFixed(2));
+    console.log(volume);
+    localStorage.setItem("player_volume", (volume * 100).toString());
+    updateVolumeUI(volume);
+  });
+
+  if (localStorage.getItem("player_volume") === null) {
+    localStorage.setItem("player_volume", "100");
+  }
+
+  const savedVolume =
+    parseInt(localStorage.getItem("player_volume") || "100") / 100;
+  video.volume = savedVolume;
+
+  updateVolumeUI(savedVolume);
+
   let touched = false;
   let touchtimeout: NodeJS.Timeout | null = null;
   video.addEventListener("click", () => {
@@ -274,6 +338,27 @@ export default async function Player(query: PlayerQuery) {
 
   video.src = query.streamurl;
 
+  window.addEventListener("keyup", (event) => {
+    event.preventDefault();
+    switch (event.key) {
+      case " ":
+        video.paused ? video.play() : video.pause();
+        break;
+      case "ArrowLeft":
+        video.currentTime -= 10;
+        break;
+      case "ArrowRight":
+        video.currentTime += 10;
+        break;
+      case "ArrowUp":
+        video.volume = Math.min(video.volume + 0.1, 1);
+        break;
+      case "ArrowDown":
+        video.volume = Math.max(video.volume - 0.1, 0);
+        break;
+    }
+  });
+
   if (authService.getUser()) {
     try {
       const formData = new FormData();
@@ -312,7 +397,7 @@ export default async function Player(query: PlayerQuery) {
       `/anime/updateEpisodeProgress?anilist_id=${query.anilist_id}&episode=${JSON.parse(query.episode).episode}&leftoff=${Math.floor(video.currentTime)}`,
     );
 
-    if (!authService.getUser()) return;
+    if (!authService.getUser()) return (video.src = "");
 
     const formData = new FormData();
     formData.append("anilist_id", query.anilist_id);
@@ -333,5 +418,7 @@ export default async function Player(query: PlayerQuery) {
     if (!response.ok) {
       console.error("Failed to update leftoff time");
     }
+
+    video.src = "";
   }
 }
