@@ -163,7 +163,7 @@ export default async function Home(query) {
   if (continueAnime !== false) {
     const continueCards = Object.values(continueAnime).map((item) => {
       const card = document.createElement("div");
-      card.className = "h-fit w-36 md:w-48 shrink-0";
+      card.className = "h-fit w-36 md:w-48 shrink-0 cursor-pointer";
 
       const cardImage = document.createElement("img");
       cardImage.src = item.coverImage.large;
@@ -186,7 +186,7 @@ export default async function Home(query) {
 
   const animeCards = anime.map((item) => {
     const card = document.createElement("div");
-    card.className = "h-fit w-36 md:w-48 shrink-0";
+    card.className = "h-fit w-36 md:w-48 shrink-0 cursor-pointer";
 
     const cardImage = document.createElement("img");
     cardImage.src = item.coverImage.large;
