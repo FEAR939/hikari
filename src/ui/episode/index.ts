@@ -23,7 +23,7 @@ interface Episode {
 export default function Episode(episode: Episode, index: number): EpElement {
   const episodeCard: EpElement = document.createElement("div");
   episodeCard.className =
-    "relative h-20 md:h-28 w-full bg-[#0f0f0f] ring-1 ring-gray-700/50 shadow-lg flex overflow-hidden rounded-lg shadow-lg cursor-pointer";
+    "relative h-20 md:h-28 w-full bg-[#0d0d0d] ring-1 ring-[#1a1a1a] shadow-lg flex overflow-hidden rounded-lg shadow-lg cursor-pointer";
   episodeCard.updateProgress = (progress) => renderProgress(progress);
 
   if (episode.image) {
@@ -35,7 +35,7 @@ export default function Episode(episode: Episode, index: number): EpElement {
 
   const episodeDuration = document.createElement("div");
   episodeDuration.className =
-    "absolute bottom-2 left-2 px-2 py-1 text-xs text-gray-300 bg-[#1a1a1a] rounded";
+    "absolute bottom-2 left-2 px-2 py-1 text-xs text-gray-300 bg-[#1a1a1a]/50 backdrop-blur-sm rounded";
   episodeDuration.textContent = `${episode.runtime} Min`;
 
   episodeCard.appendChild(episodeDuration);
