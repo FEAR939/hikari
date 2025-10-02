@@ -73,12 +73,14 @@ export default async function Player(query: PlayerQuery) {
   function handleMove() {
     controls.classList.remove("hidden");
     pageback.classList.remove("hidden");
+    player.style.cursor = "default";
     if (timeout) clearTimeout(timeout);
 
     timeout = setTimeout(() => {
       if (!canPlay || video.paused) return;
       controls.classList.add("hidden");
       pageback.classList.add("hidden");
+      player.style.cursor = "none";
     }, 3000);
   }
 
@@ -103,7 +105,7 @@ export default async function Player(query: PlayerQuery) {
 
   const seekbar = document.createElement("div");
   seekbar.className =
-    "relative h-0.75 w-full bg-neutral-600 rounded cursor-pointer";
+    "relative h-0.75 w-full bg-neutral-700 rounded cursor-pointer";
 
   seekbar.addEventListener("click", (event) => {
     const rect = seekbar.getBoundingClientRect();
@@ -150,6 +152,16 @@ export default async function Player(query: PlayerQuery) {
   const buttonRow = document.createElement("div");
   buttonRow.className = "h-12 p-2 flex items-center space-x-4";
 
+  const skipBack = document.createElement("div");
+  skipBack.className = "flex items-center justify-center size-5 cursor-pointer";
+  skipBack.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-skip-back-icon lucide-skip-back"><path d="M17.971 4.285A2 2 0 0 1 21 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z"/><path d="M3 20V4"/></svg>`;
+
+  buttonRow.appendChild(skipBack);
+
+  skipBack.addEventListener("click", () => {
+    video.currentTime -= 10;
+  });
+
   const playbutton = document.createElement("div");
   playbutton.className =
     "flex items-center justify-center size-5 cursor-pointer";
@@ -169,8 +181,20 @@ export default async function Player(query: PlayerQuery) {
   video.addEventListener("play", () => {
     playbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause-icon lucide-pause"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>`;
   });
+
   video.addEventListener("pause", () => {
     playbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>`;
+  });
+
+  const skipForward = document.createElement("div");
+  skipForward.className =
+    "flex items-center justify-center size-5 cursor-pointer";
+  skipForward.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-skip-forward-icon lucide-skip-forward"><path d="M21 4v16"/><path d="M6.029 4.285A2 2 0 0 0 3 6v12a2 2 0 0 0 3.029 1.715l9.997-5.998a2 2 0 0 0 .003-3.432z"/></svg>`;
+
+  buttonRow.appendChild(skipForward);
+
+  skipForward.addEventListener("click", () => {
+    video.currentTime += 10;
   });
 
   const volumeIcons = {
@@ -189,10 +213,10 @@ export default async function Player(query: PlayerQuery) {
 
   const volumeSlider = document.createElement("div");
   volumeSlider.className =
-    "h-0.75 w-0 group-hover:w-16 bg-gray-500 rounded-full cursor-pointer transition-all duration-300";
+    "h-0.75 w-0 group-hover:w-16 bg-neutral-700 rounded-full cursor-pointer transition-all duration-300";
 
   const volumeProgress = document.createElement("div");
-  volumeProgress.className = "h-full bg-gray-300 rounded-full";
+  volumeProgress.className = "h-full bg-white rounded-full";
 
   volumeSlider.appendChild(volumeProgress);
   volumeArea.appendChild(volumebutton);
