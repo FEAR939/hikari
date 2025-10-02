@@ -149,6 +149,11 @@ export default async function Home(query) {
 
       const data = await response.json();
 
+      if (data.length === 0) {
+        console.log("No continue anime found");
+        return false;
+      }
+
       const list = await getMultipleAnime(data.map((item) => item.anilist_id));
 
       return list;
