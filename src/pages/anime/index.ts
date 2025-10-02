@@ -181,71 +181,85 @@ export default async function Anime(query) {
 
   page.appendChild(heroSection);
 
-  const relationsSection = document.createElement("div");
-  relationsSection.className = "w-full h-fit space-y-4";
+  if (
+    anime.relations.nodes.filter((relation, index) => {
+      if (
+        relation.type !== "ANIME" ||
+        (anime.relations.edges[index].relationType !== "PREQUEL" &&
+          anime.relations.edges[index].relationType !== "SEQUEL")
+      )
+        return false;
 
-  const relationsTitle = document.createElement("h2");
-  relationsTitle.className = "text-2xl font-bold";
-  relationsTitle.textContent = "Relations";
+      return true;
+    }).length > 0
+  ) {
+    const relationsSection = document.createElement("div");
+    relationsSection.className = "w-full h-fit space-y-4";
 
-  relationsSection.appendChild(relationsTitle);
+    const relationsTitle = document.createElement("h2");
+    relationsTitle.className = "text-2xl font-bold";
+    relationsTitle.textContent = "Relations";
 
-  const relationsList = document.createElement("div");
-  relationsList.className = "grid grid-cols-2 md:grid-cols-3 gap-4";
+    relationsSection.appendChild(relationsTitle);
 
-  relationsSection.appendChild(relationsList);
+    const relationsList = document.createElement("div");
+    relationsList.className = "grid grid-cols-2 md:grid-cols-3 gap-4";
 
-  anime.relations.nodes.map((relation, index) => {
-    if (
-      relation.type !== "ANIME" ||
-      (anime.relations.edges[index].relationType !== "PREQUEL" &&
-        anime.relations.edges[index].relationType !== "SEQUEL")
-    )
-      return;
-    const relationCard = document.createElement("div");
-    relationCard.className =
-      "h-24 md:h-36 w-full bg-[#0d0d0d] flex overflow-hidden rounded-xl cursor-pointer";
+    relationsSection.appendChild(relationsList);
 
-    const relationCardImage = document.createElement("img");
-    relationCardImage.src = relation.coverImage.large;
-    relationCardImage.className =
-      "h-full aspect-[1/1.35] object-cover object-center";
+    anime.relations.nodes.map((relation, index) => {
+      if (
+        relation.type !== "ANIME" ||
+        (anime.relations.edges[index].relationType !== "PREQUEL" &&
+          anime.relations.edges[index].relationType !== "SEQUEL")
+      )
+        return;
+      const relationCard = document.createElement("div");
+      relationCard.className =
+        "h-24 md:h-36 w-full bg-[#0d0d0d] flex overflow-hidden rounded-xl cursor-pointer";
 
-    const relationCardContent = document.createElement("div");
-    relationCardContent.className = "w-3/4 h-full p-4 space-y-2 md:space-y-4";
+      const relationCardImage = document.createElement("img");
+      relationCardImage.src = relation.coverImage.large;
+      relationCardImage.className =
+        "h-full aspect-[1/1.35] object-cover object-center";
 
-    const relationType = document.createElement("h3");
-    relationType.className =
-      "text-base text-indigo-400 font-semibold text-gray-400";
-    relationType.textContent =
-      anime.relations.edges[index].relationType
-        .toString()
-        .toLowerCase()
-        .charAt(0)
-        .toUpperCase() +
-      anime.relations.edges[index].relationType
-        .toString()
-        .toLowerCase()
-        .slice(1);
+      const relationCardContent = document.createElement("div");
+      relationCardContent.className = "w-3/4 h-full p-4 space-y-2 md:space-y-4";
 
-    const relationCardTitle = document.createElement("h3");
-    relationCardTitle.className = "text-base text-white font-semibold truncate";
-    relationCardTitle.textContent = relation.title.romaji;
+      const relationType = document.createElement("h3");
+      relationType.className =
+        "text-base text-indigo-400 font-semibold text-gray-400";
+      relationType.textContent =
+        anime.relations.edges[index].relationType
+          .toString()
+          .toLowerCase()
+          .charAt(0)
+          .toUpperCase() +
+        anime.relations.edges[index].relationType
+          .toString()
+          .toLowerCase()
+          .slice(1);
 
-    relationCardContent.appendChild(relationType);
-    relationCardContent.appendChild(relationCardTitle);
+      const relationCardTitle = document.createElement("h3");
+      relationCardTitle.className =
+        "text-base text-white font-semibold truncate";
+      relationCardTitle.textContent = relation.title.romaji;
 
-    relationCard.appendChild(relationCardImage);
-    relationCard.appendChild(relationCardContent);
+      relationCardContent.appendChild(relationType);
+      relationCardContent.appendChild(relationCardTitle);
 
-    relationCard.addEventListener("click", () => {
-      router.navigate(`/anime?id=${relation.id}`);
+      relationCard.appendChild(relationCardImage);
+      relationCard.appendChild(relationCardContent);
+
+      relationCard.addEventListener("click", () => {
+        router.navigate(`/anime?id=${relation.id}`);
+      });
+
+      relationsList.appendChild(relationCard);
     });
 
-    relationsList.appendChild(relationCard);
-  });
-
-  page.appendChild(relationsSection);
+    page.appendChild(relationsSection);
+  }
 
   const tabSection = document.createElement("div");
   tabSection.className = "w-full h-fit space-y-4";
