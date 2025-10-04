@@ -12,6 +12,7 @@ function createWindow() {
     autoHideMenuBar: true,
     fullscreenable: true,
     title: "Hikari",
+    icon: path.join(dirname, "/public/icons/icon.png"),
     backgroundColor: "#000000",
     webPreferences: {
       preload: path.join(dirname, "preload.js"),
