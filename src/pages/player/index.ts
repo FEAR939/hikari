@@ -467,7 +467,6 @@ export default async function Player(query: PlayerQuery) {
     if (!autoPlayState) return;
     handleBeforeClose();
     player.remove();
-    console.log(query.episode);
     router.navigate(
       `/anime/episodes/sourcePanel?episode=${parseInt(JSON.parse(query.episode).episode) + 1}`,
     );
@@ -478,6 +477,9 @@ export default async function Player(query: PlayerQuery) {
     switch (event.key) {
       case " ":
         video.paused ? video.play() : video.pause();
+        break;
+      case "f":
+        fullscreenbutton.dispatchEvent(new Event("click"));
         break;
       case "ArrowLeft":
         video.currentTime -= 10;
