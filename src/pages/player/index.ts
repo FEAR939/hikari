@@ -105,7 +105,7 @@ export default async function Player(query: PlayerQuery) {
 
   const seekbar = document.createElement("div");
   seekbar.className =
-    "relative h-0.75 w-full bg-neutral-700 rounded cursor-pointer";
+    "relative flex items-center h-0.75 w-full bg-neutral-800 rounded cursor-pointer";
 
   seekbar.addEventListener("click", (event) => {
     const rect = seekbar.getBoundingClientRect();
@@ -115,8 +115,31 @@ export default async function Player(query: PlayerQuery) {
     video.currentTime = seekTime;
   });
 
+  let isDraggingSeekbar = false;
+
+  seekbar.addEventListener("mousedown", (event) => {
+    isDraggingSeekbar = true;
+    const rect = seekbar.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const seekTime = (offsetX / rect.width) * video.duration;
+    video.currentTime = seekTime;
+  });
+
+  document.addEventListener("mousemove", (event) => {
+    if (isDraggingSeekbar) {
+      const rect = seekbar.getBoundingClientRect();
+      const offsetX = event.clientX - rect.left;
+      const seekTime = (offsetX / rect.width) * video.duration;
+      video.currentTime = seekTime;
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    isDraggingSeekbar = false;
+  });
+
   const seekbarbufferProgress = document.createElement("div");
-  seekbarbufferProgress.className = "absolute h-full bg-gray-500 rounded";
+  seekbarbufferProgress.className = "absolute h-full bg-neutral-600 rounded";
 
   video.addEventListener("progress", () => {
     if (video.buffered.length > 0) {
@@ -128,7 +151,10 @@ export default async function Player(query: PlayerQuery) {
   });
 
   const seekbarProgress = document.createElement("div");
-  seekbarProgress.className = "absolute h-full bg-white rounded";
+  seekbarProgress.className = "absolute h-full bg-[#DC143C] rounded";
+
+  const seekbarHandle = document.createElement("div");
+  seekbarHandle.className = "absolute h-2.25 w-2.25 bg-[#DC143C] rounded-full";
 
   video.addEventListener("timeupdate", () => {
     const currentTime = video.currentTime;
@@ -138,29 +164,24 @@ export default async function Player(query: PlayerQuery) {
 
     const progress = (currentTime / duration) * 100;
     seekbarProgress.style.width = `${progress}%`;
+    seekbarHandle.style.left = `${progress}%`;
+    seekbarHandle.style.transform = `translateX(-50%)`;
   });
 
-  const seekbarChapters = document.createElement("div");
-  seekbarChapters.className = "absolute z-5 flex h-full w-full space-x-0.5";
+  // const seekbarChapters = document.createElement("div");
+  // seekbarChapters.className = "absolute z-5 flex h-full w-full space-x-0.5";
 
   seekbar.appendChild(seekbarbufferProgress);
   seekbar.appendChild(seekbarProgress);
-  seekbar.appendChild(seekbarChapters);
+
+  seekbar.appendChild(seekbarHandle);
+
+  // seekbar.appendChild(seekbarChapters);
 
   controls.appendChild(seekbar);
 
   const buttonRow = document.createElement("div");
   buttonRow.className = "h-12 p-2 flex items-center space-x-4";
-
-  const skipBack = document.createElement("div");
-  skipBack.className = "flex items-center justify-center size-5 cursor-pointer";
-  skipBack.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-skip-back-icon lucide-skip-back"><path d="M17.971 4.285A2 2 0 0 1 21 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z"/><path d="M3 20V4"/></svg>`;
-
-  buttonRow.appendChild(skipBack);
-
-  skipBack.addEventListener("click", () => {
-    video.currentTime -= 10;
-  });
 
   const playbutton = document.createElement("div");
   playbutton.className =
@@ -186,6 +207,16 @@ export default async function Player(query: PlayerQuery) {
     playbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>`;
   });
 
+  const skipBack = document.createElement("div");
+  skipBack.className = "flex items-center justify-center size-5 cursor-pointer";
+  skipBack.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-skip-back-icon lucide-skip-back"><path d="M17.971 4.285A2 2 0 0 1 21 6v12a2 2 0 0 1-3.029 1.715l-9.997-5.998a2 2 0 0 1-.003-3.432z"/><path d="M3 20V4"/></svg>`;
+
+  buttonRow.appendChild(skipBack);
+
+  skipBack.addEventListener("click", () => {
+    video.currentTime -= 10;
+  });
+
   const skipForward = document.createElement("div");
   skipForward.className =
     "flex items-center justify-center size-5 cursor-pointer";
@@ -198,14 +229,14 @@ export default async function Player(query: PlayerQuery) {
   });
 
   const volumeIcons = {
-    high: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>`,
-    mid: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume1-icon lucide-volume-1"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg>`,
-    low: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-icon lucide-volume"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/></svg>`,
-    off: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-off-icon lucide-volume-off"><path d="M16 9a5 5 0 0 1 .95 2.293"/><path d="M19.364 5.636a9 9 0 0 1 1.889 9.96"/><path d="m2 2 20 20"/><path d="m7 7-.587.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298V11"/><path d="M9.828 4.172A.686.686 0 0 1 11 4.657v.686"/></svg>`,
+    high: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume2-icon lucide-volume-2"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.364 18.364a9 9 0 0 0 0-12.728"/></svg>`,
+    mid: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume1-icon lucide-volume-1"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path d="M16 9a5 5 0 0 1 0 6"/></svg>`,
+    low: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-icon lucide-volume"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/></svg>`,
+    off: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-volume-off-icon lucide-volume-off"><path d="M16 9a5 5 0 0 1 .95 2.293"/><path d="M19.364 5.636a9 9 0 0 1 1.889 9.96"/><path d="m2 2 20 20"/><path d="m7 7-.587.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298V11"/><path d="M9.828 4.172A.686.686 0 0 1 11 4.657v.686"/></svg>`,
   };
 
   const volumeArea = document.createElement("div");
-  volumeArea.className = "group flex items-center space-x-2";
+  volumeArea.className = "group flex items-center space-x-2 px-1";
 
   const volumebutton = document.createElement("div");
   volumebutton.className =
@@ -213,18 +244,27 @@ export default async function Player(query: PlayerQuery) {
 
   const volumeSlider = document.createElement("div");
   volumeSlider.className =
-    "h-0.75 w-0 group-hover:w-16 bg-neutral-700 rounded-full cursor-pointer transition-all duration-300";
+    "relative flex items-center h-0.75 w-0 group-hover:w-16 bg-neutral-700 rounded-full cursor-pointer transition-all duration-300";
 
   const volumeProgress = document.createElement("div");
   volumeProgress.className = "h-full bg-white rounded-full";
 
+  const volumeHandle = document.createElement("div");
+  volumeHandle.className =
+    "absolute w-2.25 h-2.25 bg-white rounded-full hidden group-hover:block";
+
   volumeSlider.appendChild(volumeProgress);
+  volumeSlider.appendChild(volumeHandle);
   volumeArea.appendChild(volumebutton);
   volumeArea.appendChild(volumeSlider);
   buttonRow.appendChild(volumeArea);
 
   function updateVolumeUI(volume: number) {
+    volume = Math.max(0, Math.min(1, volume));
     volumeProgress.style.width = `${volume * 100}%`;
+    volumeHandle.style.left = `${volume * 100}%`;
+    volumeHandle.style.transform = `translateX(-50%)`;
+
     if (volume === 0.0) {
       volumebutton.innerHTML = volumeIcons.off;
     } else if (volume < 0.25) {
@@ -243,10 +283,33 @@ export default async function Player(query: PlayerQuery) {
     video.volume = volume;
   });
 
+  let isDraggingVolume = false;
+
+  volumeSlider.addEventListener("mousedown", (event) => {
+    isDraggingVolume = true;
+    const rect = volumeSlider.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const volume = offsetX / rect.width;
+    updateVolumeUI(volume);
+  });
+
+  document.addEventListener("mousemove", (event) => {
+    if (isDraggingVolume) {
+      const rect = volumeSlider.getBoundingClientRect();
+      const offsetX = event.clientX - rect.left;
+      const volume = offsetX / rect.width;
+      updateVolumeUI(volume);
+    }
+  });
+
+  document.addEventListener("mouseup", () => {
+    localStorage.setItem("player_volume", (video.volume * 100).toString());
+    isDraggingVolume = false;
+  });
+
   video.addEventListener("volumechange", () => {
     const volume = parseFloat(video.volume.toFixed(2));
     console.log(volume);
-    localStorage.setItem("player_volume", (volume * 100).toString());
     updateVolumeUI(volume);
   });
 
@@ -331,28 +394,28 @@ export default async function Player(query: PlayerQuery) {
     controls.classList.add("hidden");
     pageback.classList.add("hidden");
 
-    const chapters = await getAnimeChapters(
-      parseInt(JSON.parse(query.episode).mal_id),
-      parseInt(JSON.parse(query.episode).episode),
-      video.duration,
-    );
+    // const chapters = await getAnimeChapters(
+    //   parseInt(JSON.parse(query.episode).mal_id),
+    //   parseInt(JSON.parse(query.episode).episode),
+    //   video.duration,
+    // );
 
-    if (chapters.length == 0) {
-      const chapterElement = document.createElement("div");
-      chapterElement.className = "h-full bg-black/25";
-      chapterElement.style.width = `100%`;
+    // if (chapters.length == 0) {
+    //   const chapterElement = document.createElement("div");
+    //   chapterElement.className = "h-full bg-black/25";
+    //   chapterElement.style.width = `100%`;
 
-      seekbarChapters.appendChild(chapterElement);
-      return;
-    }
+    //   seekbarChapters.appendChild(chapterElement);
+    //   return;
+    // }
 
-    chapters.forEach((chapter) => {
-      const chapterElement = document.createElement("div");
-      chapterElement.className = "h-full bg-black/25";
-      chapterElement.style.width = `${((chapter.end / 1000 - chapter.start / 1000) / video.duration) * 100}%`;
+    // chapters.forEach((chapter) => {
+    //   const chapterElement = document.createElement("div");
+    //   chapterElement.className = "h-full bg-black/25";
+    //   chapterElement.style.width = `${((chapter.end / 1000 - chapter.start / 1000) / video.duration) * 100}%`;
 
-      seekbarChapters.appendChild(chapterElement);
-    });
+    //   seekbarChapters.appendChild(chapterElement);
+    // });
   });
 
   if (!query.streamurl) {
