@@ -2,6 +2,14 @@ import { getProvider, getEpisode } from "../../lib/animetoast";
 import { getMetadata } from "../../lib/voe";
 import { router } from "../../lib/router/index";
 
+declare global {
+  interface Window {
+    electronAPI?: {
+      getLocalMedia: (path: string) => Promise<any>;
+    };
+  }
+}
+
 export function SourcePanel(anime, episodes, index) {
   const container = document.createElement("div");
   container.className =
@@ -70,36 +78,21 @@ export function SourcePanel(anime, episodes, index) {
 
   console.log(episodes, index);
 
-  const localFileWrapper = document.createElement("div");
-  localFileWrapper.className =
-    "relative w-full px-4 py-4 grid place-items-center space-y-1 text-sm bg-[#0d0d0d] outline-1 outline-dashed outline-[#1a1a1a] rounded-md";
-  localFileWrapper.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hard-drive-icon lucide-hard-drive size-8"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" x2="6.01" y1="16" y2="16"/><line x1="10" x2="10.01" y1="16" y2="16"/></svg>
-    <span class="text-white">Drag & Drop <span class="text-gray-400">or</span></span>
-    <div class="px-2 py-1 rounded-md bg-[#1a1a1a]">Browse</div>
-  `;
+  const localSetup = document.createElement("div");
+  localSetup.className =
+    "size-8 grid place-items-center outline-1 outline-[#1a1a1a] rounded-md cursor-pointer";
+  localSetup.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-cog-icon lucide-folder-cog size-5"><path d="M10.3 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.98a2 2 0 0 1 1.69.9l.66 1.2A2 2 0 0 0 12 6h8a2 2 0 0 1 2 2v3.3"/><path d="m14.305 19.53.923-.382"/><path d="m15.228 16.852-.923-.383"/><path d="m16.852 15.228-.383-.923"/><path d="m16.852 20.772-.383.924"/><path d="m19.148 15.228.383-.923"/><path d="m19.53 21.696-.382-.924"/><path d="m20.772 16.852.924-.383"/><path d="m20.772 19.148.924.383"/><circle cx="18" cy="18" r="3"/></svg>`;
 
-  const localFileInput = document.createElement("input");
-  localFileInput.className = "absolute inset-0 opacity-0 cursor-pointer";
-  localFileInput.type = "file";
-  localFileInput.accept = ".mkv,.mp4,.avi,.webm";
+  panel.appendChild(localSetup);
 
-  localFileWrapper.appendChild(localFileInput);
+  localSetup.addEventListener("click", async () => {
+    const dirHandle = await window.showDirectoryPicker();
 
-  panel.appendChild(localFileWrapper);
+    if (!dirHandle) return;
 
-  localFileInput.addEventListener("change", () => {
-    const file = localFileInput.files[0];
+    const animeTitle = anime.title.romaji.replaceAll(" ", "-");
 
-    if (!file) return;
-
-    console.log(
-      `/player?streamurl=${encodeURIComponent(URL.createObjectURL(file))}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
-    );
-
-    router.navigate(
-      `/player?streamurl=${encodeURIComponent(URL.createObjectURL(file))}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
-    );
+    dirHandle.getDirectoryHandle(animeTitle, { create: true });
   });
 
   const extensions = {
@@ -123,8 +116,114 @@ export function SourcePanel(anime, episodes, index) {
 
   loadSource();
 
-  function loadSource() {
+  async function getLocalEpisode() {
+    const animeDirContents = await window.electronAPI.getLocalMedia(
+      `F:\\Anime\\${anime.title.romaji.replaceAll(" ", "-")}`,
+    );
+
+    if (!animeDirContents) {
+      console.warn("Anime directory not found");
+      return;
+    }
+
+    if (animeDirContents.length === 0) {
+      console.warn("No episodes found");
+      return;
+    }
+
+    const episodeFile = animeDirContents.filter((file) => {
+      const match = file.name.match(/E(\d+)/);
+
+      if (match && parseInt(match[1]) === episodePickerInput.valueAsNumber)
+        return true;
+
+      return false;
+    });
+
+    if (episodeFile.length === 0) {
+      console.warn("No episode found");
+      return;
+    }
+
+    console.log(episodeFile);
+    return episodeFile[0];
+  }
+
+  function formatBytes(bytes, decimals = 2) {
+    if (bytes === 0) return "0 Bytes";
+
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB"];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
+  }
+
+  async function loadSource() {
     sourceElementList.innerHTML = "";
+
+    const skeletonElement = document.createElement("div");
+    skeletonElement.className =
+      "relative w-full h-28 p-4 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2 animate-pulse";
+    skeletonElement.innerHTML = `
+      <div class="mt-2 w-1/3 h-4 bg-[#1a1a1a] rounded-md"></div>
+      <div class="w-2/3 h-4 bg-[#1a1a1a] rounded-md"></div>
+      <div class="mt-2 w-1/4 h-4 bg-[#1a1a1a] rounded-md"></div>
+    `;
+    sourceElementList.appendChild(skeletonElement);
+
+    const local = await getLocalEpisode();
+
+    if (!local) {
+      skeletonElement.remove();
+    } else {
+      skeletonElement.remove();
+      const hosterElement = document.createElement("div");
+      hosterElement.className =
+        "relative w-full h-28 p-4 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2";
+
+      sourceElementList.appendChild(hosterElement);
+
+      const hosterTitle = document.createElement("div");
+      hosterTitle.className =
+        "flex items-center space-x-2 text-white font-bold";
+      hosterTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hard-drive-icon lucide-hard-drive"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" x2="6.01" y1="16" y2="16"/><line x1="10" x2="10.01" y1="16" y2="16"/></svg>
+    <span>Local Media</span>`;
+
+      hosterElement.appendChild(hosterTitle);
+
+      // const extensionIcon = document.createElement("img");
+      // extensionIcon.src = "";
+      // extensionIcon.className = "absolute right-4 top-4 w-4 h-4";
+      // extensionIcon.title = `Provided by Local Media`;
+
+      // hosterElement.appendChild(extensionIcon);
+
+      const hosterFileName = document.createElement("div");
+      hosterFileName.className = "text-[#a2a2a2] text-xs";
+      hosterFileName.textContent = local.name;
+
+      hosterElement.appendChild(hosterFileName);
+
+      const hosterSize = document.createElement("div");
+      hosterSize.className =
+        "absolute left-4 bottom-4 text-[#f0f0f0] text-xs py-1 m-0";
+      hosterSize.textContent = formatBytes(local.size);
+
+      hosterElement.appendChild(hosterSize);
+
+      hosterElement.addEventListener("click", () => {
+        console.log(
+          `/player?streamurl=${encodeURIComponent(local.path)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
+        );
+
+        router.navigate(
+          `/player?streamurl=${encodeURIComponent(local.path)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
+        );
+      });
+    }
 
     extensions.source.map(async (source_extension) => {
       const skeletonElement = document.createElement("div");
