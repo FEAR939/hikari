@@ -67,7 +67,6 @@ export default function Episode(episode: Episode, index: number): EpElement {
 
   function renderProgress(prog) {
     const duration = (prog / (episode.runtime * 60)) * 100;
-    console.log(prog, episode.runtime * 60, duration);
     progbar.style.width = `${duration}%`;
 
     progress.classList.remove("hidden");
