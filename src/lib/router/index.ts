@@ -34,8 +34,13 @@ class Router {
         }
       }
 
-      if (path == "/player" || path == "/anime/updateEpisodeProgress")
+      if (
+        path == "/player" ||
+        path == "/anime/updateEpisodeProgress" ||
+        path == "/anime/episodes/sourcePanel"
+      ) {
         return handler(query);
+      }
 
       root.innerHTML = "";
       handler(query);
