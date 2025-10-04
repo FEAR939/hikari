@@ -194,12 +194,12 @@ export function SourcePanel(anime, episodes, index) {
 
       hosterElement.appendChild(hosterTitle);
 
-      // const extensionIcon = document.createElement("img");
-      // extensionIcon.src = "";
-      // extensionIcon.className = "absolute right-4 top-4 w-4 h-4";
-      // extensionIcon.title = `Provided by Local Media`;
+      const extensionIcon = document.createElement("img");
+      extensionIcon.src = "../public/icons/icon.png";
+      extensionIcon.className = "absolute right-4 top-4 w-4 h-4";
+      extensionIcon.title = `Provided by Local Media`;
 
-      // hosterElement.appendChild(extensionIcon);
+      hosterElement.appendChild(extensionIcon);
 
       const hosterFileName = document.createElement("div");
       hosterFileName.className = "text-[#a2a2a2] text-xs";
