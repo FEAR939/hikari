@@ -171,9 +171,16 @@ export function SourcePanel(anime, episodes, index) {
     }
 
     const episodeFile = animeDirContents.filter((file) => {
-      const match = file.name.match(/E(\d+)/);
+      const match = file.name.toLowerCase().match(/e(\d+)/);
+      const matchAlt = file.name.toLowerCase().match(/ep(\d+)/);
 
       if (match && parseInt(match[1]) === episodePickerInput.valueAsNumber)
+        return true;
+
+      if (
+        matchAlt &&
+        parseInt(matchAlt[1]) === episodePickerInput.valueAsNumber
+      )
         return true;
 
       return false;
@@ -203,12 +210,14 @@ export function SourcePanel(anime, episodes, index) {
   async function loadSource() {
     sourceElementList.innerHTML = "";
 
-    let toLoad = 0;
+    let toLoad = extensions.source.length + 1;
+    console.log(`Loading ${toLoad} sources`);
     let loaded = 0;
     let sources = [];
 
     function updateLoaded() {
       loaded += 1;
+      console.log(`Loaded ${loaded}/${toLoad}`);
 
       if (loaded === toLoad && autoSelect) {
         setTimeout(() => {
@@ -216,14 +225,19 @@ export function SourcePanel(anime, episodes, index) {
 
           const local = sources.find((source) => source.name === "local"); // preferred
 
-          if (local) return local.node.dispatchEvent(new Event("click"));
+          if (local) {
+            local.node.dispatchEvent(new Event("click"));
+            return;
+          }
 
           const filteredSources = sources.filter(
             (source) => source.name !== "local",
           );
 
-          if (!filteredSources.length)
-            return console.warn("No sources for auto selection");
+          if (!filteredSources.length) {
+            console.warn("No sources for auto selection");
+            return;
+          }
 
           filteredSources[0].node.dispatchEvent(new Event("click"));
         }, 3000);
@@ -248,8 +262,8 @@ export function SourcePanel(anime, episodes, index) {
 
     if (!local) {
       skeletonElement.remove();
+      toLoad -= 1;
     } else {
-      toLoad += 1;
       skeletonElement.remove();
       const hosterElement = document.createElement("div");
       hosterElement.className =
@@ -320,16 +334,20 @@ export function SourcePanel(anime, episodes, index) {
 
       console.log(source);
 
-      if (!source) return skeletonElement.remove();
+      if (!source) {
+        skeletonElement.remove();
+        toLoad -= 1;
+        return;
+      }
 
       source.hosters.map(async (source_hoster) => {
         const extensionIndex = extensions.stream.findIndex(
           (extension_hoster) => extension_hoster.name === source_hoster.label,
         );
 
-        if (extensionIndex === -1) return;
-
-        toLoad += 1;
+        if (extensionIndex === -1) {
+          return;
+        }
 
         const extension = extensions.stream[extensionIndex];
 
@@ -363,7 +381,10 @@ export function SourcePanel(anime, episodes, index) {
 
         const stream = await getMetadata(source_episode);
 
-        if (!stream) return;
+        if (!stream) {
+          toLoad -= 1;
+          return;
+        }
 
         console.log(stream);
 
