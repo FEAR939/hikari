@@ -29,6 +29,7 @@ export function SourcePanel(anime, episodes, index) {
   panel.appendChild(containerClose);
 
   containerClose.addEventListener("click", () => {
+    router.removeRoute("/anime/episodes/sourcePanel");
     container.remove();
   });
 
@@ -76,14 +77,24 @@ export function SourcePanel(anime, episodes, index) {
     loadSource();
   });
 
+  router.route("/anime/episodes/sourcePanel", (query) => {
+    episodePickerInput.value = query.episode;
+    episodePickerInput.dispatchEvent(new Event("input"));
+  });
+
   console.log(episodes, index);
+
+  const buttonRow = document.createElement("div");
+  buttonRow.className = "flex space-x-2";
+
+  panel.appendChild(buttonRow);
 
   const localSetup = document.createElement("div");
   localSetup.className =
     "size-8 grid place-items-center outline-1 outline-[#1a1a1a] rounded-md cursor-pointer";
   localSetup.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-folder-cog-icon lucide-folder-cog size-5"><path d="M10.3 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.98a2 2 0 0 1 1.69.9l.66 1.2A2 2 0 0 0 12 6h8a2 2 0 0 1 2 2v3.3"/><path d="m14.305 19.53.923-.382"/><path d="m15.228 16.852-.923-.383"/><path d="m16.852 15.228-.383-.923"/><path d="m16.852 20.772-.383.924"/><path d="m19.148 15.228.383-.923"/><path d="m19.53 21.696-.382-.924"/><path d="m20.772 16.852.924-.383"/><path d="m20.772 19.148.924.383"/><circle cx="18" cy="18" r="3"/></svg>`;
 
-  panel.appendChild(localSetup);
+  buttonRow.appendChild(localSetup);
 
   localSetup.addEventListener("click", async () => {
     const dirHandle = await window.showDirectoryPicker();
@@ -93,6 +104,34 @@ export function SourcePanel(anime, episodes, index) {
     const animeTitle = anime.title.romaji.replaceAll(" ", "-");
 
     dirHandle.getDirectoryHandle(animeTitle, { create: true });
+  });
+
+  if (localStorage.getItem("autoSelect") === null) {
+    localStorage.setItem("autoSelect", "false");
+  }
+
+  let autoSelect = localStorage.getItem("autoSelect") === "true";
+
+  const autoSelectToggle = document.createElement("div");
+  autoSelectToggle.textContent = "AUTO";
+
+  buttonRow.appendChild(autoSelectToggle);
+
+  function toggleAutoSelect() {
+    if (autoSelect) {
+      autoSelectToggle.className = "px-2 py-1 bg-white text-black rounded-md";
+    } else {
+      autoSelectToggle.className =
+        "px-2 py-1 bg-black text-white outline-1 outline-[#1a1a1a] rounded-md";
+    }
+  }
+
+  toggleAutoSelect();
+
+  autoSelectToggle.addEventListener("click", () => {
+    autoSelect = !autoSelect;
+    localStorage.setItem("autoSelect", autoSelect.toString());
+    toggleAutoSelect();
   });
 
   const extensions = {
@@ -164,6 +203,33 @@ export function SourcePanel(anime, episodes, index) {
   async function loadSource() {
     sourceElementList.innerHTML = "";
 
+    let toLoad = 0;
+    let loaded = 0;
+    let sources = [];
+
+    function updateLoaded() {
+      loaded += 1;
+
+      if (loaded === toLoad && autoSelect) {
+        setTimeout(() => {
+          if (!autoSelect) return console.warn("Auto selection disabled");
+
+          const local = sources.find((source) => source.name === "local"); // preferred
+
+          if (local) return local.node.dispatchEvent(new Event("click"));
+
+          const filteredSources = sources.filter(
+            (source) => source.name !== "local",
+          );
+
+          if (!filteredSources.length)
+            return console.warn("No sources for auto selection");
+
+          filteredSources[0].node.dispatchEvent(new Event("click"));
+        }, 3000);
+      }
+    }
+
     const skeletonElement = document.createElement("div");
     skeletonElement.className =
       "relative w-full h-28 p-4 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2 animate-pulse";
@@ -173,12 +239,17 @@ export function SourcePanel(anime, episodes, index) {
       <div class="mt-2 w-1/4 h-4 bg-[#1a1a1a] rounded-md"></div>
     `;
     sourceElementList.appendChild(skeletonElement);
-
-    const local = await getLocalEpisode();
+    let local = false;
+    try {
+      local = await getLocalEpisode();
+    } catch (error) {
+      console.error("Error fetching local episode:", error);
+    }
 
     if (!local) {
       skeletonElement.remove();
     } else {
+      toLoad += 1;
       skeletonElement.remove();
       const hosterElement = document.createElement("div");
       hosterElement.className =
@@ -223,6 +294,12 @@ export function SourcePanel(anime, episodes, index) {
           `/player?streamurl=${encodeURIComponent(local.path)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
         );
       });
+
+      sources.push({
+        name: "local",
+        node: hosterElement,
+      });
+      updateLoaded();
     }
 
     extensions.source.map(async (source_extension) => {
@@ -251,6 +328,8 @@ export function SourcePanel(anime, episodes, index) {
         );
 
         if (extensionIndex === -1) return;
+
+        toLoad += 1;
 
         const extension = extensions.stream[extensionIndex];
 
@@ -317,6 +396,13 @@ export function SourcePanel(anime, episodes, index) {
             `/player?streamurl=${encodeURIComponent(stream.mp4)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
           );
         });
+
+        sources.push({
+          name: source_hoster.label,
+          node: hosterElement,
+        });
+
+        updateLoaded();
       });
     });
   }
