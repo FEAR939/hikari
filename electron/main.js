@@ -59,6 +59,35 @@ function createWindow() {
       throw error;
     }
   });
+
+  session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    if (details.url.startsWith("https://graphql.anilist.co")) {
+      details.requestHeaders.Referer = "https://anilist.co/";
+      details.requestHeaders.Origin = "https://anilist.co";
+      delete details.requestHeaders["User-Agent"];
+    }
+    callback({ cancel: false, requestHeaders: details.requestHeaders });
+  });
+
+  // anilist.... forgot to set the cache header on their preflights..... pathetic.... this just wastes rate limits, this fixes it!
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    if (
+      details.url.startsWith("https://graphql.anilist.co") &&
+      details.method === "OPTIONS"
+    ) {
+      if (details.responseHeaders) {
+        if (
+          !details.responseHeaders["access-control-allow-origin"] ||
+          !details.responseHeaders["Access-Control-Allow-Origin"]
+        )
+          details.responseHeaders["access-control-allow-origin"] = ["*"];
+        details.responseHeaders["Cache-Control"] = ["public, max-age=86400"];
+        details.responseHeaders["access-control-max-age"] = ["86400"];
+      }
+    }
+
+    callback(details);
+  });
 }
 
 app.whenReady().then(() => {
