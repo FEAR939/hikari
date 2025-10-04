@@ -316,7 +316,7 @@ export default async function Anime(query) {
   function episodeHandler() {
     const episodeList = document.createElement("div");
     episodeList.className =
-      "h-fit w-full grid grid-cols-1 md:grid-cols-2 gap-4";
+      "h-fit w-full grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4";
 
     tabContent.appendChild(episodeList);
 
