@@ -51,10 +51,10 @@ export default function Episode(episode: Episode, index: number): EpElement {
   episodeSide.appendChild(episodeTitle);
 
   const progress = document.createElement("div");
-  progress.className = "h-0.5 bg-[#2c2c2c] rounded hidden";
+  progress.className = "h-0.5 bg-neutral-800 rounded hidden";
 
   const progbar = document.createElement("div");
-  progbar.className = "h-full bg-indigo-400";
+  progbar.className = "h-full bg-[#DC143C]";
 
   progress.appendChild(progbar);
 
@@ -69,7 +69,7 @@ export default function Episode(episode: Episode, index: number): EpElement {
   }
 
   const episodeDescription = document.createElement("p");
-  episodeDescription.className = "text-[9px] text-[#a4a4a4] line-clamp-2";
+  episodeDescription.className = "text-[9px] text-neutral-300 line-clamp-2";
   episodeDescription.textContent = episode.overview;
   episodeSide.appendChild(episodeDescription);
 
