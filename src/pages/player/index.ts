@@ -341,6 +341,44 @@ export default async function Player(query: PlayerQuery) {
 
   buttonRow.appendChild(spacer);
 
+  const autoPlayToggle = document.createElement("div");
+  autoPlayToggle.className = "relative h-4 w-10 rounded-full bg-neutral-800";
+
+  const autoPlayNob = document.createElement("div");
+  autoPlayNob.className =
+    "absolute h-4 w-4 rounded-full flex items-center justify-center bg-neutral-600 transition-all duration-150";
+
+  autoPlayToggle.appendChild(autoPlayNob);
+
+  if (localStorage.getItem("autoPlay") === null) {
+    localStorage.setItem("autoPlay", "true");
+  }
+
+  let autoPlayState = localStorage.getItem("autoPlay") === "true";
+
+  function toggleAutoPlay() {
+    if (autoPlayState) {
+      autoPlayNob.style.transform = "translateX(100%)";
+      autoPlayNob.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play size-2"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
+      `;
+    } else {
+      autoPlayNob.style.transform = "translateX(0)";
+      autoPlayNob.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause-icon lucide-pause size-2"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>
+      `;
+    }
+  }
+
+  toggleAutoPlay();
+
+  autoPlayToggle.addEventListener("click", () => {
+    autoPlayState = !autoPlayState;
+    toggleAutoPlay();
+  });
+
+  buttonRow.appendChild(autoPlayToggle);
+
   const miniPlayerbutton = document.createElement("div");
   miniPlayerbutton.className =
     "flex items-center justify-center size-5 cursor-pointer";
@@ -424,6 +462,16 @@ export default async function Player(query: PlayerQuery) {
   }
 
   video.src = query.streamurl;
+
+  video.addEventListener("ended", () => {
+    if (!autoPlayState) return;
+    handleBeforeClose();
+    player.remove();
+    console.log(query.episode);
+    router.navigate(
+      `/anime/episodes/sourcePanel?episode=${parseInt(JSON.parse(query.episode).episode) + 1}`,
+    );
+  });
 
   window.addEventListener("keyup", (event) => {
     event.preventDefault();
