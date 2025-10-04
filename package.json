@@ -30,6 +30,9 @@
       "node_modules/**/*",
       "electron/**/*"
     ],
+    "win": {
+      "icon": "public/icons/icon.png"
+    },
     "asar": true,
     "nsis": {
       "oneClick": false,
