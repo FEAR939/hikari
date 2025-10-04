@@ -364,41 +364,41 @@ export default async function Anime(query) {
 
     async function renderPage() {
       episodeList.innerHTML = "";
-      const episodes = Object.values(anime_anizip.episodes)
-        .filter((episode) => episode.episode)
-        .map((episode, index) => {
-          if (
-            isNaN(parseInt(episode.episode)) ||
-            episodesPage * episodesPerPage > index ||
-            index >= (episodesPage + 1) * episodesPerPage
-          )
-            return;
+      const episodes = new Map(); // Changed from array to Map
+      const eps = Object.values(anime_anizip.episodes).filter(
+        (episode) => episode.episode,
+      );
 
-          episode.mal_id = anime.idMal || 0;
-          episode.anilist_id = anime.id || 0;
+      for (let index = 0; index < eps.length; index++) {
+        const episode = eps[index];
+        if (
+          isNaN(parseInt(episode.episode)) ||
+          episodesPage * episodesPerPage > index ||
+          index >= (episodesPage + 1) * episodesPerPage
+        )
+          continue;
 
-          const episodeCard = Episode(episode, index);
-
-          episodeList.appendChild(episodeCard);
-
-          episodeCard.addEventListener("click", () => {
-            const sourcepanel = SourcePanel(
-              anime,
-              Object.values(anime_anizip.episodes).filter(
-                (episode) => episode.episode,
-              ),
-              index,
-            );
-            page.appendChild(sourcepanel);
-          });
-
-          return episodeCard;
+        episode.mal_id = anime.idMal || 0;
+        episode.anilist_id = anime.id || 0;
+        const episodeCard = Episode(episode, index);
+        episodeList.appendChild(episodeCard);
+        episodeCard.addEventListener("click", () => {
+          const sourcepanel = SourcePanel(
+            anime,
+            Object.values(anime_anizip.episodes).filter(
+              (episode) => episode.episode,
+            ),
+            index,
+          );
+          page.appendChild(sourcepanel);
         });
+        episodes.set(episode.episode, episodeCard); // Store by episode number
+      }
 
       router.route("/anime/updateEpisodeProgress", (query) => {
         if (parseInt(query.anilist_id) !== anime.id) return;
-
-        episodes[query.episode - 1].updateProgress(query.leftoff);
+        const episodeCard = episodes.get(query.episode);
+        if (episodeCard) episodeCard.updateProgress(query.leftoff);
       });
 
       if (!authService.getUser() || !episodeProgress) return;
@@ -408,8 +408,9 @@ export default async function Anime(query) {
         (episodesPage + 1) * episodesPerPage,
       );
 
-      episodeProgressPart.map((episodeProg) => {
-        episodes[episodeProg.episode - 1].updateProgress(episodeProg.leftoff);
+      episodeProgressPart.forEach((episodeProg) => {
+        const episodeCard = episodes.get(episodeProg.episode.toString());
+        if (episodeCard) episodeCard.updateProgress(episodeProg.leftoff);
       });
     }
   }
