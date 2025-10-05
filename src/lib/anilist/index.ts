@@ -92,6 +92,7 @@ export async function getAnime(id: number) {
           }
           description
           genres
+          format
           status
           duration
           episodes
