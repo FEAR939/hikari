@@ -365,9 +365,23 @@ export default async function Anime(query) {
     async function renderPage() {
       episodeList.innerHTML = "";
       const episodes = new Map(); // Changed from array to Map
-      const eps = Object.values(anime_anizip.episodes).filter(
+      let eps = Object.values(anime_anizip.episodes).filter(
         (episode) => episode.episode,
       );
+      if (eps.length === 0 && anime.format === "MOVIE") {
+        const epObj = {
+          episode: "1",
+          runtime: 0,
+          image: "",
+          overview: "",
+          title: {
+            en: "",
+          },
+          airdate: "",
+        };
+
+        eps = [epObj];
+      }
 
       for (let index = 0; index < eps.length; index++) {
         const episode = eps[index];
@@ -403,9 +417,10 @@ export default async function Anime(query) {
 
       if (!authService.getUser() || !episodeProgress) return;
 
-      const episodeProgressPart = episodeProgress.slice(
-        episodesPage * episodesPerPage,
-        (episodesPage + 1) * episodesPerPage,
+      const episodeProgressPart = episodeProgress.filter(
+        (episode) =>
+          episode.episode >= episodesPage * episodesPerPage &&
+          episode.episode < (episodesPage + 1) * (episodesPerPage - 1),
       );
 
       episodeProgressPart.forEach((episodeProg) => {
