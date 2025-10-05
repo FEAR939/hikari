@@ -80,7 +80,7 @@ export default function Episode(episode: Episode, index: number): EpElement {
 
   const episodeAirDate = document.createElement("div");
   episodeAirDate.className = "text-xs font-medium m-0 text-neutral-500";
-  episodeAirDate.textContent = getRelativeTime(episode.airdate);
+  episodeAirDate.textContent = getRelativeTime(episode.airdate) || "Unknown";
 
   episodeSide.appendChild(episodeAirDate);
 
