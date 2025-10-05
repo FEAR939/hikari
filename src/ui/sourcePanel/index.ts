@@ -101,7 +101,11 @@ export function SourcePanel(anime, episodes, index) {
 
     if (!dirHandle) return;
 
-    const animeTitle = anime.title.romaji.replaceAll(" ", "-");
+    const animeTitle = anime.title.romaji
+      .replaceAll(" ", "-")
+      .replaceAll(":", "")
+      .replaceAll("'", "")
+      .replaceAll('"', "");
 
     dirHandle.getDirectoryHandle(animeTitle, { create: true });
   });
@@ -157,7 +161,11 @@ export function SourcePanel(anime, episodes, index) {
 
   async function getLocalEpisode() {
     const animeDirContents = await window.electronAPI.getLocalMedia(
-      `F:\\Anime\\${anime.title.romaji.replaceAll(" ", "-")}`,
+      `F:\\Anime\\${anime.title.romaji
+        .replaceAll(" ", "-")
+        .replaceAll(":", "")
+        .replaceAll("'", "")
+        .replaceAll('"', "")}`,
     );
 
     if (!animeDirContents) {
@@ -173,6 +181,8 @@ export function SourcePanel(anime, episodes, index) {
     const episodeFile = animeDirContents.filter((file) => {
       const match = file.name.toLowerCase().match(/e(\d+)/);
       const matchAlt = file.name.toLowerCase().match(/ep(\d+)/);
+
+      if (anime.format === "MOVIE") return true;
 
       if (match && parseInt(match[1]) === episodePickerInput.valueAsNumber)
         return true;
@@ -215,9 +225,12 @@ export function SourcePanel(anime, episodes, index) {
     let loaded = 0;
     let sources = [];
 
-    function updateLoaded() {
-      loaded += 1;
-      console.log(`Loaded ${loaded}/${toLoad}`);
+    function updateLoaded(success: boolean) {
+      if (success) {
+        loaded += 1;
+      } else {
+        toLoad -= 1;
+      }
 
       if (loaded === toLoad && autoSelect) {
         setTimeout(() => {
@@ -262,7 +275,7 @@ export function SourcePanel(anime, episodes, index) {
 
     if (!local) {
       skeletonElement.remove();
-      toLoad -= 1;
+      updateLoaded(false);
     } else {
       skeletonElement.remove();
       const hosterElement = document.createElement("div");
@@ -313,7 +326,7 @@ export function SourcePanel(anime, episodes, index) {
         name: "local",
         node: hosterElement,
       });
-      updateLoaded();
+      updateLoaded(true);
     }
 
     extensions.source.map(async (source_extension) => {
@@ -336,7 +349,7 @@ export function SourcePanel(anime, episodes, index) {
 
       if (!source) {
         skeletonElement.remove();
-        toLoad -= 1;
+        updateLoaded(false);
         return;
       }
 
@@ -382,7 +395,7 @@ export function SourcePanel(anime, episodes, index) {
         const stream = await getMetadata(source_episode);
 
         if (!stream) {
-          toLoad -= 1;
+          updateLoaded(false);
           return;
         }
 
@@ -423,7 +436,7 @@ export function SourcePanel(anime, episodes, index) {
           node: hosterElement,
         });
 
-        updateLoaded();
+        updateLoaded(true);
       });
     });
   }
