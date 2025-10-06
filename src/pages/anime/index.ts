@@ -115,8 +115,6 @@ export default async function Anime(query) {
       return acc;
     }, 0);
 
-    console.log(lastProgress);
-
     const sourcePanel = SourcePanel(anime, episodes, lastProgress - 1);
     page.appendChild(sourcePanel);
   });
