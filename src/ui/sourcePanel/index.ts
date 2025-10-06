@@ -1,6 +1,7 @@
 import { getProvider, getEpisode } from "../../lib/animetoast";
 import { getMetadata } from "../../lib/voe";
 import { router } from "../../lib/router/index";
+import { Timer } from "../../ui/timer";
 
 declare global {
   interface Window {
@@ -138,6 +139,11 @@ export function SourcePanel(anime, episodes, index) {
     toggleAutoSelect();
   });
 
+  const insertSpace = document.createElement("div");
+  insertSpace.className = "w-full h-fit space-y-2";
+
+  panel.appendChild(insertSpace);
+
   const extensions = {
     source: [
       {
@@ -224,6 +230,8 @@ export function SourcePanel(anime, episodes, index) {
     console.log(`Loading ${toLoad} sources`);
     let loaded = 0;
     let sources = [];
+    let episodeSelected = false;
+    let timerInterrupted = false;
 
     function updateLoaded(success: boolean) {
       if (success) {
@@ -232,9 +240,21 @@ export function SourcePanel(anime, episodes, index) {
         toLoad -= 1;
       }
 
-      if (loaded === toLoad && autoSelect) {
+      if (
+        loaded === toLoad &&
+        autoSelect &&
+        !episodeSelected &&
+        !timerInterrupted
+      ) {
+        const timer = Timer("Episode auto selection", 3, () => {
+          timerInterrupted = true;
+        });
+        insertSpace.appendChild(timer);
+        timer.start();
+
         setTimeout(() => {
-          if (!autoSelect) return console.warn("Auto selection disabled");
+          if (!autoSelect || episodeSelected || timerInterrupted)
+            return console.warn("Auto selection disabled");
 
           const local = sources.find((source) => source.name === "local"); // preferred
 
@@ -313,9 +333,7 @@ export function SourcePanel(anime, episodes, index) {
       hosterElement.appendChild(hosterSize);
 
       hosterElement.addEventListener("click", () => {
-        console.log(
-          `/player?streamurl=${encodeURIComponent(local.path)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
-        );
+        episodeSelected = true;
 
         router.navigate(
           `/player?streamurl=${encodeURIComponent(local.path)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
@@ -422,9 +440,7 @@ export function SourcePanel(anime, episodes, index) {
         hosterElement.appendChild(hosterQuality);
 
         hosterElement.addEventListener("click", () => {
-          console.log(
-            `/player?streamurl=${encodeURIComponent(stream.mp4)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
-          );
+          episodeSelected = true;
 
           router.navigate(
             `/player?streamurl=${encodeURIComponent(stream.mp4)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
