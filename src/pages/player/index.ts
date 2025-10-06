@@ -106,13 +106,13 @@ export default async function Player(query: PlayerQuery) {
     time.textContent = `${new Date(video.currentTime * 1000).toISOString().substring(14, 19)} | ${new Date(video.duration * 1000).toISOString().substring(14, 19)}`;
   });
 
-  const seekbar = Seekbar(video);
-  controls.appendChild(seekbar);
-
   titleAndTime.appendChild(title);
   titleAndTime.appendChild(time);
 
   controls.appendChild(titleAndTime);
+
+  const seekbar = Seekbar(video);
+  controls.appendChild(seekbar);
 
   const buttonRow = document.createElement("div");
   buttonRow.className = "h-12 p-2 flex items-center space-x-4";
@@ -253,7 +253,6 @@ export default async function Player(query: PlayerQuery) {
   let fullscreenstate = false;
 
   fullscreenbutton.addEventListener("click", () => {
-    console.log("fullscreenbutton clicked");
     if (!fullscreenstate) {
       window.electronAPI?.enterFullscreen();
       fullscreenbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-minimize-icon lucide-minimize"><path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/></svg>`;
@@ -346,7 +345,7 @@ export default async function Player(query: PlayerQuery) {
 
     if (!leftoff) return;
 
-    video.currentTime = leftoff.leftoff;
+    video.currentTime = leftoff;
   }
 
   async function handleBeforeClose() {
@@ -354,7 +353,11 @@ export default async function Player(query: PlayerQuery) {
       `/anime/updateEpisodeProgress?anilist_id=${query.anilist_id}&episode=${JSON.parse(query.episode).episode}&leftoff=${Math.floor(video.currentTime)}`,
     );
 
-    if (!authService.getUser()) return (video.src = "");
+    if (!authService.getUser()) {
+      video.removeAttribute("src");
+      video.load();
+      return;
+    }
 
     setLeftoff({
       anilist_id: query.anilist_id,
@@ -362,6 +365,8 @@ export default async function Player(query: PlayerQuery) {
       leftoff: Math.floor(video.currentTime),
     });
 
-    video.src = "";
+    video.removeAttribute("src");
+    video.load();
+    return;
   }
 }
