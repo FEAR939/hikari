@@ -1,5 +1,7 @@
 import { router } from "../../lib/router/index";
 import GeneralSettings from "../../ui/generalSettings/index";
+import AccountSettings from "../../ui/accountSettings/index";
+import ExtensionSettings from "../../ui/extensionSettings/index";
 
 const settingsTree = [
   {
@@ -8,17 +10,17 @@ const settingsTree = [
   },
   {
     label: "Account ",
-    handler: () => {},
+    handler: AccountSettings,
   },
   {
     label: "Extensions ",
-    handler: () => {},
+    handler: ExtensionSettings,
   },
 ];
 
 export default async function Settings(query) {
   const page = document.createElement("div");
-  page.className = "relative h-full w-full p-4 pt-12 space-x-2 space-y-4 flex";
+  page.className = "relative h-full w-full p-4 pt-12 space-x-2 space-y-4";
 
   document.root.appendChild(page);
 
@@ -32,6 +34,20 @@ export default async function Settings(query) {
   pageback.addEventListener("click", () => {
     router.navigate("/");
   });
+
+  const header = document.createElement("div");
+  header.className = "h-fit w-full pb-4 border-b-1 border-[#1a1a1a]";
+  header.innerHTML = `
+    <div class="text-xl">Settings</div>
+    <div class="text-neutral-500">Manage your app settings, preferences, and more.</div>
+  `;
+
+  page.appendChild(header);
+
+  const row = document.createElement("div");
+  row.className = "flex h-full w-full gap-4";
+
+  page.appendChild(row);
 
   const nav = document.createElement("div");
   nav.className = "h-full w-64 overflow-y-scroll space-y-4";
@@ -51,9 +67,16 @@ export default async function Settings(query) {
     nav.appendChild(option);
   });
 
+  const versionArea = document.createElement("div");
+  versionArea.className =
+    "absolute bottom-0 h-fit w-full p-4 text-neutral-500 text-sm";
+  versionArea.textContent = `Hikari ${await window.electronAPI?.getAppVersion()}`;
+
+  nav.appendChild(versionArea);
+
   const content = document.createElement("div");
   content.className = "h-full w-full overflow-y-hidden";
 
-  page.appendChild(nav);
-  page.appendChild(content);
+  row.appendChild(nav);
+  row.appendChild(content);
 }
