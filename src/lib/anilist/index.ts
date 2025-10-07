@@ -141,6 +141,9 @@ export async function getSearch(searchString: string) {
               romaji
               english
             }
+            coverImage {
+              large
+            }
           }
         }
       }
