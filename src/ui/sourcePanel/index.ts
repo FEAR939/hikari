@@ -2,6 +2,7 @@ import { getProvider, getEpisode } from "../../lib/animetoast";
 import { getMetadata } from "../../lib/voe";
 import { router } from "../../lib/router/index";
 import { Timer } from "../../ui/timer";
+import { NumberInput } from "../numberInput";
 
 declare global {
   interface Window {
@@ -58,18 +59,25 @@ export function SourcePanel(anime, episodes, index) {
 
   episodePicker.appendChild(episodePickerLabel);
 
-  const episodePickerInput = document.createElement("input");
-  episodePickerInput.className =
-    "w-full px-4 py-2 bg-[#080808] outline-1 outline-[#1a1a1a] rounded-md";
-  episodePickerInput.type = "number";
-  episodePickerInput.min = "1";
-  episodePickerInput.max = episodes.length;
-  episodePickerInput.value = (index + 1).toString();
+  const episodePickerInput = NumberInput();
+  episodePickerInput.field.min = "1";
+  episodePickerInput.field.max = episodes.length;
+  episodePickerInput.field.value = (index + 1).toString();
 
   episodePicker.appendChild(episodePickerInput);
 
-  episodePickerInput.addEventListener("input", () => {
-    const value = parseInt(episodePickerInput.value);
+  episodePickerInput.field.addEventListener("input", () => {
+    const value = parseInt(episodePickerInput.field.value);
+
+    // check if number is below or equal to max
+    if (value > episodes.length) {
+      episodePickerInput.field.value = episodes.length.toString();
+    }
+
+    // check if number is above or equal to min
+    if (value < 1) {
+      episodePickerInput.field.value = "1";
+    }
 
     if (isNaN(value) || value < 1 || value > episodes.length) return;
 
@@ -79,7 +87,7 @@ export function SourcePanel(anime, episodes, index) {
   });
 
   router.route("/anime/episodes/sourcePanel", (query) => {
-    episodePickerInput.value = query.episode;
+    episodePickerInput.field.value = query.episode;
     episodePickerInput.dispatchEvent(new Event("input"));
   });
 
@@ -190,12 +198,15 @@ export function SourcePanel(anime, episodes, index) {
 
       if (anime.format === "MOVIE") return true;
 
-      if (match && parseInt(match[1]) === episodePickerInput.valueAsNumber)
+      if (
+        match &&
+        parseInt(match[1]) === episodePickerInput.field.valueAsNumber
+      )
         return true;
 
       if (
         matchAlt &&
-        parseInt(matchAlt[1]) === episodePickerInput.valueAsNumber
+        parseInt(matchAlt[1]) === episodePickerInput.field.valueAsNumber
       )
         return true;
 
