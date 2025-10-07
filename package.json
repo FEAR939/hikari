@@ -3,13 +3,13 @@
   "author": "F E A R",
   "private": true,
   "description": "Hikari is an app for watching anime from your favorite sources",
-  "version": "1.0.0",
-  "main": "./electron/main.js",
-  "type": "module",
+  "version": "1.2.3",
+  "main": "./electron/main.ts",
   "dependencies": {
     "@tailwindcss/vite": "^4.1.14",
     "rolldown-vite": "^7.1.16",
-    "tailwindcss": "^4.1.14"
+    "tailwindcss": "^4.1.14",
+    "electron-updater": "^6.6.2"
   },
   "devDependencies": {
     "@types/bun": "latest",
@@ -20,11 +20,19 @@
     "typescript": "^5.9.2"
   },
   "build": {
-    "appId": "com.example.hikari",
+    "appId": "com.hikari.app",
     "productName": "Hikari",
     "directories": {
       "output": "build"
     },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "FEAR939",
+        "repo": "hikari",
+        "releaseType": "release"
+      }
+    ],
     "files": [
       "dist/**/*",
       "node_modules/**/*",
