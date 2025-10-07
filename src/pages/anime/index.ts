@@ -421,8 +421,6 @@ export default async function Anime(query) {
           episode.episode <= (episodesPage + 1) * episodesPerPage,
       );
 
-      console.log(episodeProgressPart);
-
       episodeProgressPart.forEach((episodeProg) => {
         const episodeCard = episodes.get(episodeProg.episode.toString());
         if (episodeCard) episodeCard.updateProgress(episodeProg.leftoff);
