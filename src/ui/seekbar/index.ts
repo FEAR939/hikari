@@ -1,7 +1,7 @@
 export function Seekbar(video) {
   const seekbar = document.createElement("div");
   seekbar.className =
-    "relative flex items-center h-0.75 w-full bg-neutral-800 rounded cursor-pointer";
+    "group absolute bottom-13 left-4 right-4 flex items-center h-0.75 hover:h-1.5 bg-neutral-800 rounded cursor-pointer transition-all duration-300";
 
   seekbar.addEventListener("click", (event) => {
     const rect = seekbar.getBoundingClientRect();
@@ -22,12 +22,20 @@ export function Seekbar(video) {
   });
 
   document.addEventListener("mousemove", (event) => {
+    const rect = seekbar.getBoundingClientRect();
+    const offsetX = event.clientX - rect.left;
+    const seekTime = (offsetX / rect.width) * video.duration;
+
     if (isDraggingSeekbar) {
-      const rect = seekbar.getBoundingClientRect();
-      const offsetX = event.clientX - rect.left;
-      const seekTime = (offsetX / rect.width) * video.duration;
       video.currentTime = seekTime;
     }
+
+    seekbarHover.style.left = `${offsetX - seekbarHover.clientWidth / 2}px`;
+    seekbarHover.textContent = `${Math.floor(seekTime / 60)}:${Math.floor(
+      seekTime % 60,
+    )
+      .toString()
+      .padStart(2, "0")}`;
   });
 
   document.addEventListener("mouseup", () => {
@@ -50,7 +58,8 @@ export function Seekbar(video) {
   seekbarProgress.className = "absolute h-full bg-[#DC143C] rounded";
 
   const seekbarHandle = document.createElement("div");
-  seekbarHandle.className = "absolute h-2.25 w-2.25 bg-[#DC143C] rounded-full";
+  seekbarHandle.className =
+    "absolute h-2.25 w-2.25 group-hover:w-3 group-hover:h-3 bg-[#DC143C] rounded-full transition-[height,width] duration-300";
 
   video.addEventListener("timeupdate", () => {
     const currentTime = video.currentTime;
@@ -62,11 +71,16 @@ export function Seekbar(video) {
     seekbarHandle.style.transform = `translateX(-50%)`;
   });
 
+  const seekbarHover = document.createElement("div");
+  seekbarHover.className =
+    "absolute bottom-4 px-4 py-1 bg-neutral-800/50 backdrop-blur-md text-sm text-neutral-300 rounded-full hidden group-hover:block";
+
   // const seekbarChapters = document.createElement("div");
   // seekbarChapters.className = "absolute z-5 flex h-full w-full space-x-0.5";
 
   seekbar.appendChild(seekbarbufferProgress);
   seekbar.appendChild(seekbarProgress);
+  seekbar.appendChild(seekbarHover);
 
   seekbar.appendChild(seekbarHandle);
 
