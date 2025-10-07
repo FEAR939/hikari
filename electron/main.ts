@@ -104,6 +104,12 @@ app.whenReady().then(() => {
   });
 
   autoUpdater.checkForUpdatesAndNotify();
+  setInterval(
+    () => {
+      autoUpdater.checkForUpdatesAndNotify();
+    },
+    1000 * 60 * 30,
+  ).unref(); // 30 mins
 });
 
 app.on("window-all-closed", () => {
