@@ -64,7 +64,7 @@ export default async function Player(query: PlayerQuery) {
 
   const controls = document.createElement("div");
   controls.className =
-    "absolute bottom-0 left-0 right-0 h-36 bg-gradient bg-gradient-to-t from-black to-transparent p-4 space-y-2";
+    "absolute bottom-0 left-0 right-0 h-26 bg-gradient bg-gradient-to-t from-black to-transparent px-4 py-2 space-y-2 flex flex-col justify-around";
 
   player.appendChild(controls);
 
@@ -91,12 +91,12 @@ export default async function Player(query: PlayerQuery) {
   titleAndTime.className = "h-fit flex items-center justify-between space-x-2";
 
   const title = document.createElement("div");
-  title.className = "h-12 text-white text-base truncate";
+  title.className = "h-6 max-w-1/2 text-white text-base truncate";
   title.textContent =
     JSON.parse(query.episode ?? "{}").title?.en || "No Episode Title found";
 
   const time = document.createElement("div");
-  time.className = "h-12 text-white text-sm";
+  time.className = "h-6 text-white text-base";
   time.textContent = "00:00 | 00:00";
 
   video.addEventListener("timeupdate", () => {
@@ -115,7 +115,7 @@ export default async function Player(query: PlayerQuery) {
   controls.appendChild(seekbar);
 
   const buttonRow = document.createElement("div");
-  buttonRow.className = "h-12 p-2 flex items-center space-x-4";
+  buttonRow.className = "bottom-0 h-12 p-2 flex items-center space-x-4";
 
   const playbutton = document.createElement("div");
   playbutton.className =
@@ -233,7 +233,7 @@ export default async function Player(query: PlayerQuery) {
     if (!player.miniPlayerActive) {
       miniPlayerbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-picture-in-picture2-icon lucide-picture-in-picture-2"><path d="M21 9V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h4"/><rect width="10" height="7" x="12" y="13" rx="2"/></svg>`;
       player.className =
-        "absolute bottom-4 right-4 h-48 aspect-video bg-[#0c0c0c] rounded-lg overflow-hidden transition-all duration-300";
+        "absolute bottom-4 right-4 h-48 w-[calc(12rem*(16/9))] aspect-video bg-[#0c0c0c] rounded-lg overflow-hidden transition-all duration-300";
       player.miniPlayerActive = true;
     } else {
       miniPlayerbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-picture-in-picture-icon lucide-picture-in-picture"><path d="M2 10h6V4"/><path d="m2 4 6 6"/><path d="M21 10V7a2 2 0 0 0-2-2h-7"/><path d="M3 14v2a2 2 0 0 0 2 2h3"/><rect x="12" y="14" width="10" height="7" rx="1"/></svg>`;
