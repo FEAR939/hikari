@@ -2,6 +2,12 @@ export default function GeneralSettings() {
   const page = document.createElement("div");
   page.className = "h-full w-full space-y-2 overflow-y-scroll";
 
+  const header = document.createElement("div");
+  header.className = "text-l";
+  header.textContent = "General Settings";
+
+  page.appendChild(header);
+
   const settings = [
     {
       name: "Server Adress",
@@ -14,10 +20,11 @@ export default function GeneralSettings() {
 
   settings.map((setting) => {
     const settingNode = document.createElement("div");
-    settingNode.className = "h-fit w-full p-4 bg-[#0d0d0d] rounded-xl";
+    settingNode.className =
+      "h-fit w-full p-4 space-y-2 bg-[#0d0d0d] rounded-lg";
 
     const settingLabel = document.createElement("div");
-    settingLabel.className = "fold-sembild";
+    settingLabel.className = "text-sm";
     settingLabel.textContent = setting.name;
 
     settingNode.appendChild(settingLabel);
@@ -26,7 +33,7 @@ export default function GeneralSettings() {
       case "input":
         const settingInput = document.createElement("input");
         settingInput.className =
-          "w-full bg-[#0d0d0d] rounded-xl text-[#b1b1b1] outline-none border-none";
+          "w-full px-4 py-2 text-neutral-500 outline-1 outline-[#1a1a1a] bg-[#080808] rounded-md border-none";
         settingInput.value =
           localStorage.getItem(setting.storageKey) || setting.default;
 
