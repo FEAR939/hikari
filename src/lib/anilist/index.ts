@@ -108,6 +108,7 @@ export async function getAnime(id: number) {
                 type
                 title {
                   romaji
+                  english
                 }
                 coverImage {
                   large
@@ -138,6 +139,7 @@ export async function getSearch(searchString: string) {
             id
             title {
               romaji
+              english
             }
           }
         }
@@ -164,6 +166,7 @@ export async function getTrendingAnime() {
               id
               title {
                 romaji
+                english
               }
               description
               bannerImage
@@ -195,6 +198,7 @@ export async function getMultipleAnime(ids) {
             id
             title {
               romaji
+              english
             }
             coverImage {
               large
