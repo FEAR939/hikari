@@ -184,7 +184,8 @@ export default async function Player(query: PlayerQuery) {
   buttonRow.appendChild(spacer);
 
   const autoPlayToggle = document.createElement("div");
-  autoPlayToggle.className = "relative h-4 w-10 rounded-full bg-neutral-800";
+  autoPlayToggle.className =
+    "relative h-4 min-w-8 w-8 rounded-full bg-neutral-800";
 
   const autoPlayNob = document.createElement("div");
   autoPlayNob.className =
