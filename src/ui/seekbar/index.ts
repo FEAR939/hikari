@@ -1,7 +1,7 @@
 export function Seekbar(video) {
   const seekbar = document.createElement("div");
   seekbar.className =
-    "group absolute bottom-13 left-4 right-4 flex items-center h-0.75 hover:h-1.5 bg-neutral-800 rounded cursor-pointer transition-all duration-300";
+    "group absolute bottom-13 left-4 right-4 flex items-center h-0.75 hover:h-1.5 hover:translate-y-1/4 bg-neutral-800 rounded cursor-pointer transition-all duration-300";
 
   seekbar.addEventListener("click", (event) => {
     const rect = seekbar.getBoundingClientRect();
