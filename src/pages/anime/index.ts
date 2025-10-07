@@ -172,7 +172,7 @@ export default async function Anime(query) {
     const tagElement = document.createElement("span");
     tagElement.textContent = genre;
     tagElement.className =
-      "px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-[#0d0d0d] text-white";
+      "px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-neutral-900 text-white";
     heroSectionTags.appendChild(tagElement);
   });
 
@@ -233,7 +233,7 @@ export default async function Anime(query) {
 
   const tabSelector = document.createElement("div");
   tabSelector.className =
-    "p-1 bg-[#0d0d0d] rounded-xl flex justify-center w-fit";
+    "p-1 bg-neutral-900 rounded-xl flex justify-center w-fit";
 
   const tabContent = document.createElement("div");
   tabContent.className = "w-full h-fit";
