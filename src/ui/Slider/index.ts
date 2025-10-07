@@ -3,11 +3,11 @@ import { router } from "../../lib/router";
 export default function CategorySlider(label, children) {
   const categorySlider = document.createElement("div");
   categorySlider.className =
-    "relative h-fit w-full overflow-hidden flex items-center p-4 pt-12";
+    "group relative h-fit w-full overflow-hidden flex items-center p-4 pt-12";
 
   const categorySliderLabel = document.createElement("div");
   categorySliderLabel.className =
-    "absolute top-0 left-4 w-full text-lg font-semibold text-neutral-300";
+    "absolute top-0 left-4 w-full text-xl font-medium text-white";
   categorySliderLabel.textContent = label;
 
   categorySlider.appendChild(categorySliderLabel);
@@ -19,13 +19,13 @@ export default function CategorySlider(label, children) {
 
   const categorySliderPrev = document.createElement("div");
   categorySliderPrev.className =
-    "absolute left-5 h-12 w-12 flex items-center justify-center bg-[#000000]/50 rounded-full cursor-pointer";
+    "absolute left-5 h-12 w-12 flex items-center justify-center bg-neutral-800/50 backdrop-blur-md rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300";
   categorySliderPrev.innerHTML =
     '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" /></svg>';
 
   const categorySliderNext = document.createElement("div");
   categorySliderNext.className =
-    "absolute right-5 h-12 w-12 flex items-center justify-center bg-[#000000]/50 rounded-full cursor-pointer";
+    "absolute right-5 h-12 w-12 flex items-center justify-center bg-neutral-800/50 backdrop-blur-md rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300";
   categorySliderNext.innerHTML =
     '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" /></svg>';
 
