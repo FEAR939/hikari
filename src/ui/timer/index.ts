@@ -34,6 +34,10 @@ export function Timer(
     timerProgress.offsetWidth;
     timerProgress.style.transition = `width ${duration}s linear`;
     timerProgress.style.width = "100%";
+    setTimeout(() => {
+      if (!timer) return;
+      timer.remove();
+    }, duration * 1000);
   }
 
   timer.start = start;
