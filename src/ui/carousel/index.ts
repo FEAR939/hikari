@@ -53,20 +53,22 @@ export function Carousel(items) {
 
     const indicatorProgress = document.createElement("div");
     indicatorProgress.className = "h-full bg-white";
-    indicatorProgress.style.width = "0%";
+    indicatorProgress.style.width = "100%";
+    indicatorProgress.style.transformOrigin = "left";
+    indicatorProgress.style.transform = "scaleX(0)";
 
     indicator.timer = () => {
-      indicatorProgress.style.transition = "width 10s linear";
-      indicatorProgress.style.width = "100%";
+      indicatorProgress.style.transition = "transform 10s linear";
+      indicatorProgress.style.transform = "scaleX(1)";
       setTimeout(() => {
         indicatorProgress.style.transition = "none";
-        indicatorProgress.style.width = "0%";
+        indicatorProgress.style.transform = "scaleX(0)";
       }, 10000);
     };
 
     indicator.stopTimer = () => {
       indicatorProgress.style.transition = "none";
-      indicatorProgress.style.width = "0%";
+      indicatorProgress.style.transform = "scaleX(0)";
     };
 
     indicator.appendChild(indicatorProgress);
