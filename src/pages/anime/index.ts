@@ -3,6 +3,7 @@ import { getAnime } from "../../lib/anilist/index";
 import { getAnimeAnizip } from "../../lib/anizip/index";
 import { authService } from "../../services/auth";
 import { SourcePanel } from "../../ui/sourcePanel/index";
+import { Card, CardType } from "../../ui/card";
 
 import Episode from "../../ui/episode/index";
 
@@ -201,7 +202,7 @@ export default async function Anime(query) {
     relationsSection.appendChild(relationsTitle);
 
     const relationsList = document.createElement("div");
-    relationsList.className = "grid grid-cols-2 md:grid-cols-3 gap-4";
+    relationsList.className = "flex overflow-y-scroll gap-4";
 
     relationsSection.appendChild(relationsList);
 
@@ -212,48 +213,16 @@ export default async function Anime(query) {
           anime.relations.edges[index].relationType !== "SEQUEL")
       )
         return;
-      const relationCard = document.createElement("div");
-      relationCard.className =
-        "h-24 md:h-36 w-full bg-[#0d0d0d] flex overflow-hidden rounded-xl cursor-pointer";
 
-      const relationCardImage = document.createElement("img");
-      relationCardImage.src = relation.coverImage.large;
-      relationCardImage.className =
-        "h-full aspect-[1/1.35] object-cover object-center";
+      relation.relationType = anime.relations.edges[index].relationType;
 
-      const relationCardContent = document.createElement("div");
-      relationCardContent.className = "w-3/4 h-full p-4 space-y-2 md:space-y-4";
+      const card = Card(relation, { type: CardType.RELATION, label: true });
 
-      const relationType = document.createElement("h3");
-      relationType.className =
-        "text-base text-indigo-400 font-semibold text-gray-400";
-      relationType.textContent =
-        anime.relations.edges[index].relationType
-          .toString()
-          .toLowerCase()
-          .charAt(0)
-          .toUpperCase() +
-        anime.relations.edges[index].relationType
-          .toString()
-          .toLowerCase()
-          .slice(1);
-
-      const relationCardTitle = document.createElement("h3");
-      relationCardTitle.className =
-        "text-base text-white font-semibold truncate";
-      relationCardTitle.textContent = relation.title.romaji;
-
-      relationCardContent.appendChild(relationType);
-      relationCardContent.appendChild(relationCardTitle);
-
-      relationCard.appendChild(relationCardImage);
-      relationCard.appendChild(relationCardContent);
-
-      relationCard.addEventListener("click", () => {
+      card.addEventListener("click", () => {
         router.navigate(`/anime?id=${relation.id}`);
       });
 
-      relationsList.appendChild(relationCard);
+      relationsList.appendChild(card);
     });
 
     page.appendChild(relationsSection);
