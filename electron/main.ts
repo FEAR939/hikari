@@ -64,6 +64,10 @@ function createWindow() {
     }
   });
 
+  ipcMain.handle("get-app-version", () => {
+    return app.getVersion();
+  });
+
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     if (details.url.startsWith("https://graphql.anilist.co")) {
       details.requestHeaders.Referer = "https://anilist.co/";
