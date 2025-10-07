@@ -1,5 +1,6 @@
 import { router } from "../../lib/router/index";
 import { getSearch } from "../../lib/anilist/index";
+import { Card, CardSize } from "../../ui/card";
 
 export default async function Search(query) {
   const page = document.createElement("div");
@@ -34,7 +35,8 @@ export default async function Search(query) {
   });
 
   const resultContainer = document.createElement("div");
-  resultContainer.className = "grid grid-cols-1 gap-4";
+  resultContainer.className =
+    "h-fit w-full grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4";
 
   page.appendChild(resultContainer);
 
@@ -43,16 +45,8 @@ export default async function Search(query) {
     if (!results) return;
 
     results.map((result) => {
-      const resultCard = document.createElement("div");
-      resultCard.className = "bg-[#0c0c0c] rounded-xl p-4";
-      resultCard.innerHTML = `
-        <h2 class="text-white">${result.title.english || result.title.romaji}</h2>
-      `;
+      const resultCard = Card(result, { label: true, size: CardSize.AUTO });
       resultContainer.appendChild(resultCard);
-
-      resultCard.addEventListener("click", () => {
-        router.navigate(`/anime?id=${result.id}`);
-      });
     });
   }
 }
