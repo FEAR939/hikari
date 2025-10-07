@@ -185,7 +185,7 @@ export default async function Player(query: PlayerQuery) {
 
   const autoPlayToggle = document.createElement("div");
   autoPlayToggle.className =
-    "relative h-4 min-w-8 w-8 rounded-full bg-neutral-800";
+    "relative h-4 min-w-8 w-8 rounded-full bg-neutral-800 cursor-pointer";
 
   const autoPlayNob = document.createElement("div");
   autoPlayNob.className =
