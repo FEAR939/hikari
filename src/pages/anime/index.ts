@@ -417,9 +417,11 @@ export default async function Anime(query) {
 
       const episodeProgressPart = episodeProgress.filter(
         (episode) =>
-          episode.episode >= episodesPage * episodesPerPage &&
-          episode.episode < (episodesPage + 1) * (episodesPerPage - 1),
+          episode.episode > episodesPage * episodesPerPage &&
+          episode.episode <= (episodesPage + 1) * episodesPerPage,
       );
+
+      console.log(episodeProgressPart);
 
       episodeProgressPart.forEach((episodeProg) => {
         const episodeCard = episodes.get(episodeProg.episode.toString());
