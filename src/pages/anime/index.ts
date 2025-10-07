@@ -367,7 +367,7 @@ export default async function Anime(query) {
           const sourcepanel = SourcePanel(
             anime,
             Object.values(anime_anizip.episodes).filter(
-              (episode) => episode.episode,
+              (episode) => episode.episodeNumber,
             ),
             index,
           );
