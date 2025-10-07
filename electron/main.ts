@@ -1,4 +1,6 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, session } from "electron";
+import electronUpdater from "electron-updater";
+const { autoUpdater } = electronUpdater;
 import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
@@ -15,7 +17,9 @@ function createWindow() {
     icon: path.join(dirname, "../public/icons/icon.png"),
     backgroundColor: "#000000",
     webPreferences: {
-      preload: path.join(dirname, "preload.js"),
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(dirname, "preload.ts"),
     },
   });
 
@@ -98,6 +102,8 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+
+  autoUpdater.checkForUpdatesAndNotify();
 });
 
 app.on("window-all-closed", () => {
