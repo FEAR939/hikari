@@ -90,7 +90,8 @@ export function Carousel(items) {
     trendingCarouselBanner.src =
       items[index].bannerImage || items[index].trailer.thumbnail;
 
-    trendingCarouselTitle.textContent = items[index].title.romaji;
+    trendingCarouselTitle.textContent =
+      items[index].title.english || items[index].title.romaji;
     trendingCarouselDescription.textContent = items[index].description
       .substring(0, items[index].description.indexOf("(Source:"))
       .replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, "");

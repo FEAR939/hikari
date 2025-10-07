@@ -46,7 +46,7 @@ export default async function Search(query) {
       const resultCard = document.createElement("div");
       resultCard.className = "bg-[#0c0c0c] rounded-xl p-4";
       resultCard.innerHTML = `
-        <h2 class="text-white">${result.title.romaji}</h2>
+        <h2 class="text-white">${result.title.english || result.title.romaji}</h2>
       `;
       resultContainer.appendChild(resultCard);
 

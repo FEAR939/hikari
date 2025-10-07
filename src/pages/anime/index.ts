@@ -129,7 +129,7 @@ export default async function Anime(query) {
   const heroSectionTitle = document.createElement("h1");
   heroSectionTitle.className =
     "w-full text-xl md:text-4xl font-bold flex items-center space-x-4 truncate";
-  heroSectionTitle.textContent = anime.title.romaji;
+  heroSectionTitle.textContent = anime.title.english || anime.title.romaji;
 
   const heroSectionChips = document.createElement("div");
   heroSectionChips.className =
