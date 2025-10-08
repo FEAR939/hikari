@@ -6,6 +6,8 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   }
 }

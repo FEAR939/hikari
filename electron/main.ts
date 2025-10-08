@@ -4,6 +4,7 @@ const { autoUpdater } = electronUpdater;
 import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
+import extensionManager from "./services/extensionManager.ts";
 
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 
@@ -66,6 +67,22 @@ function createWindow() {
 
   ipcMain.handle("get-app-version", () => {
     return app.getVersion();
+  });
+
+  ipcMain.handle("load-extensions", async () => {
+    const extensions = await extensionManager.loadExtensions();
+    return extensions;
+  });
+
+  ipcMain.handle("install-extension", async (event, url) => {
+    const extensionZIP = await extensionManager.downloadFromGitHub(url);
+    const extension = await extensionManager.installExtension(extensionZIP);
+    return extension;
+  });
+
+  ipcMain.handle("remove-extension", async (event, name) => {
+    const extension = await extensionManager.removeExtension(name);
+    return extension;
   });
 
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {

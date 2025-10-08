@@ -1,6 +1,6 @@
 export default function ExtensionSettings() {
   const page = document.createElement("div");
-  page.className = "h-full w-full space-y-2 overflow-y-scroll";
+  page.className = "h-full w-full space-y-2";
 
   const header = document.createElement("div");
   header.className = "text-l";
@@ -8,52 +8,57 @@ export default function ExtensionSettings() {
 
   page.appendChild(header);
 
-  const settings = [];
+  const installRow = document.createElement("div");
+  installRow.className = "flex h-fit w-full space-x-2";
 
-  settings.map((setting) => {
-    const settingNode = document.createElement("div");
-    settingNode.className =
-      "h-fit w-full p-4 space-y-2 bg-[#0d0d0d] rounded-lg";
+  page.appendChild(installRow);
 
-    const settingLabel = document.createElement("div");
-    settingLabel.className = "text-sm";
-    settingLabel.textContent = setting.name;
+  const installInput = document.createElement("input");
+  installInput.className =
+    "w-full px-4 py-2 text-neutral-500 border-1 border-[#1a1a1a] bg-[#080808] rounded-md outline-none";
+  installInput.placeholder = "Extension URL";
 
-    settingNode.appendChild(settingLabel);
+  installRow.appendChild(installInput);
 
-    switch (setting.type) {
-      case "input":
-        const settingInput = document.createElement("input");
-        settingInput.className =
-          "w-full px-2 py-1 text-neutral-500 outline-1 outline-[#1a1a1a] bg-[#080808] rounded-md border-none";
-        settingInput.value =
-          localStorage.getItem(setting.storageKey) || setting.default;
+  const installButton = document.createElement("div");
+  installButton.className =
+    "w-1/3 px-4 py-2 flex items-center justify-center text-black bg-white rounded-md cursor-pointer";
+  installButton.textContent = "Install Extension";
 
-        settingNode.appendChild(settingInput);
+  installButton.addEventListener("click", () => {
+    const url = installInput.value;
+    if (!url || !url.match(/https:\/\/github\.com\/.*\.git/)) return;
 
-        settingInput.addEventListener("input", () => {
-          setting.newValue = settingInput.value;
-        });
-
-        break;
-    }
-
-    page.appendChild(settingNode);
+    console.log("Installing extension:", url);
+    window.electronAPI.installExtension(url);
   });
 
-  const saveButton = document.createElement("div");
-  saveButton.className =
-    "absolute px-4 py-2 bg-[#0d0d0d] rounded-md cursor-pointer";
-  saveButton.textContent = "Save";
+  installRow.appendChild(installButton);
 
-  saveButton.addEventListener("click", () => {
-    settings.forEach((setting) => {
-      if (!setting.newValue) return;
-      localStorage.setItem(setting.storageKey, setting.newValue);
+  const extensionList = document.createElement("div");
+  extensionList.className = "w-full h-fit space-y-2 mt-4";
+
+  page.appendChild(extensionList);
+
+  async function load_extensions() {
+    const extensions = await window.electronAPI.loadExtensions();
+
+    extensions.map((extension) => {
+      console.log(extension);
+
+      const extensionItem = document.createElement("div");
+      extensionItem.className =
+        "px-4 py-2 border border-[#1a1a1a] rounded-md space-y-2";
+      extensionItem.innerHTML = `
+        <div>${extension.name}</div>
+        <div class="w-fit px-2 py-1 bg-neutral-900 text-neutral-500 rounded">${extension.version}</div>
+      `;
+
+      extensionList.appendChild(extensionItem);
     });
-  });
+  }
 
-  page.appendChild(saveButton);
+  load_extensions();
 
   return page;
 }

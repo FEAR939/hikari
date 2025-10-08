@@ -3,6 +3,7 @@ import { getMetadata } from "../../lib/voe";
 import { router } from "../../lib/router/index";
 import { Timer } from "../../ui/timer";
 import { NumberInput } from "../numberInput";
+import { cache } from "../../services/cache";
 
 export function SourcePanel(anime, episodes, index) {
   const container = document.createElement("div");
@@ -144,19 +145,7 @@ export function SourcePanel(anime, episodes, index) {
 
   panel.appendChild(insertSpace);
 
-  const extensions = {
-    source: [
-      {
-        name: "AnimeToast",
-        icon: "https://www.animetoast.cc/wp-content/uploads/2018/03/toastfavi-72x72.png",
-      },
-    ],
-    stream: [
-      {
-        name: "Voe",
-      },
-    ],
-  };
+  let extensions;
 
   const sourceElementList = document.createElement("div");
   sourceElementList.className = "w-full h-fit space-y-2";
@@ -228,8 +217,9 @@ export function SourcePanel(anime, episodes, index) {
 
   async function loadSource() {
     sourceElementList.innerHTML = "";
+    extensions = await window.electronAPI.loadExtensions();
 
-    let toLoad = extensions.source.length + 1;
+    let toLoad = extensions.length + 1;
     console.log(`Loading ${toLoad} sources`);
     let loaded = 0;
     let sources = [];
@@ -350,114 +340,133 @@ export function SourcePanel(anime, episodes, index) {
       updateLoaded(true);
     }
 
-    extensions.source.map(async (source_extension) => {
-      const skeletonElement = document.createElement("div");
-      skeletonElement.className =
-        "relative w-full h-28 p-4 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2 animate-pulse";
-      skeletonElement.innerHTML = `
+    extensions
+      .filter((extension) => extension.type === "source")
+      .map(async (source_extension) => {
+        const imported_extension = await import(
+          `${source_extension.path}/${source_extension.main}`
+        );
+
+        const SourceExtensionClass = new imported_extension.Extension(cache);
+
+        const skeletonElement = document.createElement("div");
+        skeletonElement.className =
+          "relative w-full h-28 p-4 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2 animate-pulse";
+        skeletonElement.innerHTML = `
         <div class="mt-2 w-1/3 h-4 bg-[#1a1a1a] rounded-md"></div>
         <div class="w-2/3 h-4 bg-[#1a1a1a] rounded-md"></div>
         <div class="mt-2 w-1/4 h-4 bg-[#1a1a1a] rounded-md"></div>
       `;
-      sourceElementList.appendChild(skeletonElement);
+        sourceElementList.appendChild(skeletonElement);
 
-      const source = await getProvider({
-        romaji: anime.title.romaji,
-        english: anime.title.english,
-      });
+        const source = await SourceExtensionClass.getProvider({
+          romaji: anime.title.romaji,
+          english: anime.title.english,
+        });
 
-      console.log(source);
+        console.log(source);
 
-      if (!source) {
-        skeletonElement.remove();
-        updateLoaded(false);
-        return;
-      }
-
-      source.hosters.map(async (source_hoster) => {
-        const extensionIndex = extensions.stream.findIndex(
-          (extension_hoster) => extension_hoster.name === source_hoster.label,
-        );
-
-        if (extensionIndex === -1) {
-          return;
-        }
-
-        const extension = extensions.stream[extensionIndex];
-
-        console.log(source_hoster);
-
-        const source_episode = await getEpisode(source_hoster, episodes[index]);
-        console.log(source_episode);
-        skeletonElement.remove();
-        if (!source_episode) return;
-
-        const hosterElement = document.createElement("div");
-        hosterElement.className =
-          "relative w-full h-28 p-4 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2";
-
-        sourceElementList.appendChild(hosterElement);
-
-        const hosterTitle = document.createElement("div");
-        hosterTitle.className =
-          "flex items-center space-x-2 text-white font-bold";
-        hosterTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tv-icon lucide-tv"><path d="m17 2-5 5-5-5"/><rect width="20" height="15" x="2" y="7" rx="2"/></svg>
-      <span>${source_hoster.label}</span>`;
-
-        hosterElement.appendChild(hosterTitle);
-
-        const extensionIcon = document.createElement("img");
-        extensionIcon.src = source_extension.icon;
-        extensionIcon.className = "absolute right-4 top-4 w-4 h-4";
-        extensionIcon.title = `Provided by ${source_extension.name}`;
-
-        hosterElement.appendChild(extensionIcon);
-
-        const stream = await getMetadata(source_episode);
-
-        if (!stream) {
+        if (!source) {
+          skeletonElement.remove();
           updateLoaded(false);
           return;
         }
 
-        console.log(stream);
-
-        const hosterFileName = document.createElement("div");
-        hosterFileName.className = "text-[#a2a2a2] text-xs";
-        hosterFileName.textContent = stream.name;
-
-        hosterElement.appendChild(hosterFileName);
-
-        const hosterSize = document.createElement("div");
-        hosterSize.className =
-          "absolute left-4 bottom-4 text-[#f0f0f0] text-xs py-1 m-0";
-        hosterSize.textContent = stream.size;
-
-        hosterElement.appendChild(hosterSize);
-
-        const hosterQuality = document.createElement("div");
-        hosterQuality.className =
-          "absolute right-4 bottom-4 px-2 py-1 text-xs text-black bg-[#FFBF00] rounded";
-        hosterQuality.textContent = stream.quality;
-
-        hosterElement.appendChild(hosterQuality);
-
-        hosterElement.addEventListener("click", () => {
-          episodeSelected = true;
-
-          router.navigate(
-            `/player?streamurl=${encodeURIComponent(stream.mp4)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
+        source.hosters.map(async (source_hoster) => {
+          const extensionIndex = extensions.findIndex(
+            (extension_hoster) =>
+              extension_hoster.type === "stream" &&
+              extension_hoster.name === source_hoster.label,
           );
-        });
 
-        sources.push({
-          name: source_hoster.label,
-          node: hosterElement,
-        });
+          if (extensionIndex === -1) {
+            return;
+          }
 
-        updateLoaded(true);
+          const imported_stream_extension = await import(
+            `${extensions[extensionIndex].path}/${extensions[extensionIndex].main}`
+          );
+
+          const StreamExtensionClass = new imported_stream_extension.Extension(
+            cache,
+          );
+
+          console.log(source_hoster);
+
+          const source_episode = await SourceExtensionClass.getEpisode(
+            source_hoster,
+            episodes[index],
+          );
+          console.log(source_episode);
+          skeletonElement.remove();
+          if (!source_episode) return;
+
+          const hosterElement = document.createElement("div");
+          hosterElement.className =
+            "relative w-full h-28 p-4 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2";
+
+          sourceElementList.appendChild(hosterElement);
+
+          const hosterTitle = document.createElement("div");
+          hosterTitle.className =
+            "flex items-center space-x-2 text-white font-bold";
+          hosterTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tv-icon lucide-tv"><path d="m17 2-5 5-5-5"/><rect width="20" height="15" x="2" y="7" rx="2"/></svg>
+          <span>${source_hoster.label}</span>`;
+
+          hosterElement.appendChild(hosterTitle);
+
+          const extensionIcon = document.createElement("img");
+          extensionIcon.src = source_extension.icon;
+          extensionIcon.className = "absolute right-4 top-4 w-4 h-4";
+          extensionIcon.title = `Provided by ${source_extension.name}`;
+
+          hosterElement.appendChild(extensionIcon);
+
+          const stream = await StreamExtensionClass.getMetadata(source_episode);
+
+          if (!stream) {
+            updateLoaded(false);
+            return;
+          }
+
+          console.log(stream);
+
+          const hosterFileName = document.createElement("div");
+          hosterFileName.className = "text-[#a2a2a2] text-xs";
+          hosterFileName.textContent = stream.name;
+
+          hosterElement.appendChild(hosterFileName);
+
+          const hosterSize = document.createElement("div");
+          hosterSize.className =
+            "absolute left-4 bottom-4 text-[#f0f0f0] text-xs py-1 m-0";
+          hosterSize.textContent = stream.size;
+
+          hosterElement.appendChild(hosterSize);
+
+          const hosterQuality = document.createElement("div");
+          hosterQuality.className =
+            "absolute right-4 bottom-4 px-2 py-1 text-xs text-black bg-[#FFBF00] rounded";
+          hosterQuality.textContent = stream.quality;
+
+          hosterElement.appendChild(hosterQuality);
+
+          hosterElement.addEventListener("click", () => {
+            episodeSelected = true;
+
+            router.navigate(
+              `/player?streamurl=${encodeURIComponent(stream.mp4)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[index])}&anilist_id=${anime.id}`,
+            );
+          });
+
+          sources.push({
+            name: source_hoster.label,
+            node: hosterElement,
+          });
+
+          updateLoaded(true);
+        });
       });
-    });
   }
 
   return container;
