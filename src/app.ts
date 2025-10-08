@@ -13,6 +13,17 @@ declare global {
   interface Document {
     root: HTMLElement;
   }
+
+  interface Window {
+    electronAPI?: {
+      enterFullscreen: () => void;
+      exitFullscreen: () => void;
+      getLocalMedia: () => Promise<any>;
+      loadExtensions: () => Promise<any>;
+      installExtension: (url: string) => Promise<any>;
+      removeExtension: (name: string) => Promise<any>;
+    };
+  }
 }
 
 function main() {
