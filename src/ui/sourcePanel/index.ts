@@ -4,14 +4,6 @@ import { router } from "../../lib/router/index";
 import { Timer } from "../../ui/timer";
 import { NumberInput } from "../numberInput";
 
-declare global {
-  interface Window {
-    electronAPI?: {
-      getLocalMedia: (path: string) => Promise<any>;
-    };
-  }
-}
-
 export function SourcePanel(anime, episodes, index) {
   const container = document.createElement("div");
   container.className =
