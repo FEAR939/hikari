@@ -5,15 +5,6 @@ import { getLeftoff, setLeftoff } from "../../lib/api";
 import { Seekbar } from "../../ui/seekbar";
 import { Volume } from "../../ui/volume";
 
-declare global {
-  interface Window {
-    electronAPI?: {
-      enterFullscreen: () => void;
-      exitFullscreen: () => void;
-    };
-  }
-}
-
 interface PlayerQuery {
   url: string;
   episodeNumber: string;
