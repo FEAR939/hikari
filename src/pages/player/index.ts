@@ -1,5 +1,5 @@
 import { router } from "../../lib/router/index";
-import { getAnimeChapters } from "../../lib/aniskip";
+import { getSkipTimes } from "../../lib/aniskip";
 import { authService } from "../../services/auth";
 import { getLeftoff, setLeftoff } from "../../lib/api";
 import { Seekbar } from "../../ui/seekbar";
@@ -281,28 +281,31 @@ export default async function Player(query: PlayerQuery) {
     controls.classList.add("hidden");
     pageback.classList.add("hidden");
 
-    // const chapters = await getAnimeChapters(
-    //   parseInt(JSON.parse(query.episode).mal_id),
-    //   parseInt(JSON.parse(query.episode).episode),
-    //   video.duration,
-    // );
+    const malId = JSON.parse(query.episode).mal_id;
+    const episodeNumber = JSON.parse(query.episode).episode;
+    const showName = JSON.parse(query.episode).title;
 
-    // if (chapters.length == 0) {
-    //   const chapterElement = document.createElement("div");
-    //   chapterElement.className = "h-full bg-black/25";
-    //   chapterElement.style.width = `100%`;
+    const aniskip = await getSkipTimes(malId, episodeNumber);
 
-    //   seekbarChapters.appendChild(chapterElement);
-    //   return;
-    // }
+    console.log(aniskip);
 
-    // chapters.forEach((chapter) => {
-    //   const chapterElement = document.createElement("div");
-    //   chapterElement.className = "h-full bg-black/25";
-    //   chapterElement.style.width = `${((chapter.end / 1000 - chapter.start / 1000) / video.duration) * 100}%`;
+    if (!aniskip.found) return;
 
-    //   seekbarChapters.appendChild(chapterElement);
-    // });
+    const chapters = aniskip.results.map((segment) => {
+      let timestampStart = segment.interval.start_time;
+      let timestampEnd = segment.interval.end_time;
+      let segmentType = segment.skip_type;
+      let segmentId = segment.skip_id;
+
+      return {
+        id: segmentId,
+        title: segmentType,
+        start: timestampStart,
+        end: timestampEnd,
+      };
+    });
+
+    seekbar.updateChapters(chapters);
   });
 
   if (!query.streamurl) {
