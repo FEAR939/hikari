@@ -1,3 +1,7 @@
+import { accountAvatar } from "../accountAvatar";
+import { authService } from "../../services/auth";
+import { uploadAvatar } from "../../lib/api";
+
 export default function AccountSettings() {
   const page = document.createElement("div");
   page.className = "h-full w-full space-y-2 overflow-y-scroll";
@@ -8,52 +12,58 @@ export default function AccountSettings() {
 
   page.appendChild(header);
 
-  const settings = [];
+  if (!authService.getUser()) {
+    const alertModal = document.createElement("div");
+    alertModal.className =
+      "w-full h-fit p-4 grid place-items-center border border-[#1a1a1a] rounded-md text-neutral-500 space-y-2";
+    alertModal.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-info-icon lucide-info size-5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      <div>You will need to log in to access these settings.</div>
+    `;
 
-  settings.map((setting) => {
-    const settingNode = document.createElement("div");
-    settingNode.className =
-      "h-fit w-full p-4 space-y-2 bg-[#0d0d0d] rounded-lg";
+    page.appendChild(alertModal);
 
-    const settingLabel = document.createElement("div");
-    settingLabel.className = "text-sm";
-    settingLabel.textContent = setting.name;
+    return page;
+  }
 
-    settingNode.appendChild(settingLabel);
+  const avatarUpload = document.createElement("div");
+  avatarUpload.className = "group relative size-16 rounded-full cursor-pointer";
 
-    switch (setting.type) {
-      case "input":
-        const settingInput = document.createElement("input");
-        settingInput.className =
-          "w-full px-2 py-1 text-neutral-500 outline-1 outline-[#1a1a1a] bg-[#080808] rounded-md border-none";
-        settingInput.value =
-          localStorage.getItem(setting.storageKey) || setting.default;
+  const avatar = accountAvatar();
+  avatar.className = "size-16";
+  avatarUpload.appendChild(avatar);
 
-        settingNode.appendChild(settingInput);
+  const avatarFileInput = document.createElement("input");
+  avatarFileInput.className = "hidden";
+  avatarFileInput.type = "file";
+  avatarFileInput.accept = "image/*";
 
-        settingInput.addEventListener("input", () => {
-          setting.newValue = settingInput.value;
-        });
+  avatarUpload.appendChild(avatarFileInput);
 
-        break;
-    }
-
-    page.appendChild(settingNode);
+  avatarUpload.addEventListener("click", () => {
+    avatarFileInput.dispatchEvent(new MouseEvent("click"));
   });
 
-  const saveButton = document.createElement("div");
-  saveButton.className =
-    "absolute px-4 py-2 bg-[#0d0d0d] rounded-md cursor-pointer";
-  saveButton.textContent = "Save";
+  avatarFileInput.addEventListener("change", async () => {
+    const file = avatarFileInput.files[0];
+    if (!file) return;
 
-  saveButton.addEventListener("click", () => {
-    settings.forEach((setting) => {
-      if (!setting.newValue) return;
-      localStorage.setItem(setting.storageKey, setting.newValue);
-    });
+    const path = await uploadAvatar(file);
+    if (!path) return;
+
+    const user = authService.getUser();
+    user!.avatar = path;
+    authService.setUser(user);
   });
 
-  page.appendChild(saveButton);
+  const avatarEdit = document.createElement("div");
+  avatarEdit.className =
+    "absolute right-0 bottom-0 bg-white text-black rounded-full size-5 grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300";
+  avatarEdit.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-icon lucide-pencil size-3"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>`;
+
+  avatarUpload.appendChild(avatarEdit);
+
+  page.appendChild(avatarUpload);
 
   return page;
 }

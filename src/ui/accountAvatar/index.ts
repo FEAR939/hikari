@@ -30,5 +30,10 @@ export function accountAvatar() {
     avatarContainer.innerHTML = `<img src="${localStorage.getItem("app_server_adress")}${user.avatar}" alt="Avatar" class="absolute inset-0 w-full h-full object-cover object-center rounded-full" />`;
   }
 
+  const user = authService.getUser();
+  if (!user) return avatar;
+
+  handleAvatarImage(user);
+
   return avatar;
 }

@@ -84,3 +84,29 @@ export async function getLeftoff(episode) {
     return false;
   }
 }
+
+export async function uploadAvatar(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("type", "0");
+
+  const response = await fetch(
+    `${localStorage.getItem("app_server_adress")}/upload-photo`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    console.error("Failed to upload avatar");
+    return false;
+  }
+
+  const data = await response.json();
+
+  return data.path;
+}
