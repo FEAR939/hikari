@@ -409,6 +409,8 @@ export function SourcePanel(anime, episodes, index) {
           );
 
           if (extensionIndex === -1) {
+            updateLoaded(false);
+            skeletonElement.remove();
             return;
           }
 
