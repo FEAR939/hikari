@@ -48,7 +48,7 @@ export default function ExtensionSettings() {
 
       const extensionItem = document.createElement("div");
       extensionItem.className =
-        "px-4 py-2 border border-[#1a1a1a] rounded-md space-y-2";
+        "p-4 border border-[#1a1a1a] rounded-md space-y-2";
       extensionItem.innerHTML = `
         <div>${extension.name}</div>
         <div class="w-fit px-2 py-1 bg-neutral-900 text-neutral-500 rounded">${extension.version}</div>
