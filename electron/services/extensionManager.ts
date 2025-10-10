@@ -105,6 +105,8 @@ class ExtensionManager {
   async removeExtension(extensionName) {
     const extensionPath = path.join(this.extensionsDir, extensionName);
     await fs.remove(extensionPath);
+
+    return true;
   }
 }
 

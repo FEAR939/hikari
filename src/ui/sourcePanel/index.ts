@@ -146,6 +146,7 @@ export function SourcePanel(anime, episodes, index) {
   panel.appendChild(insertSpace);
 
   let extensions;
+  let extensionsConfig;
 
   const sourceElementList = document.createElement("div");
   sourceElementList.className = "w-full h-fit space-y-2";
@@ -218,6 +219,34 @@ export function SourcePanel(anime, episodes, index) {
   async function loadSource() {
     sourceElementList.innerHTML = "";
     extensions = await window.electronAPI.loadExtensions();
+    extensionsConfig = JSON.parse(
+      localStorage.getItem("extensions.config") || "[]",
+    );
+    if (!extensionsConfig || extensions.length > extensionsConfig.length) {
+      for (const extension of extensions) {
+        if (
+          extensionsConfig.findIndex(
+            (config) => config.id === extension.github,
+          ) !== -1
+        )
+          continue;
+
+        extensions.push({
+          id: extension.github,
+          enabled: true,
+        });
+      }
+      localStorage.setItem(
+        "extensions.config",
+        JSON.stringify(extensionsConfig),
+      );
+    }
+
+    extensions = extensions.filter(
+      (extension) =>
+        extensionsConfig.find((config) => config.id === extension.github)
+          .enabled,
+    );
 
     let toLoad = extensions.length + 1;
     console.log(`Loading ${toLoad} sources`);
