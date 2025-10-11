@@ -191,30 +191,59 @@ export function Seekbar(video) {
     for (let index = 0; index < chapters.length; index++) {
       const chapter = chapters[index];
 
+      // Add "Start" chapter if first chapter doesn't start at 0
       if (index === 0 && chapter.start !== 0) {
         const chapterBefore = {
           start: 0,
           end: chapter.start,
-          title: "Start",
+          title: "Start", // This is the episode content before OP
         };
-
         seekBarChapters.push(chapterBefore);
       }
 
+      // Add the actual chapter
+      switch (chapter.title) {
+        case "op":
+          chapter.title = "Opening";
+          break;
+        case "ed":
+          chapter.title = "Ending";
+          break;
+      }
       seekBarChapters.push(chapter);
 
-      if (index === chapters.length - 1 && chapter.end !== video.duration) {
+      // Add gap filler between current and next chapter
+      if (index < chapters.length - 1) {
+        const nextChapter = chapters[index + 1];
+        if (chapter.end < nextChapter.start) {
+          const chapterMiddle = {
+            start: chapter.end,
+            end: nextChapter.start,
+            title: "Episode", // Gap between chapters is episode content
+          };
+          seekBarChapters.push(chapterMiddle);
+        }
+      }
+
+      // Add final chapter if last chapter doesn't end at video duration
+      if (index === chapters.length - 1 && chapter.end < video.duration) {
+        // Check if the last chapter is an ED chapter
+        const isLastChapterED =
+          chapter.title?.toLowerCase().includes("ed") ||
+          chapter.title?.toLowerCase().includes("ending") ||
+          chapter.type === "ed"; // adjust based on your data structure
+
         const chapterAfter = {
           start: chapter.end,
           end: video.duration,
-          title: "End",
+          title: isLastChapterED ? "End" : "Episode",
         };
-
         seekBarChapters.push(chapterAfter);
       }
     }
 
     hasChapters = true;
+    console.log(seekBarChapters);
 
     seekbarProgress.remove();
     seekbarbufferProgress.remove();
