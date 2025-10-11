@@ -247,8 +247,7 @@ export default async function Anime(query) {
   tabSection.className = "w-full h-fit space-y-4 mt-12";
 
   const tabSelector = document.createElement("div");
-  tabSelector.className =
-    "p-1 bg-neutral-900 rounded-xl flex justify-center w-fit";
+  tabSelector.className = "flex justify-center w-fit";
 
   const tabContent = document.createElement("div");
   tabContent.className = "w-full h-fit";
@@ -272,7 +271,7 @@ export default async function Anime(query) {
   tabs.map((tab) => {
     const tabOption = document.createElement("div");
     tabOption.className =
-      "px-4 py-2 rounded-md text-neutral-600 font-semibold cursor-pointer";
+      "px-4 py-2 rounded-md text-neutral-500 text-sm cursor-pointer";
     tabOption.textContent = tab.label;
 
     tabSelector.appendChild(tabOption);
@@ -280,9 +279,9 @@ export default async function Anime(query) {
 
     tabOption.addEventListener("click", () => {
       tabOptionNodes.forEach((node) => {
-        node.classList.remove("bg-white", "text-black");
+        node.classList.remove("bg-neutral-900", "text-white");
       });
-      tabOption.classList.add("bg-white", "text-black");
+      tabOption.classList.add("bg-neutral-900", "text-white");
 
       tabContent.innerHTML = "";
       tab.handler();
