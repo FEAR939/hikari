@@ -394,9 +394,8 @@ export function SourcePanel(anime, episodes, index) {
         });
 
         console.log(source);
-
+        skeletonElement.remove();
         if (!source) {
-          skeletonElement.remove();
           updateLoaded(false);
           return;
         }
@@ -410,9 +409,18 @@ export function SourcePanel(anime, episodes, index) {
 
           if (extensionIndex === -1) {
             updateLoaded(false);
-            skeletonElement.remove();
             return;
           }
+
+          const skeletonElement = document.createElement("div");
+          skeletonElement.className =
+            "relative w-full h-28 p-4 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2 animate-pulse";
+          skeletonElement.innerHTML = `
+          <div class="mt-2 w-1/3 h-4 bg-[#1a1a1a] rounded-md"></div>
+          <div class="w-2/3 h-4 bg-[#1a1a1a] rounded-md"></div>
+          <div class="mt-2 w-1/4 h-4 bg-[#1a1a1a] rounded-md"></div>
+        `;
+          sourceElementList.appendChild(skeletonElement);
 
           const imported_stream_extension = await import(
             `${extensions[extensionIndex].path}/${extensions[extensionIndex].main}`
@@ -429,8 +437,20 @@ export function SourcePanel(anime, episodes, index) {
             episodes[index],
           );
           console.log(source_episode);
+          if (!source_episode) {
+            skeletonElement.remove();
+            return;
+          }
+
+          const stream = await StreamExtensionClass.getMetadata(source_episode);
+
           skeletonElement.remove();
-          if (!source_episode) return;
+          if (!stream) {
+            updateLoaded(false);
+            return;
+          }
+
+          console.log(stream);
 
           const hosterElement = document.createElement("div");
           hosterElement.className =
@@ -452,15 +472,6 @@ export function SourcePanel(anime, episodes, index) {
           extensionIcon.title = `Provided by ${source_extension.name}`;
 
           hosterElement.appendChild(extensionIcon);
-
-          const stream = await StreamExtensionClass.getMetadata(source_episode);
-
-          if (!stream) {
-            updateLoaded(false);
-            return;
-          }
-
-          console.log(stream);
 
           const hosterFileName = document.createElement("div");
           hosterFileName.className = "text-[#a2a2a2] text-xs";
