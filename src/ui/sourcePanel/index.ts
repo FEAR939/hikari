@@ -477,8 +477,19 @@ export function SourcePanel(anime, episodes, index) {
 
           const hosterQuality = document.createElement("div");
           hosterQuality.className =
-            "absolute right-4 bottom-4 px-2 py-1 text-xs text-black bg-[#FFBF00] rounded";
-          hosterQuality.textContent = stream.quality;
+            "absolute right-4 bottom-4 px-2 py-1 text-xs text-white bg-neutral-700 rounded";
+
+          switch (stream.quality) {
+            case "2160p":
+              hosterQuality.textContent = "UHD";
+              break;
+            case "1080p":
+              hosterQuality.textContent = "FHD";
+              break;
+            case "720p":
+              hosterQuality.textContent = "HD";
+              break;
+          }
 
           hosterElement.appendChild(hosterQuality);
 
