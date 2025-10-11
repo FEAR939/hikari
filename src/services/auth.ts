@@ -103,6 +103,21 @@ class AuthService {
   }
 
   async logout() {
+    const formdata = new FormData();
+    formdata.append("refreshToken", localStorage.getItem("refreshToken")!);
+
+    const response = await fetch(
+      `${localStorage.getItem("app_server_adress")}/auth/logout`,
+      {
+        method: "POST",
+        body: formdata,
+      },
+    );
+
+    if (!response.ok) {
+      return console.error("Failed to logout");
+    }
+
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
 
