@@ -78,7 +78,7 @@ export default async function Anime(query) {
 
   const heroSectionImage = document.createElement("img");
   heroSectionImage.src = anime.coverImage.large;
-  heroSectionImage.className = "w-full aspect-[5/7] object-cover rounded-xl";
+  heroSectionImage.className = "w-full aspect-[5/7] object-cover rounded-md";
 
   heroSectionPrimary.appendChild(heroSectionImage);
 
@@ -101,13 +101,16 @@ export default async function Anime(query) {
     {
       text: `${anime.episodes} Episodes`,
     },
+    {
+      text: `${anime.status}`,
+    },
   ];
 
   chips.map((chip) => {
     const chipElement = document.createElement("span");
     chipElement.textContent = chip.text;
     chipElement.className =
-      "px-2 md:px-4 py-1 md:py-2 text-sm font-semibold rounded-md bg-[#FFBF00] text-black";
+      "px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-neutral-900 text-white";
     heroSectionChips.appendChild(chipElement);
   });
 
@@ -124,7 +127,7 @@ export default async function Anime(query) {
 
   const watchButton = document.createElement("div");
   watchButton.className =
-    "w-24 md:w-56 h-full py-1 md:py-3 rounded-md md:rounded-xl bg-[#FFBF00] text-xs md:text-base text-black flex items-center justify-center space-x-2 cursor-pointer";
+    "w-24 md:w-56 h-full py-1 md:py-3 rounded-md bg-neutral-900 text-xs md:text-base text-white flex items-center justify-center space-x-2 cursor-pointer";
   watchButton.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play size-2 md:size-4"><path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"/></svg>
     <div class="h-fit">${episodeProgress ? "Continue" : "Watch Now"}</div>
