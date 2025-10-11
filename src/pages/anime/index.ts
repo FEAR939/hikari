@@ -6,6 +6,7 @@ import { SourcePanel } from "../../ui/sourcePanel/index";
 import { Card, CardType } from "../../ui/card";
 
 import Episode from "../../ui/episode/index";
+import { PageControls } from "../../ui/pageControls";
 
 export default async function Anime(query) {
   const page = document.createElement("div");
@@ -207,7 +208,7 @@ export default async function Anime(query) {
     }).length > 0
   ) {
     const relationsSection = document.createElement("div");
-    relationsSection.className = "w-full h-fit space-y-4";
+    relationsSection.className = "w-full h-fit space-y-4 mt-12";
 
     const relationsTitle = document.createElement("h2");
     relationsTitle.className = "text-2xl font-bold";
@@ -243,7 +244,7 @@ export default async function Anime(query) {
   }
 
   const tabSection = document.createElement("div");
-  tabSection.className = "w-full h-fit space-y-4";
+  tabSection.className = "w-full h-fit space-y-4 mt-12";
 
   const tabSelector = document.createElement("div");
   tabSelector.className =
@@ -302,43 +303,19 @@ export default async function Anime(query) {
     tabContent.appendChild(episodeList);
 
     let episodesPage = 0;
-    let episodesPerPage = 12;
+    let episodesPerPage = 15;
 
-    const pageControls = document.createElement("div");
-    pageControls.className = "flex items-center space-x-2 w-fit mt-4 ml-auto";
-
-    const pageControlsPrev = document.createElement("div");
-    pageControlsPrev.className = "text-[#c1c1c1] cursor-pointer";
-    pageControlsPrev.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left-icon lucide-chevron-left size-4"><path d="m15 18-6-6 6-6"/></svg>`;
-
-    const pageControlCurr = document.createElement("div");
-    pageControlCurr.className =
-      "bg-[#0d0d0d] text-white px-4 py-2 rounded-lg cursor-pointer";
-    pageControlCurr.textContent = (episodesPage + 1).toString();
-
-    const pageControlsNext = document.createElement("div");
-    pageControlsNext.className = "text-[#c1c1c1] cursor-pointer";
-    pageControlsNext.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right-icon lucide-chevron-right size-4"><path d="m9 18 6-6-6-6"/></svg>`;
-
-    pageControls.append(pageControlsPrev, pageControlCurr, pageControlsNext);
-
-    pageControlsPrev.addEventListener("click", () => {
-      if (episodesPage == 0) return;
-
-      episodesPage--;
-      pageControlCurr.textContent = (episodesPage + 1).toString();
+    function handlePageChange(page: number) {
+      episodesPage = page - 1;
       renderPage();
-    });
+    }
 
-    pageControlsNext.addEventListener("click", () => {
-      if (episodesPage >= anime_anizip.episodeCount / episodesPerPage - 1)
-        return;
-
-      episodesPage++;
-      pageControlCurr.textContent = (episodesPage + 1).toString();
-      renderPage();
-    });
-
+    const pageControls = PageControls(
+      Math.ceil(anime_anizip.episodeCount / episodesPerPage),
+      episodesPage + 1,
+      handlePageChange,
+    );
+    pageControls.classList.add("ml-auto");
     tabContent.appendChild(pageControls);
 
     renderPage();
