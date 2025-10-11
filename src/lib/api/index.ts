@@ -1,6 +1,10 @@
 import { getMultipleAnime } from "../anilist";
+import { authService } from "../../services/auth";
 
 export async function getContinueAnime() {
+  const user = authService.getUser();
+  if (!user) return false;
+
   try {
     const response = await fetch(
       `${localStorage.getItem("app_server_adress")}/get-last-watched`,
