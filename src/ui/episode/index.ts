@@ -27,7 +27,8 @@ export default function Episode(episode: Episode, index: number): EpElement {
   episodeCard.updateProgress = (progress) => renderProgress(progress);
 
   let episodeCardImageWrapper = document.createElement("div");
-  episodeCardImageWrapper.className = "relative w-full aspect-video rounded-lg";
+  episodeCardImageWrapper.className =
+    "relative w-full bg-neutral-800 aspect-video rounded-lg";
 
   episodeCard.appendChild(episodeCardImageWrapper);
 
