@@ -1,4 +1,3 @@
-import { getMultipleAnime } from "../anilist";
 import { authService } from "../../services/auth";
 
 export async function getContinueAnime() {
@@ -27,9 +26,7 @@ export async function getContinueAnime() {
       return false;
     }
 
-    const list = await getMultipleAnime(data.map((item) => item.anilist_id));
-
-    return list;
+    return data;
   } catch (error) {
     console.warn(error);
     return false;
