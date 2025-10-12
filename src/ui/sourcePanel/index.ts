@@ -99,9 +99,11 @@ export function SourcePanel(anime, episodes, index) {
   buttonRow.appendChild(localSetup);
 
   localSetup.addEventListener("click", async () => {
-    const dirHandle = await window.showDirectoryPicker();
-
-    if (!dirHandle) return;
+    const local_media_path = localStorage.getItem("app_local_media_path");
+    if (!local_media_path) {
+      console.warn("Local media path not found");
+      return;
+    }
 
     const animeTitle = anime.title.romaji
       .replaceAll(" ", "-")
@@ -109,7 +111,7 @@ export function SourcePanel(anime, episodes, index) {
       .replaceAll("'", "")
       .replaceAll('"', "");
 
-    dirHandle.getDirectoryHandle(animeTitle, { create: true });
+    window.electronAPI.createLocalMediaDir(`${local_media_path}${animeTitle}`);
   });
 
   if (localStorage.getItem("autoSelect") === null) {
@@ -156,8 +158,23 @@ export function SourcePanel(anime, episodes, index) {
   loadSource();
 
   async function getLocalEpisode() {
+    const local_media_path = localStorage.getItem("app_local_media_path");
+    if (!local_media_path) {
+      console.warn("Local media path not found");
+      return;
+    }
+
+    console.log(
+      "Searching for local media: ",
+      `${local_media_path}${anime.title.romaji
+        .replaceAll(" ", "-")
+        .replaceAll(":", "")
+        .replaceAll("'", "")
+        .replaceAll('"', "")}`,
+    );
+
     const animeDirContents = await window.electronAPI.getLocalMedia(
-      `F:\\Anime\\${anime.title.romaji
+      `${local_media_path}${anime.title.romaji
         .replaceAll(" ", "-")
         .replaceAll(":", "")
         .replaceAll("'", "")
