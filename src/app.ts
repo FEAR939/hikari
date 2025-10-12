@@ -26,7 +26,7 @@ declare global {
   }
 }
 
-function main() {
+async function main() {
   const root = document.getElementById("root")!;
   document.root = root;
 
@@ -43,9 +43,9 @@ function main() {
   router.route("/settings", Settings);
   router.route("/auth", Auth);
 
-  router.navigate("/");
+  await authService.authenticate();
 
-  authService.authenticate();
+  router.navigate("/");
 }
 
 window.addEventListener("DOMContentLoaded", () => {
