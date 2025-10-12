@@ -1,5 +1,4 @@
 import { router } from "../../lib/router/index";
-import { getAnime } from "../../lib/anilist/index";
 import { getAnimeAnizip } from "../../lib/anizip/index";
 import { authService } from "../../services/auth";
 import { SourcePanel } from "../../ui/sourcePanel/index";
@@ -7,6 +6,7 @@ import { Card, CardType } from "../../ui/card";
 
 import Episode from "../../ui/episode/index";
 import { PageControls } from "../../ui/pageControls";
+import { fetchSections } from "../../lib/anilist";
 
 export default async function Anime(query) {
   const page = document.createElement("div");
@@ -27,10 +27,24 @@ export default async function Anime(query) {
     router.navigate("/");
   });
 
+  const section = [
+    {
+      type: "anime",
+      params: {
+        id: query.id,
+      },
+    },
+  ];
+
   const [anime, anime_anizip] = await Promise.all([
-    getAnime(query.id),
+    (async () => {
+      const result = await fetchSections(section);
+      return result[0].data;
+    })(),
     getAnimeAnizip(query.id),
   ]);
+
+  console.log(anime);
 
   let episodeProgress = null;
 

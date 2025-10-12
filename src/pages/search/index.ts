@@ -1,6 +1,6 @@
 import { router } from "../../lib/router/index";
-import { getSearch } from "../../lib/anilist/index";
 import { Card, CardSize } from "../../ui/card";
+import { fetchSections } from "../../lib/anilist";
 
 export default async function Search(query) {
   const page = document.createElement("div");
@@ -29,8 +29,19 @@ export default async function Search(query) {
 
   searchBar.addEventListener("keyup", async (e) => {
     if (e.keyCode == 13) {
-      const results = await getSearch(searchBar.value);
-      return showSearch(results);
+      const section = [
+        {
+          type: "search",
+          params: {
+            search: searchBar.value,
+          },
+        },
+      ];
+
+      const results = await fetchSections(section);
+
+      console.log(results);
+      return showSearch(results[0].data);
     }
   });
 
