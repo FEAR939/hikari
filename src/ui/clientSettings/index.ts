@@ -1,20 +1,29 @@
-export default function GeneralSettings() {
+import { debounce } from "../../lib/util";
+
+export default function ClientSettings() {
   const page = document.createElement("div");
   page.className = "h-full w-full space-y-2 overflow-y-scroll";
 
   const header = document.createElement("div");
   header.className = "text-l";
-  header.textContent = "General Settings";
+  header.textContent = "Client Settings";
 
   page.appendChild(header);
 
   const settings = [
     {
+      name: "Local Media Path",
+      type: "input",
+      storageKey: "app_local_media_path",
+      newValue: null,
+      default: "",
+    },
+    {
       name: "Server Adress",
       type: "input",
       storageKey: "app_server_adress",
       newValue: null,
-      default: "http://localhost:5000",
+      default: "https://animenetwork.org:5000",
     },
   ];
 
@@ -39,8 +48,14 @@ export default function GeneralSettings() {
 
         settingNode.appendChild(settingInput);
 
+        const handleSettingChange = debounce(() => {
+          localStorage.setItem(setting.storageKey, setting.newValue);
+          console.log("key set");
+        }, 250);
+
         settingInput.addEventListener("input", () => {
           setting.newValue = settingInput.value;
+          handleSettingChange();
         });
 
         break;
@@ -48,20 +63,6 @@ export default function GeneralSettings() {
 
     page.appendChild(settingNode);
   });
-
-  const saveButton = document.createElement("div");
-  saveButton.className =
-    "absolute px-4 py-2 bg-[#0d0d0d] rounded-md cursor-pointer";
-  saveButton.textContent = "Save";
-
-  saveButton.addEventListener("click", () => {
-    settings.forEach((setting) => {
-      if (!setting.newValue) return;
-      localStorage.setItem(setting.storageKey, setting.newValue);
-    });
-  });
-
-  page.appendChild(saveButton);
 
   return page;
 }
