@@ -1,12 +1,12 @@
 import { router } from "../../lib/router/index";
-import GeneralSettings from "../../ui/generalSettings/index";
+import ClientSettings from "../../ui/clientSettings/index";
 import AccountSettings from "../../ui/accountSettings/index";
 import ExtensionSettings from "../../ui/extensionSettings/index";
 
 const settingsTree = [
   {
-    label: "General",
-    handler: GeneralSettings,
+    label: "Client",
+    handler: ClientSettings,
   },
   {
     label: "Account ",
