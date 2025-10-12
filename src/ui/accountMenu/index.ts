@@ -5,7 +5,7 @@ import { accountAvatar } from "../accountAvatar/index";
 export function accountMenu() {
   const menu = document.createElement("div");
   menu.className =
-    "absolute z-5 top-8 right-0 h-fit w-64 p-2 opacity-0 hidden bg-[#1a1a1a]/95 backdrop-blur-md rounded-lg ring-1 ring-gray-700/50 shadow-lg space-y-1 scale-75 transition-all ease-in-out duration-150";
+    "absolute z-5 top-8 right-0 h-fit w-64 p-2 opacity-0 hidden bg-black/75 backdrop-blur-md rounded-lg ring-1 ring-gray-700/50 shadow-lg space-y-1 scale-75 transition-all ease-in-out duration-150";
   menu.trigger = null;
 
   let menustate = false;
@@ -57,7 +57,7 @@ export function accountMenu() {
   accountSide.appendChild(usernickname);
 
   const useremail = document.createElement("div");
-  useremail.className = "text-xs text-gray-500 leading-none";
+  useremail.className = "text-xs text-neutral-500 leading-none";
   useremail.textContent = "Sign up for more features!";
 
   accountSide.appendChild(useremail);
