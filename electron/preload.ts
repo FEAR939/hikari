@@ -23,4 +23,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     const extension = await ipcRenderer.invoke("remove-extension", name);
     return extension;
   },
+  createLocalMediaDir: async (path) => {
+    ipcRenderer.invoke("create-local-media-dir", path);
+    return true;
+  },
 });

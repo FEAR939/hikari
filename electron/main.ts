@@ -85,6 +85,10 @@ function createWindow() {
     return extension;
   });
 
+  ipcMain.handle("create-local-media-dir", async (event, path) => {
+    fs.mkdirSync(path);
+  });
+
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     if (details.url.startsWith("https://graphql.anilist.co")) {
       details.requestHeaders.Referer = "https://anilist.co/";
