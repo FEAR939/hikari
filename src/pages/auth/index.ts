@@ -1,5 +1,6 @@
 import { authService } from "../../services/auth";
 import { router } from "../../lib/router/index";
+import { API } from "../../app";
 
 enum AuthOp {
   SIGNUP = 0,
@@ -467,13 +468,10 @@ async function handleSignup(email: string, username: string, password: string) {
   formData.append("password", password);
 
   try {
-    const response = await fetch(
-      `${localStorage.getItem("app_server_adress")}/auth/register`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
+    const response = await fetch(`${API.baseurl}/auth/register`, {
+      method: "POST",
+      body: formData,
+    });
 
     if (!response.ok) {
       return false;
@@ -492,13 +490,10 @@ async function handleSignin(email: string, password: string) {
   formData.append("password", password);
 
   try {
-    const response = await fetch(
-      `${localStorage.getItem("app_server_adress")}/auth/login`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
+    const response = await fetch(`${API.baseurl}/auth/login`, {
+      method: "POST",
+      body: formData,
+    });
 
     if (!response.ok) {
       return false;
@@ -518,13 +513,10 @@ async function handleForgotPassword(email: string) {
   formData.append("email", email);
 
   try {
-    const response = await fetch(
-      `${localStorage.getItem("app_server_adress")}/auth/password-reset-code`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
+    const response = await fetch(`${API.baseurl}/auth/password-reset-code`, {
+      method: "POST",
+      body: formData,
+    });
 
     if (!response.ok) {
       return false;
@@ -544,9 +536,9 @@ async function handleVerifyCode(code: string, mode: number) {
   let url = "";
 
   if (mode === 1) {
-    url = `${localStorage.getItem("app_server_adress")}/auth/verify-reset-code`;
+    url = `${API.baseurl}/auth/verify-reset-code`;
   } else if (mode === 2) {
-    url = `${localStorage.getItem("app_server_adress")}/auth/verify-email`;
+    url = `${API.baseurl}/auth/verify-email`;
   }
 
   try {
@@ -574,13 +566,10 @@ async function handleResetPassword(token: string, password: string) {
   formData.append("password", password);
 
   try {
-    const response = await fetch(
-      `${localStorage.getItem("app_server_adress")}/auth/reset-password`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
+    const response = await fetch(`${API.baseurl}/auth/reset-password`, {
+      method: "POST",
+      body: formData,
+    });
 
     if (!response.ok) {
       return false;
