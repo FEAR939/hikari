@@ -1,46 +1,94 @@
 # hikari
 
-[Installation](#installation)
-[Extensions](#extensions)
+<div align="center">
 
-<h2><sub><img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Package.png" alt="Package" width="25" height="25" /></sub> Installation</h2>
+[![Latest Release](https://img.shields.io/github/v/release/FEAR939/hikari?style=flat-square)](https://github.com/FEAR939/hikari/releases/latest)
+[![License](https://img.shields.io/github/license/FEAR939/hikari?style=flat-square)](LICENSE)
+[![Issues](https://img.shields.io/github/issues/FEAR939/hikari?style=flat-square)](https://github.com/FEAR939/hikari/issues)
 
-Take a look at the Releases page for the latest version or click [here](https://github.com/FEAR939/hikari/releases/latest).
+</div>
 
-### Updates
+## 📋 Table of Contents
 
-Hikari has an autoupdate feature implemented. It will automatically check for updates and notify you when a new version is available. It will also automatically download the update and send you a OS notification when the new version can be installed. Simply restart the application, grant the installer the necessary permissions, and that's it.
+- [Installation](#-installation)
+- [Build from Source](#-build-from-source)
+- [Extensions](#-extensions)
+- [Auto-Updates](#-auto-updates)
+
+## 📦 Installation
+
+Download the latest version from the [Releases page](https://github.com/FEAR939/hikari/releases/latest).
+
+### 🔄 Auto-Updates
+
+Hikari includes a built-in auto-update feature that:
+- ✅ Automatically checks for new versions
+- 📬 Notifies you when updates are available
+- ⬇️ Downloads updates in the background
+- 🔔 Sends an OS notification when ready to install
+
+To complete the update:
+1. Restart the application
+2. Grant installer permissions when prompted
+3. You're done! 🎉
+
+## 🛠️ Build from Source
 
 > [!TIP]
-> In order to build from source, follow the steps below!
+> Follow these steps to build Hikari locally for development or testing.
 
-### Build from source
+### Prerequisites
+- [Bun](https://bun.sh) installed on your system
 
-1. Clone the repository:
-    - Stable:
-      ```bash
-      git clone https://github.com/FEAR939/hikari.git
-      ```
-    - Development (latest changes):
-      ```bash
-      git clone https://github.com/FEAR939/hikari.git -b frontend-dev
-      ```
-2. Change directory to the cloned repository:
-    ```bash
-    cd hikari
-    ```
-3. Install dependencies:
-    ```bash
-    bun install
-    ```
-4. Build the project:
-    ```bash
-    bun vite build
-    ```
-5. Run the project:
-    ```bash
-    bun electron .
-    ```
-### Extensions
+### Steps
 
-By default, Hikari only supports local media files. To install other extensions, you can use the built-in extension manager.
+1. **Clone the repository**
+
+   For the stable version:
+   ```bash
+   git clone https://github.com/FEAR939/hikari.git
+   ```
+
+   For the development version (latest changes):
+   ```bash
+   git clone https://github.com/FEAR939/hikari.git -b frontend-dev
+   ```
+
+2. **Navigate to the project directory**
+   ```bash
+   cd hikari
+   ```
+
+3. **Install dependencies**
+   ```bash
+   bun install
+   ```
+
+4. **Build the project**
+   ```bash
+   bun vite build
+   ```
+
+5. **Run the application**
+   ```bash
+   bun electron .
+   ```
+
+## 🧩 Extensions
+
+By default, Hikari supports **local media files only**. To expand functionality and add support for streaming services or other sources, use the **built-in extension manager**.
+
+### Installing Extensions
+1. Open Hikari
+2. Navigate to the Extension-Manager in Settings
+3. Install available extensions on Github
+
+---
+
+<div align="center">
+
+Made with ❤️ by the Hikari team
+
+[Report Bug](https://github.com/FEAR939/hikari/issues) · [Request Feature](https://github.com/FEAR939/hikari/issues)
+
+</div>
