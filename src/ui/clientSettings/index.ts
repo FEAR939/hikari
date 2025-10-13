@@ -23,7 +23,7 @@ export default function ClientSettings() {
       type: "input",
       storageKey: "app_server_adress",
       newValue: null,
-      default: "https://animenetwork.org:5000",
+      default: "https://hikari.animenetwork.org",
     },
   ];
 

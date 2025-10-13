@@ -33,7 +33,10 @@ async function main() {
   document.body.appendChild(topBar());
 
   if (localStorage.getItem("app_server_adress") === null) {
-    localStorage.setItem("app_server_adress", "https://animenetwork.org:5000");
+    localStorage.setItem(
+      "app_server_adress",
+      "https://hikari.animenetwork.org",
+    );
   }
 
   router.route("/", Home);
