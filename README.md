@@ -1,6 +1,8 @@
-# hikari
+# Hikari
 
 <div align="center">
+
+<img src="./public/icons/icon.png" alt="Hikari Logo" width="120" height="120" />
 
 [![Latest Release](https://img.shields.io/github/v/release/FEAR939/hikari?style=flat-square)](https://github.com/FEAR939/hikari/releases/latest)
 [![License](https://img.shields.io/github/license/FEAR939/hikari?style=flat-square)](LICENSE)
