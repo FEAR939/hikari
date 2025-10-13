@@ -1,7 +1,7 @@
 import { router } from "../../lib/router/index";
 import { getSkipTimes } from "../../lib/aniskip";
 import { authService } from "../../services/auth";
-import { getLeftoff, setLeftoff } from "../../lib/api";
+import { API } from "../../app";
 import { Seekbar } from "../../ui/seekbar";
 import { Volume } from "../../ui/volume";
 import { PlayerSettingsMenu } from "../../ui/playerSettingsMenu";
@@ -358,7 +358,7 @@ export default async function Player(query: PlayerQuery) {
   });
 
   if (authService.getUser()) {
-    const leftoff = await getLeftoff({
+    const leftoff = await API.getLeftoff({
       anilist_id: query.anilist_id,
       ident: JSON.parse(query.episode).episode,
     });
@@ -379,7 +379,7 @@ export default async function Player(query: PlayerQuery) {
       return;
     }
 
-    setLeftoff({
+    API.setLeftoff({
       anilist_id: query.anilist_id,
       episode: JSON.parse(query.episode).episode,
       leftoff: Math.floor(video.currentTime),

@@ -2,7 +2,7 @@ import { router } from "../../lib/router/index";
 import { fetchSections, get } from "../../lib/anilist";
 import CategorySlider from "../../ui/Slider";
 import { Card } from "../../ui/card";
-import { getContinueAnime } from "../../lib/api";
+import { API } from "../../app";
 import { Carousel } from "../../ui/carousel";
 import { authService } from "../../services/auth";
 import { currentSeason, currentYear } from "../../lib/anilist/util";
@@ -15,7 +15,7 @@ export default async function Home(query) {
 
   let ids = [];
   if (authService.getUser()) {
-    ids = (await getContinueAnime()).map((item) => item.anilist_id);
+    ids = (await API.getContinueAnime()).map((item) => item.anilist_id);
   }
 
   const sections = [

@@ -1,4 +1,5 @@
 import { debounce } from "../../lib/util";
+import { API } from "../../app";
 
 export default function ClientSettings() {
   const page = document.createElement("div");
@@ -15,6 +16,7 @@ export default function ClientSettings() {
       name: "Local Media Path",
       type: "input",
       storageKey: "app_local_media_path",
+      onchange: (value) => {},
       newValue: null,
       default: "",
     },
@@ -22,6 +24,9 @@ export default function ClientSettings() {
       name: "Server Adress",
       type: "input",
       storageKey: "app_server_adress",
+      onchange: (value) => {
+        API.baseurl = value;
+      },
       newValue: null,
       default: "https://hikari.animenetwork.org",
     },
@@ -50,7 +55,7 @@ export default function ClientSettings() {
 
         const handleSettingChange = debounce(() => {
           localStorage.setItem(setting.storageKey, setting.newValue);
-          console.log("key set");
+          setting.onchange(setting.newValue);
         }, 250);
 
         settingInput.addEventListener("input", () => {

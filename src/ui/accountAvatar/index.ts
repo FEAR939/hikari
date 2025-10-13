@@ -1,4 +1,5 @@
 import { authService } from "../../services/auth";
+import { API } from "../../app";
 
 export function accountAvatar() {
   const avatar = document.createElement("div");
@@ -27,7 +28,7 @@ export function accountAvatar() {
       return;
     }
 
-    avatarContainer.innerHTML = `<img src="${localStorage.getItem("app_server_adress")}${user.avatar}" alt="Avatar" class="absolute inset-0 w-full h-full object-cover object-center rounded-full" />`;
+    avatarContainer.innerHTML = `<img src="${API.baseurl}${user.avatar}" alt="Avatar" class="absolute inset-0 w-full h-full object-cover object-center rounded-full" />`;
   }
 
   const user = authService.getUser();

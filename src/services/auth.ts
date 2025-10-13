@@ -1,4 +1,5 @@
 import { router } from "../lib/router";
+import { API } from "../app";
 
 type AuthState = { user: null | { id: string; email: string } };
 
@@ -51,15 +52,12 @@ class AuthService {
       const formData = new FormData();
       formData.append("accessToken", localStorage.getItem("accessToken")!);
 
-      const response = await fetch(
-        `${localStorage.getItem("app_server_adress")}/me`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-          },
+      const response = await fetch(`${API.baseurl}/me`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
         },
-      );
+      });
 
       if (!response.ok) return false;
 
@@ -82,13 +80,10 @@ class AuthService {
     const formData = new FormData();
     formData.append("refreshToken", localStorage.getItem("refreshToken")!);
 
-    const response = await fetch(
-      `${localStorage.getItem("app_server_adress")}/auth/refresh`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
+    const response = await fetch(`${API.baseurl}/auth/refresh`, {
+      method: "POST",
+      body: formData,
+    });
 
     if (response.ok) {
       const { accessToken, refreshToken } = await response.json();
@@ -106,13 +101,10 @@ class AuthService {
     const formdata = new FormData();
     formdata.append("refreshToken", localStorage.getItem("refreshToken")!);
 
-    const response = await fetch(
-      `${localStorage.getItem("app_server_adress")}/auth/logout`,
-      {
-        method: "POST",
-        body: formdata,
-      },
-    );
+    const response = await fetch(`${API.baseurl}/auth/logout`, {
+      method: "POST",
+      body: formdata,
+    });
 
     if (!response.ok) {
       return console.error("Failed to logout");

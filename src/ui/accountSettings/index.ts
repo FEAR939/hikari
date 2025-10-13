@@ -1,6 +1,6 @@
 import { accountAvatar } from "../accountAvatar";
 import { authService } from "../../services/auth";
-import { uploadAvatar } from "../../lib/api";
+import { API } from "../../app";
 
 export default function AccountSettings() {
   const page = document.createElement("div");
@@ -48,7 +48,7 @@ export default function AccountSettings() {
     const file = avatarFileInput.files[0];
     if (!file) return;
 
-    const path = await uploadAvatar(file);
+    const path = await API.uploadAvatar(file);
     if (!path) return;
 
     const user = authService.getUser();

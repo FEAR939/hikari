@@ -3,7 +3,7 @@ import { getAnimeAnizip } from "../../lib/anizip/index";
 import { authService } from "../../services/auth";
 import { SourcePanel } from "../../ui/sourcePanel/index";
 import { Card, CardType } from "../../ui/card";
-
+import { API } from "../../app";
 import Episode from "../../ui/episode/index";
 import { PageControls } from "../../ui/pageControls";
 import { fetchSections } from "../../lib/anilist";
@@ -414,16 +414,13 @@ async function getEpisodeProgress(
   formData.append("anilist_id", anilist_id);
   formData.append("episode_filter", `${episode_start}-${episode_end}`);
 
-  const response = await fetch(
-    `${localStorage.getItem("app_server_adress")}/get-leftoff-at`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-      body: formData,
+  const response = await fetch(`${API.baseurl}/get-leftoff-at`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
     },
-  );
+    body: formData,
+  });
 
   if (!response.ok) {
     console.error("Failed to fetch episode progress");
