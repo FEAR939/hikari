@@ -1,5 +1,6 @@
 import { router } from "./lib/router/index";
 import { authService } from "./services/auth";
+import { Client } from "./lib/api";
 
 import Home from "./pages/home/index";
 import Anime from "./pages/anime/index";
@@ -26,18 +27,23 @@ declare global {
   }
 }
 
+let apiBaseUrl =
+  localStorage.getItem("app_server_adress") !== null &&
+  localStorage.getItem("app_server_adress")?.length !== 0
+    ? localStorage.getItem("app_server_adress")!
+    : "https://hikari.animenetwork.org";
+
+console.log(apiBaseUrl);
+
+let api = new Client(apiBaseUrl);
+
+export const API = api;
+
 async function main() {
   const root = document.getElementById("root")!;
   document.root = root;
 
   document.body.appendChild(topBar());
-
-  if (localStorage.getItem("app_server_adress") === null) {
-    localStorage.setItem(
-      "app_server_adress",
-      "https://hikari.animenetwork.org",
-    );
-  }
 
   router.route("/", Home);
   router.route("/anime", Anime);
