@@ -7,7 +7,7 @@ export default function AccountSettings() {
   page.className = "h-full w-full space-y-2 overflow-y-scroll";
 
   const header = document.createElement("div");
-  header.className = "text-l";
+  header.className = "text-xl";
   header.textContent = "Account Settings";
 
   page.appendChild(header);

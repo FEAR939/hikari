@@ -20,20 +20,32 @@ export default async function Search(query) {
     router.navigate("/");
   });
 
-  const searchBar = document.createElement("input");
+  const searchBar = document.createElement("div");
   searchBar.className =
-    "px-4 py-2 rounded-xl bg-[#0c0c0c] text-white border-none outline-none";
-  searchBar.placeholder = "Search...";
+    "rounded-lg border-1 border-[#1a1a1a] bg-neutral-950 h-10 w-64 px-3 flex items-center overflow-hidden";
+
+  const searchBarIcon = document.createElement("div");
+  searchBarIcon.className = "h-full flex items-center shrink-0";
+  searchBarIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search size-4"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>`;
+
+  searchBar.appendChild(searchBarIcon);
+
+  const searchBarInput = document.createElement("input");
+  searchBarInput.className =
+    "p-2 border-none outline-none text-sm inline-block w-full leading-none placeholder:text-neutral-500 placeholder:text-sm placeholder:text-weight-normal";
+  searchBarInput.placeholder = "Search";
+
+  searchBar.appendChild(searchBarInput);
 
   page.appendChild(searchBar);
 
-  searchBar.addEventListener("keyup", async (e) => {
+  searchBarInput.addEventListener("keyup", async (e) => {
     if (e.keyCode == 13) {
       const section = [
         {
           type: "search",
           params: {
-            search: searchBar.value,
+            search: searchBarInput.value,
           },
         },
       ];

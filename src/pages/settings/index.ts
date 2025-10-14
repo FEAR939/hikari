@@ -9,11 +9,11 @@ const settingsTree = [
     handler: ClientSettings,
   },
   {
-    label: "Account ",
+    label: "Account",
     handler: AccountSettings,
   },
   {
-    label: "Extensions ",
+    label: "Extensions",
     handler: ExtensionSettings,
   },
 ];
@@ -50,12 +50,12 @@ export default async function Settings(query) {
   page.appendChild(row);
 
   const nav = document.createElement("div");
-  nav.className = "h-full w-64 overflow-y-scroll space-y-4";
+  nav.className = "h-full w-64 overflow-y-scroll";
 
   settingsTree.map((item) => {
     const option = document.createElement("div");
     option.className =
-      "w-full px-4 py-2 bg-[#0d0d0d] text-white rounded-md text-left cursor-pointer";
+      "w-full px-4 py-2 hover:bg-neutral-900 text-white rounded-md text-left cursor-pointer";
     option.textContent = item.label;
 
     option.addEventListener("click", () => {

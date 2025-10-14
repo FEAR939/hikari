@@ -3,10 +3,10 @@ import { API } from "../../app";
 
 export default function ClientSettings() {
   const page = document.createElement("div");
-  page.className = "h-full w-full space-y-2 overflow-y-scroll";
+  page.className = "h-full w-full space-y-4 overflow-y-scroll";
 
   const header = document.createElement("div");
-  header.className = "text-l";
+  header.className = "text-xl";
   header.textContent = "Client Settings";
 
   page.appendChild(header);
@@ -14,6 +14,7 @@ export default function ClientSettings() {
   const settings = [
     {
       name: "Local Media Path",
+      description: "Path to the local media directory",
       type: "input",
       storageKey: "app_local_media_path",
       onchange: (value) => {},
@@ -22,6 +23,7 @@ export default function ClientSettings() {
     },
     {
       name: "Server Adress",
+      description: "Address of the server",
       type: "input",
       storageKey: "app_server_adress",
       onchange: (value) => {
@@ -35,7 +37,7 @@ export default function ClientSettings() {
   settings.map((setting) => {
     const settingNode = document.createElement("div");
     settingNode.className =
-      "h-fit w-full p-4 space-y-2 bg-[#0d0d0d] rounded-lg";
+      "relative flex flex-col justify-center h-fit w-full space-y-2";
 
     const settingLabel = document.createElement("div");
     settingLabel.className = "text-sm";
@@ -43,11 +45,17 @@ export default function ClientSettings() {
 
     settingNode.appendChild(settingLabel);
 
+    const settingDescription = document.createElement("div");
+    settingDescription.className = "text-sm text-neutral-500";
+    settingDescription.textContent = setting.description;
+
+    settingNode.appendChild(settingDescription);
+
     switch (setting.type) {
       case "input":
         const settingInput = document.createElement("input");
         settingInput.className =
-          "w-full px-4 py-2 text-neutral-500 outline-1 outline-[#1a1a1a] bg-[#080808] rounded-md border-none";
+          "absolute right-0 w-1/3 px-4 py-2 text-neutral-500 border-1 border-[#1a1a1a] bg-[#080808] rounded-md outline-none";
         settingInput.value =
           localStorage.getItem(setting.storageKey) || setting.default;
 

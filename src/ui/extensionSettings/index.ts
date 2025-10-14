@@ -5,7 +5,7 @@ export default function ExtensionSettings() {
   page.className = "h-full w-full space-y-2";
 
   const header = document.createElement("div");
-  header.className = "text-l";
+  header.className = "text-xl";
   header.textContent = "Extension Settings";
 
   page.appendChild(header);
@@ -81,7 +81,7 @@ export default function ExtensionSettings() {
       }
       const extensionItem = document.createElement("div");
       extensionItem.className =
-        "relative p-4 border border-[#1a1a1a] rounded-md space-y-2";
+        "relative p-4 border border-[#1a1a1a] rounded-lg space-y-2";
 
       const extensionName = document.createElement("div");
       extensionName.textContent = extension.name;
@@ -111,7 +111,7 @@ export default function ExtensionSettings() {
       });
 
       const extensionMetaRow = document.createElement("div");
-      extensionMetaRow.className = "flex space-x-2";
+      extensionMetaRow.className = "h-fit flex space-x-2 mb-0";
 
       const extensionVersion = document.createElement("div");
       extensionVersion.className =
