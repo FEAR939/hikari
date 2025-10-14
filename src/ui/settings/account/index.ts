@@ -1,6 +1,6 @@
-import { accountAvatar } from "../accountAvatar";
-import { authService } from "../../services/auth";
-import { API } from "../../app";
+import { accountAvatar } from "../../accountAvatar";
+import { authService } from "../../../services/auth";
+import { API } from "../../../app";
 
 export default function AccountSettings() {
   const page = document.createElement("div");

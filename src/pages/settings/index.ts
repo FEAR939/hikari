@@ -1,7 +1,7 @@
 import { router } from "../../lib/router/index";
-import ClientSettings from "../../ui/clientSettings/index";
-import AccountSettings from "../../ui/accountSettings/index";
-import ExtensionSettings from "../../ui/extensionSettings/index";
+import ClientSettings from "../../ui/settings/client/index";
+import AccountSettings from "../../ui/settings/account/index";
+import ExtensionSettings from "../../ui/settings/extensions/index";
 
 const settingsTree = [
   {

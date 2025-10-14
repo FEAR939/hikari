@@ -1,5 +1,5 @@
-import { debounce } from "../../lib/util";
-import { API } from "../../app";
+import { debounce } from "../../../lib/util";
+import { API } from "../../../app";
 
 export default function ClientSettings() {
   const page = document.createElement("div");

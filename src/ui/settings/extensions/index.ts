@@ -1,4 +1,4 @@
-import { Toggle } from "../toggle";
+import { Toggle } from "../../toggle";
 
 export default function ExtensionSettings() {
   const page = document.createElement("div");
