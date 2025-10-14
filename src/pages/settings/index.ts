@@ -5,12 +5,13 @@ import ExtensionSettings from "../../ui/settings/extensions/index";
 
 const settingsTree = [
   {
-    label: "Client",
-    handler: ClientSettings,
-  },
-  {
     label: "Account",
     handler: AccountSettings,
+    default: true,
+  },
+  {
+    label: "Client",
+    handler: ClientSettings,
   },
   {
     label: "Extensions",
@@ -52,6 +53,12 @@ export default async function Settings(query) {
   const nav = document.createElement("div");
   nav.className = "h-full w-64 overflow-y-scroll";
 
+  const content = document.createElement("div");
+  content.className = "h-full w-full overflow-y-hidden";
+
+  row.appendChild(nav);
+  row.appendChild(content);
+
   settingsTree.map((item) => {
     const option = document.createElement("div");
     option.className =
@@ -65,6 +72,12 @@ export default async function Settings(query) {
     });
 
     nav.appendChild(option);
+
+    if (item.default) {
+      const tabPage = item.handler();
+      content.innerHTML = "";
+      content.appendChild(tabPage);
+    }
   });
 
   const versionArea = document.createElement("div");
@@ -73,10 +86,4 @@ export default async function Settings(query) {
   versionArea.textContent = `Hikari ${await window.electronAPI?.getAppVersion()}`;
 
   nav.appendChild(versionArea);
-
-  const content = document.createElement("div");
-  content.className = "h-full w-full overflow-y-hidden";
-
-  row.appendChild(nav);
-  row.appendChild(content);
 }
