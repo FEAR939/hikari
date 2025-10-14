@@ -8,6 +8,7 @@ import Player from "./pages/player/index";
 import Search from "./pages/search/index";
 import Settings from "./pages/settings/index";
 import Auth from "./pages/auth/index";
+import News from "./pages/news/index";
 import { topBar } from "./ui/topbar";
 import { Sidebar } from "./ui/sidebar";
 
@@ -57,6 +58,7 @@ async function main() {
   router.route("/search", Search);
   router.route("/settings", Settings);
   router.route("/auth", Auth);
+  router.route("/news", News);
 
   await authService.authenticate();
 
