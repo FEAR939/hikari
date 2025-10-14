@@ -87,6 +87,7 @@ export function accountMenu() {
 
   settingsLink.addEventListener("click", () => {
     router.navigate("/settings");
+    menu.toggleVisibility();
   });
 
   let state = 0;
@@ -99,6 +100,7 @@ export function accountMenu() {
   menu.appendChild(signButton);
 
   signButton.addEventListener("click", () => {
+    menu.toggleVisibility();
     if (state == 0) return router.navigate("/auth");
 
     // else logout
