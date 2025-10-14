@@ -23,7 +23,7 @@ export default async function Player(query: PlayerQuery) {
     player.id = "player";
     player.miniPlayerActive = false;
     player.className =
-      "absolute top-0 h-full w-full bg-[#0c0c0c] transition-all duration-300";
+      "absolute z-20 top-0 h-full w-full bg-[#0c0c0c] transition-all duration-300";
 
     document.body.appendChild(player);
   }
@@ -248,12 +248,12 @@ export default async function Player(query: PlayerQuery) {
     if (!player.miniPlayerActive) {
       miniPlayerbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-picture-in-picture2-icon lucide-picture-in-picture-2"><path d="M21 9V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10c0 1.1.9 2 2 2h4"/><rect width="10" height="7" x="12" y="13" rx="2"/></svg>`;
       player.className =
-        "absolute bottom-4 right-4 h-48 w-[calc(12rem*(16/9))] aspect-video bg-[#0c0c0c] rounded-lg overflow-hidden transition-all duration-300";
+        "absolute z-20 bottom-4 right-4 h-48 w-[calc(12rem*(16/9))] aspect-video bg-[#0c0c0c] rounded-lg overflow-hidden transition-all duration-300";
       player.miniPlayerActive = true;
     } else {
       miniPlayerbutton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-picture-in-picture-icon lucide-picture-in-picture"><path d="M2 10h6V4"/><path d="m2 4 6 6"/><path d="M21 10V7a2 2 0 0 0-2-2h-7"/><path d="M3 14v2a2 2 0 0 0 2 2h3"/><rect x="12" y="14" width="10" height="7" rx="1"/></svg>`;
       player.className =
-        "absolute bottom-0 right-0 h-full w-full bg-[#0c0c0c] transition-all duration-300";
+        "absolute z-20 bottom-0 right-0 h-full w-full bg-[#0c0c0c] transition-all duration-300";
 
       player.miniPlayerActive = false;
     }

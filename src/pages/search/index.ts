@@ -7,7 +7,7 @@ export default async function Search(query) {
   page.className =
     "relative h-full w-full p-4 pt-12 space-y-4 overflow-y-scroll";
 
-  document.root.appendChild(page);
+  router.container.appendChild(page);
 
   const pageback = document.createElement("div");
   pageback.className =

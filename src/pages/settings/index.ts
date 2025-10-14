@@ -22,7 +22,7 @@ export default async function Settings(query) {
   const page = document.createElement("div");
   page.className = "relative h-full w-full p-4 pt-12 space-x-2 space-y-4";
 
-  document.root.appendChild(page);
+  router.container.appendChild(page);
 
   const pageback = document.createElement("div");
   pageback.className =

@@ -13,7 +13,7 @@ export default async function Anime(query) {
   page.className =
     "relative h-full w-full px-4 md:px-12 pb-4 space-y-4 overflow-y-scroll";
 
-  document.root.appendChild(page);
+  router.container.appendChild(page);
 
   const pageback = document.createElement("div");
   pageback.className =

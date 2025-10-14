@@ -9,12 +9,9 @@ import Search from "./pages/search/index";
 import Settings from "./pages/settings/index";
 import Auth from "./pages/auth/index";
 import { topBar } from "./ui/topbar";
+import { Sidebar } from "./ui/sidebar";
 
 declare global {
-  interface Document {
-    root: HTMLElement;
-  }
-
   interface Window {
     electronAPI?: {
       enterFullscreen: () => void;
@@ -41,9 +38,18 @@ export const API = api;
 
 async function main() {
   const root = document.getElementById("root")!;
-  document.root = root;
 
-  document.body.appendChild(topBar());
+  const topbar = topBar();
+  root.appendChild(topbar);
+
+  const sidebar = Sidebar();
+  root.appendChild(sidebar);
+
+  const content = document.createElement("div");
+  content.className = "h-full w-full";
+  root.appendChild(content);
+
+  router.container = content;
 
   router.route("/", Home);
   router.route("/anime", Anime);

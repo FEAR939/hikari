@@ -16,7 +16,7 @@ export default async function Auth(query) {
   page.className =
     "h-full w-full p-4 flex flex-col items-center justify-center space-y-8";
 
-  document.root.appendChild(page);
+  router.container.appendChild(page);
 
   const pageback = document.createElement("div");
   pageback.className =

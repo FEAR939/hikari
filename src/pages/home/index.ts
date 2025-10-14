@@ -11,7 +11,7 @@ export default async function Home(query) {
   const page = document.createElement("div");
   page.className = "h-full w-full space-y-4 overflow-y-scroll";
 
-  document.root.appendChild(page);
+  router.container.appendChild(page);
 
   let ids = [];
   if (authService.getUser()) {
