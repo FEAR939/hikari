@@ -46,7 +46,7 @@ async function main() {
   root.appendChild(sidebar);
 
   const content = document.createElement("div");
-  content.className = "h-full w-full";
+  content.className = "h-full w-full overflow-hidden";
   root.appendChild(content);
 
   router.container = content;
