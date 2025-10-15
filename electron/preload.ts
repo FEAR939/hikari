@@ -7,6 +7,13 @@ contextBridge.exposeInMainWorld("electronAPI", {
     const files = ipcRenderer.invoke("get-local-media", dirPath);
     return files;
   },
+  getLocalMediaMetadata: async (filePath) => {
+    const metadata = await ipcRenderer.invoke(
+      "get-local-media-metadata",
+      filePath,
+    );
+    return metadata;
+  },
   getAppVersion: async () => {
     const version = await ipcRenderer.invoke("get-app-version");
     return version;

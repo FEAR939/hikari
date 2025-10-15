@@ -5,6 +5,19 @@ import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
 import extensionManager from "./services/extensionManager.ts";
+import * as mp4box from "mp4box";
+import * as ffprobe from "ffprobe-static";
+import childProcess from "child_process";
+import { promisify } from "util";
+const exec = promisify(childProcess.exec);
+
+async function getVideoMetadata(filePath) {
+  const { stdout } = await exec(
+    `${ffprobe.path} -v quiet -print_format json -show_format -show_streams "${filePath}"`,
+  );
+  const metadata = JSON.parse(stdout);
+  return metadata;
+}
 
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 
@@ -40,29 +53,52 @@ function createWindow() {
     }
   });
 
-  ipcMain.handle("get-local-media", (event, dirPath) => {
+  ipcMain.handle("get-local-media", async (event, dirPath) => {
     try {
       const files = fs.readdirSync(dirPath);
 
       // Optional: Get full file info
-      const fileInfo = files.map((file) => {
+      const fileInfo = [];
+      for (const file of files) {
         const fullPath = path.join(dirPath, file);
         const stats = fs.statSync(fullPath);
 
-        return {
+        fileInfo.push({
           name: file,
           path: fullPath,
           isDirectory: stats.isDirectory(),
           size: stats.size,
           modified: stats.mtime,
-        };
-      });
+        });
+      }
 
       return fileInfo;
     } catch (error) {
       console.error("Error reading directory:", error);
       throw error;
     }
+  });
+
+  ipcMain.handle("get-local-media-metadata", async (event, filepath) => {
+    const file_metadata = await getVideoMetadata(filepath);
+    const video_metadata = file_metadata.streams.find(
+      (stream) => stream.codec_type === "video",
+    );
+    const audio_metadata = file_metadata.streams.find(
+      (stream) => stream.codec_type === "audio",
+    );
+
+    const metadata = {
+      height: video_metadata.height,
+      width: video_metadata.width,
+      duration: video_metadata.duration,
+      video_codec: video_metadata.codec_name,
+      audio_codec: audio_metadata.codec_name,
+      bitrate: video_metadata.bit_rate,
+      bitdepth: video_metadata.bits_per_raw_sample,
+    };
+
+    return metadata;
   });
 
   ipcMain.handle("get-app-version", () => {

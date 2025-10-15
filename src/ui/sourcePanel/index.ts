@@ -217,8 +217,19 @@ export function SourcePanel(anime, episodes, index) {
       return;
     }
 
-    console.log(episodeFile);
-    return episodeFile[0];
+    console.log(episodeFile[0].path);
+
+    const metadata = await window.electronAPI.getLocalMediaMetadata(
+      episodeFile[0].path,
+    );
+    console.log(metadata);
+
+    const episode = {
+      ...episodeFile[0],
+      ...metadata,
+    };
+
+    return episode;
   }
 
   function formatBytes(bytes, decimals = 2) {
@@ -339,22 +350,22 @@ export function SourcePanel(anime, episodes, index) {
       skeletonElement.remove();
       const hosterElement = document.createElement("div");
       hosterElement.className =
-        "relative w-full h-28 p-4 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2";
+        "relative w-full h-28 p-4 bg-neutral-950 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2";
 
       sourceElementList.appendChild(hosterElement);
 
       const hosterTitle = document.createElement("div");
       hosterTitle.className =
         "flex items-center space-x-2 text-white font-bold";
-      hosterTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hard-drive-icon lucide-hard-drive"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" x2="6.01" y1="16" y2="16"/><line x1="10" x2="10.01" y1="16" y2="16"/></svg>
-    <span>Local Media</span>`;
+      hosterTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hard-drive-icon lucide-hard-drive size-5"><line x1="22" x2="2" y1="12" y2="12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/><line x1="6" x2="6.01" y1="16" y2="16"/><line x1="10" x2="10.01" y1="16" y2="16"/></svg>
+    <span>This Device</span>`;
 
       hosterElement.appendChild(hosterTitle);
 
       const extensionIcon = document.createElement("img");
       extensionIcon.src = "./icons/icon.png";
       extensionIcon.className = "absolute right-4 top-4 w-4 h-4";
-      extensionIcon.title = `Provided by Local Media`;
+      extensionIcon.title = `Provided by this Device`;
 
       hosterElement.appendChild(extensionIcon);
 
@@ -370,6 +381,88 @@ export function SourcePanel(anime, episodes, index) {
       hosterSize.textContent = formatBytes(local.size);
 
       hosterElement.appendChild(hosterSize);
+
+      const hosterMetadataRow = document.createElement("div");
+      hosterMetadataRow.className = "absolute right-4 bottom-4 flex space-x-2";
+
+      hosterElement.appendChild(hosterMetadataRow);
+
+      const hosterAudioCodec = document.createElement("div");
+      hosterAudioCodec.className =
+        "px-2 py-1 text-xs text-white bg-red-400 rounded";
+
+      console.log("Local Audio Codec:", local.audio_codec);
+
+      switch (local.audio_codec) {
+        case "aac":
+          hosterAudioCodec.textContent = "AAC";
+          break;
+        case "mp3":
+          hosterAudioCodec.textContent = "MP3";
+          break;
+        case "opus":
+          hosterAudioCodec.textContent = "Opus";
+          break;
+      }
+
+      hosterMetadataRow.appendChild(hosterAudioCodec);
+
+      const hosterVideoCodec = document.createElement("div");
+      hosterVideoCodec.className =
+        "bottom-4 px-2 py-1 text-xs text-white bg-blue-400 rounded";
+
+      console.log("Local Codec:", local.video_codec);
+
+      switch (local.video_codec) {
+        case "h264":
+          hosterVideoCodec.textContent = "H.264";
+          break;
+        case "h265":
+          hosterVideoCodec.textContent = "H.265";
+          break;
+        case "av1":
+          hosterVideoCodec.textContent = "AV1";
+          break;
+      }
+
+      hosterMetadataRow.appendChild(hosterVideoCodec);
+
+      const hosterBitDepth = document.createElement("div");
+      hosterBitDepth.className =
+        "px-2 py-1 text-xs text-white bg-blue-500 rounded";
+
+      console.log("Local Bit Depth:", local.bitdepth);
+
+      switch (local.bitdepth) {
+        case "8":
+          hosterBitDepth.textContent = "8 Bit";
+          break;
+        case "10":
+          hosterBitDepth.textContent = "10 Bit";
+          break;
+      }
+
+      hosterMetadataRow.appendChild(hosterBitDepth);
+
+      const hosterQuality = document.createElement("div");
+      hosterQuality.className =
+        "px-2 py-1 text-xs text-white bg-lime-300 rounded";
+
+      console.log("Local Height:", local.height);
+
+      switch (local.height) {
+        case 2160:
+          hosterQuality.textContent = "UHD";
+          break;
+        case 1080:
+          hosterQuality.textContent = "FHD";
+          break;
+        case 720:
+          hosterQuality.textContent = "HD";
+          break;
+      }
+
+      hosterMetadataRow.appendChild(hosterQuality);
 
       hosterElement.addEventListener("click", () => {
         episodeSelected = true;
@@ -471,20 +564,20 @@ export function SourcePanel(anime, episodes, index) {
 
           const hosterElement = document.createElement("div");
           hosterElement.className =
-            "relative w-full h-28 p-4 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2";
+            "relative w-full h-28 p-4 bg-neutral-950 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2";
 
           sourceElementList.appendChild(hosterElement);
 
           const hosterTitle = document.createElement("div");
           hosterTitle.className =
             "flex items-center space-x-2 text-white font-bold";
-          hosterTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tv-icon lucide-tv"><path d="m17 2-5 5-5-5"/><rect width="20" height="15" x="2" y="7" rx="2"/></svg>
+          hosterTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-airplay-icon lucide-airplay size-5"><path d="M5 17H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-1"/><path d="m12 15 5 6H7Z"/></svg>
           <span>${source_hoster.label}</span>`;
 
           hosterElement.appendChild(hosterTitle);
 
           const extensionIcon = document.createElement("img");
-          extensionIcon.src = source_extension.icon;
+          extensionIcon.src = `${source_extension.path}\\icon.png`;
           extensionIcon.className = "absolute right-4 top-4 w-4 h-4";
           extensionIcon.title = `Provided by ${source_extension.name}`;
 
@@ -505,7 +598,7 @@ export function SourcePanel(anime, episodes, index) {
 
           const hosterQuality = document.createElement("div");
           hosterQuality.className =
-            "absolute right-4 bottom-4 px-2 py-1 text-xs text-white bg-neutral-700 rounded";
+            "absolute right-4 bottom-4 px-2 py-1 text-xs text-white bg-lime-300 rounded";
 
           switch (stream.quality) {
             case "2160p":
