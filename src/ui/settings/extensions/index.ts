@@ -15,16 +15,28 @@ export default function ExtensionSettings() {
 
   page.appendChild(installRow);
 
-  const installInput = document.createElement("input");
-  installInput.className =
-    "w-full px-4 py-2 text-neutral-500 border-1 border-[#1a1a1a] bg-[#080808] rounded-md outline-none";
-  installInput.placeholder = "Extension URL";
+  const installInputBox = document.createElement("div");
+  installInputBox.className =
+    "flex items-center space-x-2 px-4 h-10 w-full text-neutral-500 border-1 border-[#1a1a1a] bg-[#080808] rounded-md";
+  installInputBox.placeholder = "Extension URL";
 
-  installRow.appendChild(installInput);
+  installRow.appendChild(installInputBox);
+
+  const installInputIcon = document.createElement("div");
+  installInputIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link2-icon lucide-link-2 size-4"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" x2="16" y1="12" y2="12"/></svg>`;
+
+  const installInput = document.createElement("input");
+  installInput.className = "w-full py-2 border-none outline-none leading-none";
+  installInput.placeholder = "Extension URL from GitHub";
+
+  installInputBox.appendChild(installInputIcon);
+  installInputBox.appendChild(installInput);
+
+  installRow.appendChild(installInputBox);
 
   const installButton = document.createElement("div");
   installButton.className =
-    "w-1/3 px-4 py-2 flex items-center justify-center text-black bg-neutral-200 rounded-md cursor-pointer space-x-2";
+    "w-1/3 px-4 py-2 flex items-center justify-center text-black bg-gradient-to-tr from-pink-500 to-rose-500 rounded-md cursor-pointer space-x-2";
   installButton.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download-icon lucide-download size-4"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
     <div>Install Extension</div>
@@ -81,7 +93,7 @@ export default function ExtensionSettings() {
       }
       const extensionItem = document.createElement("div");
       extensionItem.className =
-        "relative p-4 border border-[#1a1a1a] rounded-lg space-y-2";
+        "relative p-4 bg-neutral-950 border-1 border-white/[0.08] rounded-lg space-y-2";
 
       const extensionName = document.createElement("div");
       extensionName.textContent = extension.name;
