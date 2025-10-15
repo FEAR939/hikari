@@ -10,13 +10,13 @@
     "electron-updater": "^6.6.2",
     "gql.tada": "^1.8.13",
     "jszip": "^3.10.1",
-    "rolldown-vite": "^7.1.16",
+    "rolldown-vite": "^7.1.17",
     "tailwindcss": "^4.1.14",
     "urql": "^5.0.1"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "electron": "^37.6.1",
+    "electron": "^37.7.0",
     "electron-builder": "^26.0.12"
   },
   "peerDependencies": {
