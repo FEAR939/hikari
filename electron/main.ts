@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
 import extensionManager from "./services/extensionManager.ts";
-import * as mp4box from "mp4box";
 import * as ffprobe from "ffprobe-static";
 import childProcess from "child_process";
 import { promisify } from "util";
@@ -13,7 +12,7 @@ const exec = promisify(childProcess.exec);
 
 async function getVideoMetadata(filePath) {
   const { stdout } = await exec(
-    `${ffprobe.path} -v quiet -print_format json -show_format -show_streams "${filePath}"`,
+    `"${ffprobe.path.replace("app.asar", "app.asar.unpacked")}" -v quiet -print_format json -show_format -show_streams "${filePath}"`,
   );
   const metadata = JSON.parse(stdout);
   return metadata;

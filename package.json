@@ -37,6 +37,9 @@
         "releaseType": "release"
       }
     ],
+    "asarUnpack": [
+      "node_modules/ffprobe-static/binaries/**/*"
+    ],
     "files": [
       "dist/**/*",
       "node_modules/**/*",
