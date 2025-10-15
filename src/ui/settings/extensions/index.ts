@@ -127,14 +127,14 @@ export default function ExtensionSettings() {
 
       const extensionVersion = document.createElement("div");
       extensionVersion.className =
-        "w-fit px-2 py-1 bg-neutral-900 text-neutral-500 rounded";
+        "w-fit px-2 py-1 text-sm bg-red-300 text-white rounded";
       extensionVersion.textContent = extension.version;
 
       extensionMetaRow.appendChild(extensionVersion);
 
       const extensionType = document.createElement("div");
       extensionType.className =
-        "w-fit px-2 py-1 bg-neutral-900 text-neutral-500 rounded";
+        "w-fit px-2 py-1 text-sm bg-blue-400 text-white rounded";
       extensionType.textContent = extension.type;
 
       extensionMetaRow.appendChild(extensionType);
