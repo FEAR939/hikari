@@ -1,5 +1,27 @@
 import { authService } from "../../services/auth";
 
+type AniListID = number;
+
+type SET_Episode = {
+  anilist_id: AniListID;
+  episode: number;
+  leftoff: number;
+};
+
+type GET_Episode = {
+  anilist_id: AniListID;
+  ident: number;
+};
+
+type LeftOffEntry = {
+  id: number;
+  user_id: number;
+  anilist_id: AniListID;
+  episode: number;
+  leftoff: number;
+  created_at: string;
+};
+
 interface APIClient {
   baseurl: string;
 }
@@ -11,9 +33,9 @@ export class Client implements APIClient {
     this.baseurl = baseurl;
   }
 
-  async getContinueAnime() {
+  async getContinueAnime(): Promise<AniListID[]> {
     const user = authService.getUser();
-    if (!user) return false;
+    if (!user) return [];
 
     try {
       const response = await fetch(`${this.baseurl}/get-last-watched`, {
@@ -31,21 +53,21 @@ export class Client implements APIClient {
 
       if (data.length === 0) {
         console.log("No continue anime found");
-        return false;
+        return [];
       }
 
       return data;
     } catch (error) {
       console.warn(error);
-      return false;
+      return [];
     }
   }
 
-  async setLeftoff(episode) {
+  async setLeftoff(episode: SET_Episode): Promise<void> {
     const formData = new FormData();
-    formData.append("anilist_id", episode.anilist_id);
-    formData.append("episode", episode.episode);
-    formData.append("leftoff", episode.leftoff);
+    formData.append("anilist_id", episode.anilist_id.toString());
+    formData.append("episode", episode.episode.toString());
+    formData.append("leftoff", episode.leftoff.toString());
 
     const response = await fetch(`${this.baseurl}/set-leftoff-at`, {
       method: "POST",
@@ -60,10 +82,10 @@ export class Client implements APIClient {
     }
   }
 
-  async getLeftoff(episode) {
+  async getLeftoff(episode: GET_Episode): Promise<LeftOffEntry[]> {
     try {
       const formData = new FormData();
-      formData.append("anilist_id", episode.anilist_id);
+      formData.append("anilist_id", episode.anilist_id.toString());
       formData.append("episode_filter", `${episode.ident}-${episode.ident}`);
 
       const response = await fetch(`${this.baseurl}/get-leftoff-at`, {
@@ -76,19 +98,23 @@ export class Client implements APIClient {
 
       if (!response.ok) {
         console.warn("Failed to get leftoff time");
-        return false;
+        return [];
       }
 
       const data = await response.json();
 
-      return data[0].leftoff;
+      return data.map((entry: LeftOffEntry) => ({
+        anilist_id: entry.anilist_id,
+        episode: entry.episode,
+        leftoff: entry.leftoff,
+      }));
     } catch (error) {
       console.warn("Error getting leftoff time: ", error);
-      return false;
+      return [];
     }
   }
 
-  async uploadAvatar(file) {
+  async uploadAvatar(file: File): Promise<string | boolean> {
     const formData = new FormData();
     formData.append("file", file);
     formData.append("type", "0");
