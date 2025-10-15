@@ -98,10 +98,10 @@ export default async function Player(query: PlayerQuery) {
   time.textContent = "00:00 | 00:00";
 
   video.addEventListener("timeupdate", () => {
-    const currentTime = video.currentTime;
-    const duration = video.duration;
+    const currentTime = video.currentTime || 0;
+    const duration = video.duration || 0;
 
-    time.textContent = `${new Date(video.currentTime * 1000).toISOString().substring(14, 19)} | ${new Date(video.duration * 1000).toISOString().substring(14, 19)}`;
+    time.textContent = `${new Date(currentTime * 1000).toISOString().substring(14, 19)} | ${new Date(duration * 1000).toISOString().substring(14, 19)}`;
   });
 
   titleAndTime.appendChild(title);
@@ -385,6 +385,8 @@ export default async function Player(query: PlayerQuery) {
       leftoff: Math.floor(video.currentTime),
     });
 
+    video.pause();
+    video.currentTime = 0;
     video.removeAttribute("src");
     video.load();
     return;
