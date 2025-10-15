@@ -1,11 +1,16 @@
 export function NumberInput() {
   const wrapper = document.createElement("div");
   wrapper.className =
-    "relative w-full bg-[#080808] outline-1 outline-[#1a1a1a] rounded-md flex items-center";
+    "relative w-full px-4 space-x-2 bg-[#080808] outline-1 outline-[#1a1a1a] rounded-md flex items-center";
+
+  const icon = document.createElement("div");
+  icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-video-icon lucide-list-video size-4"><path d="M21 5H3"/><path d="M10 12H3"/><path d="M10 19H3"/><path d="M15 12.003a1 1 0 0 1 1.517-.859l4.997 2.997a1 1 0 0 1 0 1.718l-4.997 2.997a1 1 0 0 1-1.517-.86z"/></svg>`;
+
+  wrapper.appendChild(icon);
 
   const input = document.createElement("input");
   input.className =
-    "h-full w-full px-4 py-2 outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none";
+    "h-full w-full py-2 outline-none border-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none";
   input.type = "number";
 
   const arrowBox = document.createElement("div");
