@@ -72,14 +72,14 @@ export default async function Player(query: PlayerQuery) {
   function handleMove() {
     controls.classList.remove("hidden");
     pageback.classList.remove("hidden");
-    player.style.cursor = "default";
+    player!.style.cursor = "default";
     if (timeout) clearTimeout(timeout);
 
     timeout = setTimeout(() => {
       if (!canPlay || video.paused) return;
       controls.classList.add("hidden");
       pageback.classList.add("hidden");
-      player.style.cursor = "none";
+      player!.style.cursor = "none";
     }, 3000);
   }
 
@@ -358,14 +358,14 @@ export default async function Player(query: PlayerQuery) {
   });
 
   if (authService.getUser()) {
-    const leftoff = await API.getLeftoff({
-      anilist_id: query.anilist_id,
+    const leftoffEntry = await API.getLeftoff({
+      anilist_id: parseInt(query.anilist_id),
       ident: JSON.parse(query.episode).episode,
     });
 
-    if (!leftoff) return;
+    if (!leftoffEntry) return;
 
-    video.currentTime = leftoff;
+    video.currentTime = leftoffEntry[0].leftoff;
   }
 
   async function handleBeforeClose() {
@@ -380,7 +380,7 @@ export default async function Player(query: PlayerQuery) {
     }
 
     API.setLeftoff({
-      anilist_id: query.anilist_id,
+      anilist_id: parseInt(query.anilist_id),
       episode: JSON.parse(query.episode).episode,
       leftoff: Math.floor(video.currentTime),
     });
