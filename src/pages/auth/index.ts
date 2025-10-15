@@ -14,7 +14,7 @@ enum AuthOp {
 export default async function Auth(query) {
   const page = document.createElement("div");
   page.className =
-    "h-full w-full p-4 flex flex-col items-center justify-center space-y-8";
+    "relative h-full w-full p-4 flex flex-col items-center justify-center space-y-8";
 
   router.container.appendChild(page);
 
@@ -29,7 +29,7 @@ export default async function Auth(query) {
     router.navigate("/");
   });
 
-  let op: AuthOp = AuthOp.SIGNUP;
+  let op: AuthOp = AuthOp.SIGNIN;
   let resetToken = "";
 
   const emailbox = document.createElement("div");
@@ -40,7 +40,7 @@ export default async function Auth(query) {
 
   const emailfieldwrapper = document.createElement("div");
   emailfieldwrapper.className =
-    "flex space-x-4 w-full max-w-96 px-6 py-4 outline-2 outline-[#141414] rounded-xl has-[:invalid:not(:placeholder-shown):not(:focus)]:outline-red-800";
+    "group flex items-center space-x-4 w-full max-w-96 px-4 py-3 outline-2 outline-[#141414] rounded-xl has-[:invalid:not(:placeholder-shown):not(:focus)]:outline-red-800";
   emailfieldwrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail-icon lucide-mail"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>`;
 
   const emailfield = document.createElement("input");
@@ -65,7 +65,7 @@ export default async function Auth(query) {
 
   const usernamefieldwrapper = document.createElement("div");
   usernamefieldwrapper.className =
-    "flex space-x-4 w-full max-w-96 px-6 py-4 outline-2 outline-[#141414] rounded-xl has-[:invalid:not(:placeholder-shown):not(:focus)]:outline-red-800";
+    "group flex items-center space-x-4 w-full max-w-96 px-4 py-3 outline-2 outline-[#141414] rounded-xl has-[:invalid:not(:placeholder-shown):not(:focus)]:outline-red-800";
   usernamefieldwrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`;
 
   const usernamefield = document.createElement("input");
@@ -102,7 +102,7 @@ export default async function Auth(query) {
 
   const passwordfieldwrapper = document.createElement("div");
   passwordfieldwrapper.className =
-    "group flex space-x-4 w-full max-w-96 px-6 py-4 outline-2 outline-[#141414] rounded-xl has-[:invalid:not(:placeholder-shown):not(:focus)]:outline-red-800";
+    "group flex items-center space-x-4 w-full max-w-96 px-4 py-3 outline-2 outline-[#141414] rounded-xl has-[:invalid:not(:placeholder-shown):not(:focus)]:outline-red-800";
   passwordfieldwrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock-icon lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
 
   const passwordfield = document.createElement("input");
@@ -127,7 +127,7 @@ export default async function Auth(query) {
 
   const repeatpasswordfieldwrapper = document.createElement("div");
   repeatpasswordfieldwrapper.className =
-    "group flex space-x-4 w-full max-w-96 px-6 py-4 outline-2 outline-[#141414] rounded-xl has-[:invalid:not(:placeholder-shown):not(:focus)]:outline-red-800";
+    "group flex items-center space-x-4 w-full max-w-96 px-4 py-3 outline-2 outline-[#141414] rounded-xl has-[:invalid:not(:placeholder-shown):not(:focus)]:outline-red-800";
   repeatpasswordfieldwrapper.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock-icon lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`;
 
   const repeatpasswordfield = document.createElement("input");
@@ -154,45 +154,60 @@ export default async function Auth(query) {
 
   const verificationbox = document.createElement("div");
   verificationbox.className =
-    "w-full max-w-96 text-[#c0c0c0] text-xl text-center space-y-4";
+    "w-full max-w-96 text-[#c0c0c0] text-md text-center space-y-4";
 
   const verificationText = document.createElement("div");
-  verificationText.textContent =
-    "Verification code sent. Please check your inbox!";
+  verificationText.className = "space-y-2";
+  verificationText.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail-open-icon lucide-mail-open size-10 mx-auto"><path d="M21.2 8.4c.5.38.8.97.8 1.6v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V10a2 2 0 0 1 .8-1.6l8-6a2 2 0 0 1 2.4 0l8 6Z"/><path d="m22 10-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 10"/></svg>
+    <div>Verification code sent. Please check your inbox!</div>`;
 
   verificationbox.appendChild(verificationText);
 
   const verificationCodeInputWrapper = document.createElement("div");
   verificationCodeInputWrapper.className =
-    "relative w-full max-w-96 flex justify-center space-x-2";
+    "relative w-full max-w-96 bg-neutral-900 flex items-center justify-center space-x-2 outline-none border-1 border-neutral-800 rounded-xl";
+  verificationCodeInputWrapper.tabIndex = 0;
 
   const codeLength = 6;
 
-  const verificationCodeInput = document.createElement("input");
-  verificationCodeInput.type = "text";
-  verificationCodeInput.maxLength = codeLength;
-  verificationCodeInput.className = "absolute inset-0 opacity-0";
-
   const chars = [];
+  let charString = "";
 
   for (let i = 0; i < codeLength; i++) {
+    if (i !== 0) {
+      const divider = document.createElement("div");
+      divider.className = "w-0.25 h-4 rounded bg-neutral-800";
+
+      verificationCodeInputWrapper.appendChild(divider);
+    }
     const verificationCodeChar = document.createElement("div");
     verificationCodeChar.className =
-      "w-12 h-12 bg-[#0d0d0d] text-[#c0c0c0] outline-2 outline-[#141414] rounded-xl flex items-center justify-center";
+      "w-12 h-12 flex items-center justify-center";
     verificationCodeChar.textContent = "";
     verificationCodeInputWrapper.appendChild(verificationCodeChar);
 
     chars.push(verificationCodeChar);
   }
 
-  verificationCodeInput.addEventListener("input", () => {
-    const value = verificationCodeInput.value;
+  verificationCodeInputWrapper.addEventListener("keyup", (e) => {
+    switch (e.key) {
+      case "Backspace":
+        chars[chars.length - 1].textContent = "";
+        charString = charString.slice(0, charString.length - 1);
+        break;
+      default:
+        if (charString.length < codeLength && /^[0-9a-zA-Z]$/.test(e.key)) {
+          chars[charString.length].textContent = e.key;
+
+          charString += e.key;
+        }
+        break;
+    }
+    const value = charString;
     for (let i = 0; i < codeLength; i++) {
       chars[i].textContent = value[i] || "";
     }
   });
-
-  verificationCodeInputWrapper.appendChild(verificationCodeInput);
 
   verificationbox.appendChild(verificationCodeInputWrapper);
 
@@ -212,7 +227,7 @@ export default async function Auth(query) {
 
   const submitbutton = document.createElement("div");
   submitbutton.className =
-    "group relative w-full max-w-96 px-6 py-4 bg-[#f0f0f0] hover:bg-[#e0e0e0] text-[#0a0a0a] outline-2 outline-[#141414] shadow-md rounded-xl flex justify-center cursor-pointer transition-all duration-300 ease-in-out";
+    "group relative w-full max-w-96 px-6 py-2 bg-[#f0f0f0] hover:bg-[#e0e0e0] text-[#0a0a0a] outline-2 outline-[#141414] shadow-md rounded-xl flex justify-center cursor-pointer transition-all duration-300 ease-in-out";
 
   submitbutton.tabIndex = 0;
 
@@ -301,17 +316,14 @@ export default async function Auth(query) {
         op = AuthOp.RESET_PASSWORD;
         break;
       case AuthOp.RESET_PASSWORD:
-        if (verificationCodeInput.value.trim().length < 6) break;
-        resetToken = await handleVerifyCode(
-          verificationCodeInput.value.trim(),
-          1,
-        );
+        if (charString.trim().length < 6) break;
+        resetToken = await handleVerifyCode(charString.trim(), 1);
 
         if (!resetToken) {
-          verificationCodeInput.setCustomValidity("Invalid code");
-          setTimeout(() => {
-            verificationCodeInput.setCustomValidity("");
-          }, 3000);
+          // verificationCodeInput.setCustomValidity("Invalid code");
+          // setTimeout(() => {
+          //   verificationCodeInput.setCustomValidity("");
+          // }, 3000);
           return;
         }
 
@@ -342,17 +354,14 @@ export default async function Auth(query) {
         op = AuthOp.SIGNIN;
         break;
       case AuthOp.SIGNIN_VERIFICATION:
-        if (verificationCodeInput.value.trim().length < 6) break;
-        resetToken = await handleVerifyCode(
-          verificationCodeInput.value.trim(),
-          2,
-        );
+        if (charString.trim().length < 6) break;
+        resetToken = await handleVerifyCode(charString.trim(), 2);
 
         if (!resetToken) {
-          verificationCodeInput.setCustomValidity("Invalid verification code");
-          setTimeout(() => {
-            verificationCodeInput.setCustomValidity("");
-          }, 3000);
+          // verificationCodeInput.setCustomValidity("Invalid verification code");
+          // setTimeout(() => {
+          //   verificationCodeInput.setCustomValidity("");
+          // }, 3000);
           return;
         }
 
@@ -364,8 +373,7 @@ export default async function Auth(query) {
   });
 
   const switchbutton = document.createElement("div");
-  switchbutton.className = "w-full max-w-96 cursor-pointer";
-  switchbutton.textContent = "Switch to Login";
+  switchbutton.className = "flex space-x-2 w-full max-w-96 cursor-pointer";
   switchbutton.tabIndex = 0;
 
   page.appendChild(switchbutton);
@@ -408,7 +416,7 @@ export default async function Auth(query) {
     usernamefield.value = "";
     passwordfield.value = "";
     repeatpasswordfield.value = "";
-    verificationCodeInput.value = "";
+    charString = "";
 
     switch (op) {
       case 0:
@@ -418,8 +426,15 @@ export default async function Auth(query) {
         passwordbox.style.display = "block";
         repeatpasswordbox.style.display = "block";
         submitbuttonText.textContent = "Sign Up";
-        switchbutton.style.display = "block";
-        switchbutton.textContent = "Already have an account? Sign In";
+        switchbutton.style.display = "flex";
+        switchbutton.innerHTML = `
+          <div class="text-neutral-500 w-fit">Already have an account?</div>
+          <div class="text-neutral-200 flex items-center gap-1">
+            Sign In
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-arrow-out-up-right-icon lucide-square-arrow-out-up-right size-4"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/><path d="m21 3-9 9"/><path d="M15 3h6v6"/></svg>
+          </div>
+
+          `;
         break;
       case 1:
         // signin
@@ -427,8 +442,14 @@ export default async function Auth(query) {
         passwordbox.style.display = "block";
         passwordforgot.style.display = "block";
         submitbuttonText.textContent = "Sign In";
-        switchbutton.style.display = "block";
-        switchbutton.textContent = "Don't have an account yet? Sign Up";
+        switchbutton.style.display = "flex";
+        switchbutton.innerHTML = `
+          <div class="text-neutral-500 w-fit">Don't have an account yet?</div>
+          <span class="text-neutral-200 flex items-center gap-1">
+            Sign Up
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-arrow-out-up-right-icon lucide-square-arrow-out-up-right size-4"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/><path d="m21 3-9 9"/><path d="M15 3h6v6"/></svg>
+          </span>
+          `;
         break;
       case 2:
         // forgot password
