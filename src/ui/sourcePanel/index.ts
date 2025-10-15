@@ -397,8 +397,8 @@ export function SourcePanel(anime, episodes, index) {
         case "aac":
           hosterAudioCodec.textContent = "AAC";
           break;
-        case "mp3":
-          hosterAudioCodec.textContent = "MP3";
+        case "flac":
+          hosterAudioCodec.textContent = "FLAC";
           break;
         case "opus":
           hosterAudioCodec.textContent = "Opus";
@@ -415,10 +415,10 @@ export function SourcePanel(anime, episodes, index) {
 
       switch (local.video_codec) {
         case "h264":
-          hosterVideoCodec.textContent = "H.264";
+          hosterVideoCodec.textContent = "AVC";
           break;
         case "h265":
-          hosterVideoCodec.textContent = "H.265";
+          hosterVideoCodec.textContent = "HEVC";
           break;
         case "av1":
           hosterVideoCodec.textContent = "AV1";
