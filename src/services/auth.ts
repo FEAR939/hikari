@@ -34,7 +34,7 @@ class AuthService {
     let user = await this.access();
 
     if (!user) {
-      console.error("accessToken expired, trying to refresh");
+      console.warn("accessToken expired, trying to refresh");
 
       const refresh = await this.refreshToken();
 
@@ -92,7 +92,7 @@ class AuthService {
 
       return true;
     } else {
-      console.error("Failed to refresh token");
+      console.warn("Failed to refresh token");
       return false;
     }
   }
