@@ -54,6 +54,12 @@ function createWindow() {
 
   ipcMain.handle("get-local-media", async (event, dirPath) => {
     try {
+      const exists = fs.existsSync(dirPath);
+      if (!exists) {
+        console.warn("Directory does not exist:", dirPath);
+        return [];
+      }
+
       const files = fs.readdirSync(dirPath);
 
       // Optional: Get full file info
