@@ -51,6 +51,12 @@ export function h(
         // Use setAttribute for SVG attributes
         element.setAttribute(key, value);
       }
+
+      if (key === "ref" && typeof value === "function") {
+        value(element);
+      } else if (key === "ref") {
+        value = element;
+      }
     });
   }
 
