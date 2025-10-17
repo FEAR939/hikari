@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [tailwindcss()],
     resolve: {
-      extensions: [".js", ".ts"],
+      extensions: [".js", ".ts", ".jsx", ".tsx"],
     },
     base: "./",
     clearScreen: false,
