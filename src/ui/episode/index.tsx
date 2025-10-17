@@ -40,9 +40,9 @@ export default function Episode(episode: Episode, index: number): EpElement {
             class="w-full aspect-video object-cover rounded-lg"
           />
         )}
-      </div>
-      <div class="absolute bottom-2 right-2 px-2 py-1 text-xs text-neutral-300 bg-[#1a1a1a]/50 backdrop-blur-sm rounded">
-        {episode.runtime || "N/A"} Min
+        <div class="absolute bottom-2 right-2 px-2 py-1 text-xs text-neutral-300 bg-[#1a1a1a]/50 backdrop-blur-sm rounded">
+          {episode.runtime || "N/A"} Min
+        </div>
       </div>
       <div class="relative h-fit w-full space-y-1 md:space-y-2 overflow-hidden py-2">
         <div class="text-sm font-medium truncate">
