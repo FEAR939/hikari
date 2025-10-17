@@ -44,6 +44,7 @@ async function main() {
   root.appendChild(topbar);
 
   const sidebar = Sidebar();
+  console.log(sidebar);
   root.appendChild(sidebar);
 
   const content = document.createElement("div");
