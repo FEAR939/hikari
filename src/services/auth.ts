@@ -40,10 +40,10 @@ class AuthService {
 
       if (!refresh) return router.navigate("/auth");
 
-      user = await this.authenticate();
+      user = await this.access();
     }
 
-    console.log(user);
+    console.log("User: ", user);
     this.setUser(user);
   }
 
