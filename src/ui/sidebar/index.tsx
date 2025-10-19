@@ -2,8 +2,6 @@ import { router } from "../../lib/router";
 import { h } from "../../lib/jsx/runtime";
 import { createSignal, bind } from "../../lib/jsx/reactive";
 
-const navIconSize = "size-6";
-
 const navs = [
   {
     id: "home",
