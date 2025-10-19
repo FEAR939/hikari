@@ -488,7 +488,7 @@ export default async function Player(query: PlayerQuery) {
       anilist_id: parseInt(query.anilist_id),
       ident: episodeData.episode,
     });
-    if (leftoffEntry) {
+    if (leftoffEntry.length > 0) {
       video.currentTime = leftoffEntry[0].leftoff;
     }
   }
