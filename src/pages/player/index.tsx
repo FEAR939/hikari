@@ -1,6 +1,6 @@
 import { h } from "../../lib/jsx/runtime";
 import { router } from "../../lib/router/index";
-import { getSkipTimes } from "../../lib/aniskip";
+import { getSkipTimes, SkipResult } from "../../lib/aniskip";
 import { authService } from "../../services/auth";
 import { API } from "../../app";
 import { Seekbar } from "../../ui/seekbar";
@@ -426,7 +426,7 @@ export default async function Player(query: PlayerQuery) {
 
     if (!aniskip.found) return;
 
-    const chapters = aniskip.results.map((segment: any) => ({
+    const chapters = aniskip.results.map((segment: SkipResult) => ({
       id: segment.skip_id,
       title: segment.skip_type,
       start: segment.interval.start_time,

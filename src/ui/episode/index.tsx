@@ -1,25 +1,9 @@
+import { Episode, Mapping } from "../../lib/anizip";
 import { createSignal, bind } from "../../lib/jsx/reactive";
 import { h } from "../../lib/jsx/runtime";
 
 interface EpElement extends HTMLDivElement {
   updateProgress?: (progress: number) => void;
-}
-
-interface Source {
-  icon: string;
-  url: string;
-  isBundle: boolean;
-  bundleEpisodeNumber: number;
-}
-
-interface Episode {
-  title: { en: string };
-  image: string | undefined;
-  episode: number;
-  overview: string;
-  mal_id: number;
-  runtime?: number;
-  airdate?: string;
 }
 
 export default function Episode(episode: Episode, index: number): EpElement {
