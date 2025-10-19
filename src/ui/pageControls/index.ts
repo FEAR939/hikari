@@ -1,8 +1,12 @@
-export function PageControls(
-  totalPages: number,
-  currentPage: number = 1,
-  callback: (page: number) => void,
-) {
+export function PageControls({
+  totalPages,
+  currentPage = 1,
+  callback,
+}: {
+  totalPages: number;
+  currentPage: number;
+  callback: (page: number) => void;
+}) {
   const container = document.createElement("div");
   container.className = "w-fit flex gap-2 items-center";
 

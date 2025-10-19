@@ -1,13 +1,13 @@
 import { h } from "../../lib/jsx/runtime";
+import { createSignal, bind } from "../../lib/jsx/reactive";
 import { router } from "../../lib/router/index";
 import { getAnimeAnizip } from "../../lib/anizip/index";
 import { authService } from "../../services/auth";
 import { SourcePanel } from "../../ui/sourcePanel/index";
 import { Card, CardType } from "../../ui/card";
 import { API } from "../../app";
-import Episode from "../../ui/episode/index";
-import { PageControls } from "../../ui/pageControls";
 import { fetchSections } from "../../lib/anilist";
+import { EpisodeView } from "../../ui/episodeGrid";
 
 interface AnimeQuery {
   id: string;
@@ -35,11 +35,12 @@ export default async function Anime(query: AnimeQuery) {
 
   let episodeProgress = null;
   if (authService.getUser()) {
-    episodeProgress = await getEpisodeProgress(
+    episodeProgress = await API.getAnimeProgress(
       anime.id,
       1,
       Object.values(anime_anizip.episodes).filter(
-        (episode: any) => episode.episode && !isNaN(parseInt(episode.episode)),
+        (episode: any) =>
+          parseInt(episode.episode) > 0 && !isNaN(parseInt(episode.episode)),
       ).length,
     );
   }
@@ -61,8 +62,42 @@ export default async function Anime(query: AnimeQuery) {
     },
   );
 
-  let tabContent: HTMLDivElement;
-  const tabOptionNodes: HTMLDivElement[] = [];
+  const episodes = Object.values(anime_anizip.episodes).filter(
+    (episode) => parseInt(episode.episode) > 0,
+  );
+
+  const [currTab, setCurrTab, subscribeCurrTab] = createSignal(0);
+  const [sourcePanelIndex, setSourcePanelIndex, subscribeSourcePanelIndex] =
+    createSignal<number>(-1);
+  function sourcepanel_callback(index: number) {
+    console.log(index);
+    setSourcePanelIndex(index);
+  }
+  const tabs = [
+    {
+      label: "Episodes",
+      handler: () => (
+        <EpisodeView
+          anime={anime}
+          episodes={episodes.map((episode) => {
+            const progress = episodeProgress.find(
+              (progress) => progress.episode === parseInt(episode.episode),
+            );
+
+            episode.leftoff = progress?.leftoff ?? 0;
+
+            return episode;
+          })}
+          sourcepanel_callback={sourcepanel_callback}
+        ></EpisodeView>
+      ),
+      default: true,
+    },
+    {
+      label: "Threads",
+      handler: () => {},
+    },
+  ];
 
   const page = (
     <div class="relative h-full w-full px-4 md:px-12 pb-4 space-y-4 overflow-y-scroll">
@@ -157,7 +192,11 @@ export default async function Anime(query: AnimeQuery) {
                 });
 
                 if (!authService.getUser() || !episodeProgress) {
-                  const sourcePanel = SourcePanel(anime, episodesWithMal, 0);
+                  const sourcePanel = SourcePanel({
+                    anime: anime,
+                    episodes: episodesWithMal,
+                    initialIndex: 0,
+                  });
                   (page as HTMLDivElement).appendChild(sourcePanel);
                   return;
                 }
@@ -169,11 +208,11 @@ export default async function Anime(query: AnimeQuery) {
                   },
                   0,
                 );
-                const sourcePanel = SourcePanel(
-                  anime,
-                  episodesWithMal,
-                  lastProgress - 1,
-                );
+                const sourcePanel = SourcePanel({
+                  anime: anime,
+                  episodes: episodesWithMal,
+                  initialIndex: lastProgress - 1,
+                });
                 (page as HTMLDivElement).appendChild(sourcePanel);
               }}
             >
@@ -248,173 +287,41 @@ export default async function Anime(query: AnimeQuery) {
       {/* Tab Section */}
       <div class="w-full h-fit space-y-4 mt-12">
         <div class="flex justify-center w-fit">
-          {[
-            {
-              label: "Episodes",
-              handler: episodeHandler,
-              default: true,
-            },
-            {
-              label: "Threads",
-              handler: () => {},
-            },
-          ].map((tab) => {
-            const tabOption = (
+          {tabs.map((tab, index) => {
+            bind([currTab, setCurrTab, subscribeCurrTab], (value) => (
               <div
-                class="px-4 py-2 rounded-md text-neutral-500 text-sm cursor-pointer"
+                class={`px-4 py-2 rounded-md text-sm cursor-pointer ${value === index ? "bg-neutral-900 text-white" : "text-neutral-500"}`}
                 onClick={() => {
-                  tabOptionNodes.forEach((node) => {
-                    node.classList.remove("bg-neutral-900", "text-white");
-                  });
-                  (tabOption as HTMLDivElement).classList.add(
-                    "bg-neutral-900",
-                    "text-white",
-                  );
-                  tabContent.innerHTML = "";
+                  setCurrTab(index);
+
                   tab.handler();
                 }}
               >
                 {tab.label}
               </div>
-            ) as HTMLDivElement;
-
-            tabOptionNodes.push(tabOption);
-
-            if (tab.default) {
-              setTimeout(() => (tabOption as HTMLDivElement).click(), 0);
-            }
-
-            return tabOption;
+            ));
           })}
         </div>
-        <div
-          class="w-full h-fit"
-          ref={(el) => (tabContent = el as HTMLDivElement)}
-        />
+        {bind([currTab, setCurrTab, subscribeCurrTab], (value) => (
+          <div class="w-full h-fit">{tabs[currTab()].handler()}</div>
+        ))}
       </div>
     </div>
   ) as HTMLDivElement;
 
-  router.container.appendChild(page);
+  subscribeSourcePanelIndex(() => {
+    const value = sourcePanelIndex();
+    if (value === -1) return;
 
-  function episodeHandler() {
-    const episodesPerPage = 15;
-    let episodesPage = 0;
+    console.log(value);
 
-    const episodeList = (
-      <div class="h-fit w-full grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4" />
-    ) as HTMLDivElement;
-
-    function handlePageChange(page: number) {
-      episodesPage = page - 1;
-      renderPage();
-    }
-
-    const pageControls = PageControls(
-      Math.ceil(anime_anizip.episodeCount / episodesPerPage),
-      episodesPage + 1,
-      handlePageChange,
-    );
-    pageControls.classList.add("ml-auto");
-
-    tabContent.appendChild(episodeList);
-    tabContent.appendChild(pageControls);
-
-    renderPage();
-
-    async function renderPage() {
-      episodeList.innerHTML = "";
-      const episodes = new Map();
-
-      let eps = Object.values(anime_anizip.episodes).filter(
-        (episode: any) => episode.episode,
-      );
-
-      if (eps.length === 0 && anime.format === "MOVIE") {
-        const epObj = {
-          episode: "1",
-          runtime: 0,
-          image: "",
-          overview: "",
-          title: { en: "" },
-          airdate: "",
-        };
-        eps = [epObj];
-      }
-
-      for (let index = 0; index < eps.length; index++) {
-        const episode = eps[index] as any;
-        if (
-          isNaN(parseInt(episode.episode)) ||
-          episodesPage * episodesPerPage > index ||
-          index >= (episodesPage + 1) * episodesPerPage
-        )
-          continue;
-
-        episode.mal_id = anime.idMal || 0;
-        episode.anilist_id = anime.id || 0;
-
-        const episodeCard = Episode(episode, index);
-        episodeList.appendChild(episodeCard);
-
-        episodeCard.addEventListener("click", () => {
-          const sourcepanel = SourcePanel(
-            anime,
-            Object.values(anime_anizip.episodes).filter(
-              (episode: any) => episode.episodeNumber,
-            ),
-            index,
-          );
-          page.appendChild(sourcepanel);
-        });
-
-        episodes.set(episode.episode, episodeCard);
-      }
-
-      router.route("/anime/updateEpisodeProgress", (query: any) => {
-        if (parseInt(query.anilist_id) !== anime.id) return;
-        const episodeCard = episodes.get(query.episode);
-        if (episodeCard) episodeCard.updateProgress(query.leftoff);
-      });
-
-      if (!authService.getUser() || !episodeProgress) return;
-
-      const episodeProgressPart = episodeProgress.filter(
-        (episode: any) =>
-          episode.episode > episodesPage * episodesPerPage &&
-          episode.episode <= (episodesPage + 1) * episodesPerPage,
-      );
-
-      episodeProgressPart.forEach((episodeProg: any) => {
-        const episodeCard = episodes.get(episodeProg.episode.toString());
-        if (episodeCard) episodeCard.updateProgress(episodeProg.leftoff);
-      });
-    }
-  }
-}
-
-async function getEpisodeProgress(
-  anilist_id: string,
-  episode_start: number,
-  episode_end: number,
-) {
-  const formData = new FormData();
-  formData.append("anilist_id", anilist_id);
-  formData.append("episode_filter", `${episode_start}-${episode_end}`);
-
-  const response = await fetch(`${API.baseurl}/get-leftoff-at`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    },
-    body: formData,
+    const sourcePanel = SourcePanel({
+      anime: anime,
+      episodes: episodes,
+      initialIndex: value - 1,
+    });
+    page.appendChild(sourcePanel);
   });
 
-  if (!response.ok) {
-    console.error("Failed to fetch episode progress");
-    return;
-  }
-
-  const data = await response.json();
-  return data;
+  router.container!.appendChild(page);
 }

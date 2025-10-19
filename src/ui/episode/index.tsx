@@ -1,4 +1,4 @@
-import { Episode, Mapping } from "../../lib/anizip";
+import { Episode } from "../../lib/anizip";
 import { createSignal, bind } from "../../lib/jsx/reactive";
 import { h } from "../../lib/jsx/runtime";
 
@@ -6,8 +6,18 @@ interface EpElement extends HTMLDivElement {
   updateProgress?: (progress: number) => void;
 }
 
-export default function Episode(episode: Episode, index: number): EpElement {
-  const [progress, setProgress, subscribeProgress] = createSignal(0);
+export function Episode({
+  episode,
+  index,
+  sourcepanel_callback,
+}: {
+  episode: Episode;
+  index: number;
+  sourcepanel_callback: (index: number) => void;
+}): EpElement {
+  const [progress, setProgress, subscribeProgress] = createSignal(
+    (episode.leftoff / (episode.runtime * 60)) * 100,
+  );
 
   function renderProgress(prog: number) {
     const duration = (prog / (episode.runtime * 60)) * 100;
@@ -16,7 +26,10 @@ export default function Episode(episode: Episode, index: number): EpElement {
   }
 
   const div = (
-    <div class="relative h-fit w-full shadow-lg overflow-hidden cursor-pointer">
+    <div
+      class="relative h-fit w-full shadow-lg overflow-hidden cursor-pointer"
+      onclick={() => sourcepanel_callback(parseInt(episode.episode))}
+    >
       <div class="relative w-full bg-neutral-800 aspect-video rounded-lg">
         {episode.image && (
           <img

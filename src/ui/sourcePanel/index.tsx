@@ -26,11 +26,15 @@ interface Anime {
   [key: string]: any;
 }
 
-export function SourcePanel(
-  anime: Anime,
-  episodes: Episode[],
-  initialIndex: number,
-) {
+export function SourcePanel({
+  anime,
+  episodes,
+  initialIndex,
+}: {
+  anime: Anime;
+  episodes: Episode[];
+  initialIndex: number;
+}) {
   const [currentIndex, setCurrentIndex, subscribeIndex] =
     createSignal(initialIndex);
   const [autoSelect, setAutoSelect, subscribeAutoSelect] = createSignal(
