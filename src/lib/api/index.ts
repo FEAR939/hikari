@@ -22,6 +22,15 @@ type LeftOffEntry = {
   created_at: string;
 };
 
+export interface AnimeProgress {
+  id: number;
+  user_id: number;
+  anilist_id: AniListID;
+  episode: number;
+  leftoff: number;
+  created_at: string;
+}
+
 interface APIClient {
   baseurl: string;
 }
@@ -112,6 +121,32 @@ export class Client implements APIClient {
       console.warn("Error getting leftoff time: ", error);
       return [];
     }
+  }
+
+  async getAnimeProgress(
+    anilist_id: string,
+    episode_start: number,
+    episode_end: number,
+  ): Promise<AnimeProgress[]> {
+    const formData = new FormData();
+    formData.append("anilist_id", anilist_id);
+    formData.append("episode_filter", `${episode_start}-${episode_end}`);
+
+    const response = await fetch(`${this.baseurl}/get-leftoff-at`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      console.error("Failed to fetch episode progress");
+      return [];
+    }
+
+    const data = await response.json();
+    return data;
   }
 
   async uploadAvatar(file: File): Promise<string | boolean> {
