@@ -31,7 +31,7 @@ let apiBaseUrl =
     ? localStorage.getItem("app_server_adress")!
     : "https://hikari.animenetwork.org";
 
-console.log(apiBaseUrl);
+console.log("API Base URL: ", apiBaseUrl);
 
 let api = new Client(apiBaseUrl);
 
@@ -44,7 +44,6 @@ async function main() {
   root.appendChild(topbar);
 
   const sidebar = Sidebar();
-  console.log(sidebar);
   root.appendChild(sidebar);
 
   const content = document.createElement("div");
@@ -77,11 +76,7 @@ function initProxy() {
     });
   } else {
     console.warn(
-      "initializeApp: window.ensureAndroidProxyReady is not defined. Network proxying may not work.",
-    );
-
-    console.log(
-      "initializeApp: Proceeding without proxy. If you are on android expect CORS issues for external fetches, otherwise you are likely on desktop so just ignore this.",
+      "Proxy: window.ensureAndroidProxyReady is not defined. Network proxying may not work.",
     );
 
     main();
