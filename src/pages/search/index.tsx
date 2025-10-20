@@ -30,8 +30,8 @@ export default async function Search(query) {
           <path d="M7 12h14" />
         </svg>
       </div>
-      <div class="rounded-lg border-1 border-[#1a1a1a] bg-neutral-950 h-10 w-64 px-3 flex items-center overflow-hidden">
-        <div class="h-full flex items-center shrink-0">
+      <div class="rounded-lg border-1 border-neutral-700/50 bg-neutral-950 h-10 w-64 px-3 flex items-center overflow-hidden">
+        <div class="h-full flex items-center shrink-0 text-neutral-700">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -49,7 +49,7 @@ export default async function Search(query) {
           </svg>
         </div>
         <input
-          class="p-2 border-none outline-none text-sm inline-block w-full leading-none placeholder:text-neutral-500 placeholder:text-sm placeholder:text-weight-normal"
+          class="p-2 h-8 border-none outline-none text-sm text-neutral-300 font-medium inline-block w-full leading-none placeholder:text-neutral-500 placeholder:text-sm placeholder:font-medium"
           placeholder="Search"
           onKeyUp={async (e) => {
             if (e.keyCode == 13) {
