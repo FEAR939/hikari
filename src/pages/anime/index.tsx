@@ -271,14 +271,15 @@ export default async function Anime(query: AnimeQuery) {
           <div class="flex overflow-y-scroll gap-4">
             {relations.map((relation: any, index: number) => {
               relation.relationType = anime.relations.edges[index].relationType;
-              const card = Card(relation, {
-                type: CardType.RELATION,
-                label: true,
-              });
-              card.addEventListener("click", () => {
-                router.navigate(`/anime?id=${relation.id}`);
-              });
-              return card;
+              return (
+                <Card
+                  item={relation}
+                  options={{
+                    type: CardType.RELATION,
+                    label: true,
+                  }}
+                ></Card>
+              );
             })}
           </div>
         </div>
