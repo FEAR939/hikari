@@ -162,3 +162,33 @@ export const GET_MULTIPLE_ANIME = graphql(`
     }
   }
 `);
+
+export const GET_SCHEDULE = graphql(`
+  query GetSchedule($season: MediaSeason!, $seasonYear: Int!) {
+    Page {
+      media(type: ANIME, season: $season, seasonYear: $seasonYear) {
+        id
+        title {
+          romaji
+          english
+        }
+        mediaListEntry {
+          status
+          id
+        }
+        aired: airingSchedule(page: 1, perPage: 50, notYetAired: false) {
+          nodes {
+            airingAt
+            episode
+          }
+        }
+        notaired: airingSchedule(page: 1, perPage: 50, notYetAired: true) {
+          nodes {
+            airingAt
+            episode
+          }
+        }
+      }
+    }
+  }
+`);

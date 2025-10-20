@@ -9,6 +9,7 @@ import Search from "./pages/search/index";
 import Settings from "./pages/settings/index";
 import Auth from "./pages/auth/index";
 import News from "./pages/news/index";
+import Schedule from "./pages/schedule";
 import { topBar } from "./ui/topbar";
 import { Sidebar } from "./ui/sidebar";
 
@@ -59,6 +60,7 @@ async function main() {
   router.route("/settings", Settings);
   router.route("/auth", Auth);
   router.route("/news", News);
+  router.route("/schedule", Schedule);
 
   await authService.authenticate();
 

@@ -25,6 +25,7 @@ import {
   GET_SEARCH,
   GET_MULTIPLE_ANIME,
   GET_ANIME,
+  GET_SCHEDULE,
 } from "./queries";
 import type { ResultOf, VariablesOf } from "gql.tada";
 
@@ -41,7 +42,12 @@ export type SectionConfig =
       title?: string;
       params: { search: string; perPage?: number };
     }
-  | { type: "anime"; title?: string; params: { id: number } };
+  | { type: "anime"; title?: string; params: { id: number } }
+  | {
+      type: "schedule";
+      title?: string;
+      params?: { season?: MediaSeason; seasonYear?: number };
+    };
 
 type MediaSeason = "WINTER" | "SPRING" | "SUMMER" | "FALL";
 
@@ -113,6 +119,17 @@ export async function fetchSections(sections: SectionConfig[]) {
       case "anime": {
         result = await anilistClient.query(GET_ANIME, {
           id: section.params.id,
+        });
+        break;
+      }
+
+      case "schedule": {
+        const season = section.params?.season || getCurrentSeason();
+        const seasonYear =
+          section.params?.seasonYear || new Date().getFullYear();
+        result = await anilistClient.query(GET_SCHEDULE, {
+          season,
+          seasonYear,
         });
         break;
       }
