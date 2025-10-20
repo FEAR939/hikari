@@ -63,7 +63,7 @@ export default async function Home(query) {
         );
 
         const continueAnimeCards = orderedAnime.map((item) => {
-          const card = Card(item);
+          const card = Card({ item: item });
           return card;
         });
         const continueAnimeSlider = CategorySlider(
@@ -74,7 +74,7 @@ export default async function Home(query) {
         break;
       default:
         const animeCards = result.data.map((item) => {
-          const card = Card(item);
+          const card = Card({ item: item });
           return card;
         });
         const animeSlider = CategorySlider(result.title, animeCards);

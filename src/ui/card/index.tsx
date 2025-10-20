@@ -17,7 +17,13 @@ export enum CardSize {
   MANUAL = 1,
 }
 
-export function Card(item, options: CardOptions = {}) {
+export function Card({
+  item,
+  options = {},
+}: {
+  item: any;
+  options?: CardOptions;
+}) {
   if (!options.size) options.size = CardSize.MANUAL;
   if (!options.type) options.type = CardType.DEFAULT;
   if (!options.label) options.label = false;
