@@ -3,7 +3,7 @@ import { API } from "../../app";
 import { h } from "../../lib/jsx/runtime";
 import { createSignal, bind } from "../../lib/jsx/reactive";
 
-export function accountAvatar() {
+export function AccountAvatar() {
   const [user, setUser, subscribeUser] = createSignal<{
     username: string;
     avatar: string | null;

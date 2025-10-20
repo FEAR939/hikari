@@ -1,4 +1,4 @@
-import { accountAvatar } from "../../accountAvatar";
+import { AccountAvatar } from "../../accountAvatar";
 import { authService } from "../../../services/auth";
 import { API } from "../../../app";
 
@@ -29,7 +29,7 @@ export default function AccountSettings() {
   const avatarUpload = document.createElement("div");
   avatarUpload.className = "group relative size-20 rounded-full cursor-pointer";
 
-  const avatar = accountAvatar();
+  const avatar = AccountAvatar();
   avatar.className = "size-20";
   avatarUpload.appendChild(avatar);
 

@@ -1,5 +1,5 @@
 import { router } from "../../lib/router/index";
-import { accountAvatar } from "../accountAvatar/index";
+import { AccountAvatar } from "../accountAvatar/index";
 import { accountMenu } from "../accountMenu/index";
 
 export function topBar() {
@@ -18,7 +18,7 @@ export function topBar() {
     router.navigate("/search");
   });
 
-  const avatar = accountAvatar();
+  const avatar = AccountAvatar();
 
   const avatarMenu = accountMenu();
 
