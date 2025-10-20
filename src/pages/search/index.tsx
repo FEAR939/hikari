@@ -64,7 +64,6 @@ export default async function Search(query) {
 
               const results = await fetchSections(section);
 
-              console.log(results[0].data);
               return setResults(results[0].data);
             }
           }}
