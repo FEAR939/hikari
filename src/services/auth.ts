@@ -1,7 +1,15 @@
 import { router } from "../lib/router";
 import { API } from "../app";
 
-type AuthState = { user: null | { id: string; email: string } };
+type AuthState = {
+  user: null | {
+    id: string;
+    username: string;
+    email: string;
+    avatar: string | null;
+    banner: string | null;
+  };
+};
 
 class AuthService {
   state: AuthState = { user: null };
