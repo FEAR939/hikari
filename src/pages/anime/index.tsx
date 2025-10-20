@@ -175,9 +175,9 @@ export default async function Anime(query: AnimeQuery) {
           </div>
 
           {/* Button Row */}
-          <div class="w-full h-12 flex items-center space-x-2 md:space-x-4 overflow-hidden shrink-0 grow-0">
+          <div class="w-full h-10 flex items-center space-x-2 md:space-x-4 overflow-hidden shrink-0 grow-0">
             <div
-              class="w-24 md:w-56 h-full py-1 md:py-3 rounded-md bg-neutral-900 text-xs md:text-base text-white flex items-center justify-center space-x-2 cursor-pointer"
+              class="w-24 md:w-56 h-full py-1 md:py-2 rounded-md bg-neutral-900 text-xs md:text-base text-white flex items-center justify-center space-x-2 cursor-pointer"
               onClick={() => {
                 const episodes = Object.values(anime_anizip.episodes).filter(
                   (episode: any) =>
@@ -235,7 +235,7 @@ export default async function Anime(query: AnimeQuery) {
               </div>
             </div>
 
-            <div class="size-12 bg-neutral-900 rounded-md flex items-center justify-center cursor-not-allowed">
+            <div class="size-10 bg-neutral-900 rounded-md flex items-center justify-center cursor-not-allowed">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
