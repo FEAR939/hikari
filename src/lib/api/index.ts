@@ -149,6 +149,32 @@ export class Client implements APIClient {
     return data;
   }
 
+  async setBookmark(
+    anilist_id: number,
+    subscribe: boolean,
+    notify: boolean,
+    remove: boolean,
+  ) {
+    const formData = new FormData();
+    formData.append("anilist_id", anilist_id.toString());
+    formData.append("subscribed", subscribe.toString());
+    formData.append("notifications", notify.toString());
+    formData.append("remove", remove.toString());
+
+    const response = await fetch(`${this.baseurl}/set-bookmark`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      console.warn("Failed to set bookmark");
+      return false;
+    }
+  }
+
   async uploadAvatar(file: File): Promise<string | boolean> {
     const formData = new FormData();
     formData.append("file", file);
