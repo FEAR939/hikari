@@ -3,14 +3,14 @@ import { NewsItem } from "../../lib/anime2you";
 
 export function NewsCard({ news }: { news: NewsItem }) {
   return (
-    <div>
+    <div class="space-y-2">
       <img
         src={news.image}
         alt={news.title}
         className="w-full aspect-video object-cover rounded-md"
       />
-      <div className="text-lg">{news.title}</div>
-      <div className="text-neutral-500">
+      <div className="text-sm">{news.title}</div>
+      <div className="text-xs text-neutral-500">
         {new Date(news.date!).toLocaleDateString()}
       </div>
     </div>
