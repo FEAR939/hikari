@@ -1,5 +1,5 @@
 import { router } from "../../lib/router/index";
-import { fetchSections, get } from "../../lib/anilist";
+import { fetchSections } from "../../lib/anilist";
 import CategorySlider from "../../ui/Slider";
 import { Card } from "../../ui/card";
 import { API } from "../../app";
