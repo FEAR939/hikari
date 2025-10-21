@@ -15,15 +15,18 @@ export function NumberInput() {
   input.type = "number";
 
   const arrowBox = document.createElement("div");
-  arrowBox.className = "absolute right-2 h-fit w-fit bg-[#080808]";
+  arrowBox.className =
+    "absolute right-2 h-fit w-fit bg-[#080808] overflow-hidden";
 
   const upArrow = document.createElement("div");
-  upArrow.className = "h-fit w-fit text-neutral-500 hover:text-neutral-300";
-  upArrow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up-icon lucide-chevron-up size-4"><path d="m18 15-6-6-6 6"/></svg>`;
+  upArrow.className =
+    "relative h-3.25 w-4 text-neutral-500 hover:text-neutral-300 overflow-hidden";
+  upArrow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up-icon lucide-chevron-up size-4 absolute top-0"><path d="m18 15-6-6-6 6"/></svg>`;
 
   const downArrow = document.createElement("div");
-  downArrow.className = "h-fit w-fit text-neutral-500 hover:text-neutral-300";
-  downArrow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down size-4"><path d="m6 9 6 6 6-6"/></svg>`;
+  downArrow.className =
+    "relative h-3.25 w-4 text-neutral-500 hover:text-neutral-300 overflow-hidden";
+  downArrow.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down size-4 absolute bottom-0"><path d="m6 9 6 6 6-6"/></svg>`;
 
   upArrow.addEventListener("click", () => {
     input.value = (parseInt(input.value) + 1).toString();
