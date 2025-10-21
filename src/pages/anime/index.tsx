@@ -34,15 +34,22 @@ export default async function Anime(query: AnimeQuery) {
   console.log(anime);
 
   let episodeProgress = null;
+  const [bookmark, setBookmark, subscribeBookmark] = createSignal(false);
   if (authService.getUser()) {
-    episodeProgress = await API.getAnimeProgress(
-      anime.id,
-      1,
-      Object.values(anime_anizip.episodes).filter(
-        (episode: any) =>
-          parseInt(episode.episode) > 0 && !isNaN(parseInt(episode.episode)),
-      ).length,
-    );
+    const [progress, bookmarked] = await Promise.all([
+      await API.getAnimeProgress(
+        anime.id,
+        1,
+        Object.values(anime_anizip.episodes).filter(
+          (episode: any) =>
+            parseInt(episode.episode) > 0 && !isNaN(parseInt(episode.episode)),
+        ).length,
+      ),
+      await API.getBookmarks(anime.id),
+    ]);
+
+    episodeProgress = progress;
+    setBookmark(bookmarked[0]?.subscribed || false);
   }
 
   const chips = [
@@ -235,21 +242,35 @@ export default async function Anime(query: AnimeQuery) {
               </div>
             </div>
 
-            <div class="size-10 bg-neutral-900 rounded-md flex items-center justify-center cursor-not-allowed">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-bookmark size-6"
-              >
-                <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
-              </svg>
+            <div
+              class="size-10 bg-neutral-900 rounded-md flex items-center justify-center cursor-pointer"
+              onClick={async () => {
+                const result = await API.setBookmark(
+                  anime.id,
+                  !bookmark(),
+                  false,
+                  false,
+                );
+                if (!result) return;
+                setBookmark(!bookmark());
+              }}
+            >
+              {bind([bookmark, setBookmark, subscribeBookmark], (value) => (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill={value ? "currentColor" : "none"}
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-bookmark size-6"
+                >
+                  <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+                </svg>
+              ))}
             </div>
           </div>
         </div>
