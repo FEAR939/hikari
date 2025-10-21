@@ -31,6 +31,14 @@ export interface AnimeProgress {
   created_at: string;
 }
 
+export interface Bookmark {
+  anilist_id: AniListID;
+  subscribed: boolean;
+  notifications: boolean;
+}
+
+export type BookmarkResponse = Bookmark[];
+
 interface APIClient {
   baseurl: string;
 }
@@ -173,6 +181,31 @@ export class Client implements APIClient {
       console.warn("Failed to set bookmark");
       return false;
     }
+
+    return true;
+  }
+
+  async getBookmarks(anilist_id?: number): Promise<BookmarkResponse> {
+    const response = await fetch(`${this.baseurl}/get-bookmarks`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+      body: (() => {
+        if (!anilist_id) return null;
+        const formData = new FormData();
+        formData.append("anilist_id", anilist_id.toString());
+        return formData;
+      })(),
+    });
+
+    if (!response.ok) {
+      console.error("Failed to fetch bookmarks");
+      return [];
+    }
+
+    const data = await response.json();
+    return data;
   }
 
   async uploadAvatar(file: File): Promise<string | boolean> {
