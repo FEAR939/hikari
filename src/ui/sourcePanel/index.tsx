@@ -454,13 +454,13 @@ export function SourcePanel({
   });
 
   // Subscribe to autoSelect changes
-  subscribeAutoSelect((value) => {
-    localStorage.setItem("autoSelect", String(value));
+  subscribeAutoSelect(() => {
+    localStorage.setItem("autoSelect", String(autoSelect()));
   });
 
   const container = (
-    <div class="fixed inset-0 p-4 flex items-center justify-center backdrop-brightness-50 backdrop-blur-md">
-      <div class="relative w-full max-w-4xl h-2/3 p-4 pt-8 space-y-4 overflow-y-scroll bg-[#080808] rounded-xl">
+    <div class="fixed inset-0 p-4 pt-12 flex items-center justify-center backdrop-brightness-50 backdrop-blur-md">
+      <div class="relative w-full max-w-4xl h-full p-4 pt-8 space-y-4 overflow-y-scroll bg-[#080808] rounded-xl">
         {/* Close Button */}
         <div
           class="absolute z-10 top-2 right-4 size-8 flex items-center justify-center cursor-pointer"
