@@ -35,14 +35,14 @@ export function Card({
         onclick={() => router.navigate(`/anime?id=${item.id}`)}
       >
         <img
-          src={item.coverImage.large}
+          src={item.attributes.posterImage.original}
           class="w-full aspect-[5/7] object-cover rounded-lg"
           loading="lazy"
         />
         {options.label && (
           <div class="text-sm mt-2 font-medium space-y-1">
             <div class="text-white line-clamp-2">
-              {item.title.english || item.title.romaji}
+              {item.attributes.titles.en_jp || item.attributes.titles.en_us}
             </div>
             {item.relationType && (
               <div class="text-neutral-500 text-xs">{item.relationType}</div>

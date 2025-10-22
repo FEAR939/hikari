@@ -4,11 +4,12 @@ import { router } from "../../lib/router/index";
 import { Timer } from "../timer";
 import { NumberInput } from "../numberInput";
 import { cache } from "../../services/cache";
+import { KitsuAnime, KitsuEpisode } from "../../lib/kitsu";
 
 interface Episode {
   episode: string;
   mal_id?: number;
-  anilist_id?: number;
+  kitsu_id?: number;
   [key: string]: any;
 }
 
@@ -31,8 +32,8 @@ export function SourcePanel({
   episodes,
   initialIndex,
 }: {
-  anime: Anime;
-  episodes: Episode[];
+  anime: KitsuAnime;
+  episodes: KitsuEpisode[];
   initialIndex: number;
 }) {
   const [currentIndex, setCurrentIndex, subscribeIndex] =
@@ -62,7 +63,7 @@ export function SourcePanel({
       return;
     }
 
-    const animeTitle = anime.title.romaji
+    const animeTitle = anime.attributes.titles.en_jp
       .replaceAll(" ", "-")
       .replaceAll(":", "")
       .replaceAll("'", "")
@@ -80,7 +81,7 @@ export function SourcePanel({
     const episodeFile = animeDirContents.filter((file: any) => {
       const match = file.name.toLowerCase().match(/e(\d+)/);
       const matchAlt = file.name.toLowerCase().match(/ep(\d+)/);
-      if (anime.format === "MOVIE") return true;
+      if (anime.attributes.showType === "MOVIE") return true;
       if (match && parseInt(match[1]) === currentIndex() + 1) return true;
       if (matchAlt && parseInt(matchAlt[1]) === currentIndex() + 1) return true;
       return false;
@@ -289,7 +290,7 @@ export function SourcePanel({
           onClick={() => {
             episodeSelected = true;
             router.navigate(
-              `/player?streamurl=${encodeURIComponent(local.path)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[currentIndex()])}&anilist_id=${anime.id}`,
+              `/player?streamurl=${encodeURIComponent(local.path)}&title=${encodeURIComponent(anime.attributes.titles.en_jp)}&episode=${JSON.stringify(episodes[currentIndex()])}&kitsu_id=${anime.id}`,
             );
           }}
         >
@@ -349,8 +350,8 @@ export function SourcePanel({
         sourceElementList.appendChild(skeletonExt as HTMLElement);
 
         const source = await SourceExtensionClass.getProvider({
-          romaji: anime.title.romaji,
-          english: anime.title.english,
+          romaji: anime.attributes.titles.en_jp,
+          english: anime.attributes.titles.en,
         });
 
         (skeletonExt as HTMLElement).remove();
@@ -406,7 +407,7 @@ export function SourcePanel({
               onClick={() => {
                 episodeSelected = true;
                 router.navigate(
-                  `/player?streamurl=${encodeURIComponent(stream.mp4)}&title=${encodeURIComponent(anime.title.romaji)}&episode=${JSON.stringify(episodes[currentIndex()])}&anilist_id=${anime.id}`,
+                  `/player?streamurl=${encodeURIComponent(stream.mp4)}&title=${encodeURIComponent(anime.attributes.titles.en_jp)}&episode=${JSON.stringify(episodes[currentIndex()])}&kitsu_id=${anime.id}`,
                 );
               }}
             >
@@ -489,12 +490,15 @@ export function SourcePanel({
         {/* Banner */}
         <img
           class="absolute top-0 left-0 right-0 w-full h-32 object-cover brightness-50 mask-b-from-50% bg-[#080808]"
-          src={anime.bannerImage || anime.trailer?.thumbnail}
+          src={
+            anime.attributes.coverImage?.original ||
+            anime.attributes.posterImage?.original
+          }
         />
 
         {/* Anime Name */}
         <div class="relative text-2xl font-semibold text-white">
-          {anime.title.romaji}
+          {anime.attributes.titles.en_jp}
         </div>
 
         {/* Episode Picker */}
@@ -541,7 +545,7 @@ export function SourcePanel({
                 console.warn("Local media path not found");
                 return;
               }
-              const animeTitle = anime.title.romaji
+              const animeTitle = anime.attributes.titles.en_jp
                 .replaceAll(" ", "-")
                 .replaceAll(":", "")
                 .replaceAll("'", "")

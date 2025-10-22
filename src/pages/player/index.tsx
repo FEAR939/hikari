@@ -10,7 +10,7 @@ import { PlayerSettingsMenu } from "../../ui/playerSettingsMenu";
 interface PlayerQuery {
   url: string;
   episodeNumber: string;
-  anilist_id: string;
+  kitsu_id: string;
   isBundle: string;
   bundleEpisodeNumber: string;
   episode: string;
@@ -53,7 +53,7 @@ export default async function Player(query: PlayerQuery) {
   // Event Handlers
   const handleBeforeClose = async () => {
     router.navigate(
-      `/anime/updateEpisodeProgress?anilist_id=${query.anilist_id}&episode=${episodeData.episode}&leftoff=${Math.floor(video.currentTime)}`,
+      `/anime/updateEpisodeProgress?kitsu_id=${query.kitsu_id}&episode=${episodeData.attributes.number}&leftoff=${Math.floor(video.currentTime)}`,
     );
 
     if (!authService.getUser()) {
@@ -63,8 +63,8 @@ export default async function Player(query: PlayerQuery) {
     }
 
     API.setLeftoff({
-      anilist_id: parseInt(query.anilist_id),
-      episode: episodeData.episode,
+      kitsu_id: parseInt(query.kitsu_id),
+      episode: episodeData.attributes.number,
       leftoff: Math.floor(video.currentTime),
     });
 
@@ -165,7 +165,7 @@ export default async function Player(query: PlayerQuery) {
   const titleAndTime = (
     <div class="h-fit flex items-center justify-between space-x-2">
       <div class="h-6 max-w-1/2 text-white text-base truncate">
-        {episodeData.title?.en || "No Episode Title found"}
+        {episodeData.attributes.titles.en_jp || "No Episode Title found"}
       </div>
       {time}
     </div>
@@ -485,7 +485,7 @@ export default async function Player(query: PlayerQuery) {
   // Load saved progress
   if (authService.getUser()) {
     const leftoffEntry = await API.getLeftoff({
-      anilist_id: parseInt(query.anilist_id),
+      kitsu_id: parseInt(query.kitsu_id),
       ident: episodeData.episode,
     });
     if (leftoffEntry.length > 0) {

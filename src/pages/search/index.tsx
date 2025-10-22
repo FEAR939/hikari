@@ -3,6 +3,7 @@ import { Card, CardSize } from "../../ui/card";
 import { fetchSections } from "../../lib/anilist";
 import { h } from "../../lib/jsx/runtime";
 import { createSignal, bind } from "../../lib/jsx/reactive";
+import { kitsu } from "../../lib/kitsu";
 
 export default async function Search(query) {
   const [results, setResults, subscribeResults] = createSignal([]);
@@ -53,18 +54,9 @@ export default async function Search(query) {
           placeholder="Search"
           onKeyUp={async (e) => {
             if (e.keyCode == 13) {
-              const section = [
-                {
-                  type: "search",
-                  params: {
-                    search: e.target.value,
-                  },
-                },
-              ];
+              const results = await kitsu.searchAnime(e.target.value);
 
-              const results = await fetchSections(section);
-
-              return setResults(results[0].data);
+              return setResults(results.data);
             }
           }}
         ></input>

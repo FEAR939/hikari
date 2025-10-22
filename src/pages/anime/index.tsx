@@ -8,44 +8,27 @@ import { Card, CardType } from "../../ui/card";
 import { API } from "../../app";
 import { fetchSections } from "../../lib/anilist";
 import { EpisodeView } from "../../ui/episodeGrid";
+import { kitsu } from "../../lib/kitsu";
 
 interface AnimeQuery {
   id: string;
 }
 
 export default async function Anime(query: AnimeQuery) {
-  const section = [
-    {
-      type: "anime",
-      params: {
-        id: query.id,
-      },
-    },
-  ];
+  const [kitsuAnime] = await Promise.all([kitsu.getAnimeById(query.id)]);
 
-  const [anime, anime_anizip] = await Promise.all([
-    (async () => {
-      const result = await fetchSections(section);
-      return result[0].data;
-    })(),
-    getAnimeAnizip(query.id),
-  ]);
-
-  console.log(anime);
+  console.log(kitsuAnime);
 
   let episodeProgress = null;
   const [bookmark, setBookmark, subscribeBookmark] = createSignal(false);
   if (authService.getUser()) {
     const [progress, bookmarked] = await Promise.all([
       await API.getAnimeProgress(
-        anime.id,
+        kitsuAnime.anime.id,
         1,
-        Object.values(anime_anizip.episodes).filter(
-          (episode: any) =>
-            parseInt(episode.episode) > 0 && !isNaN(parseInt(episode.episode)),
-        ).length,
+        kitsuAnime.episodes.length,
       ),
-      await API.getBookmarks(anime.id),
+      await API.getBookmarks(parseInt(kitsuAnime.anime.id)),
     ]);
 
     episodeProgress = progress;
@@ -53,25 +36,19 @@ export default async function Anime(query: AnimeQuery) {
   }
 
   const chips = [
-    { text: `${anime.episodes} Episodes` },
-    { text: `${anime.status}` },
+    { text: `${kitsuAnime.anime.attributes.episodeCount} Episodes` },
+    { text: `${kitsuAnime.anime.attributes.status}` },
   ];
 
-  const relations = anime.relations.nodes.filter(
-    (relation: any, index: number) => {
-      if (
-        relation.type !== "ANIME" ||
-        (anime.relations.edges[index].relationType !== "PREQUEL" &&
-          anime.relations.edges[index].relationType !== "SEQUEL")
-      )
-        return false;
-      return true;
-    },
-  );
-
-  const episodes = Object.values(anime_anizip.episodes).filter(
-    (episode) => parseInt(episode.episode) > 0,
-  );
+  const relations = kitsuAnime.relations
+    .filter(
+      (relation: any, index: number) =>
+        relation.role === "sequel" || relation.role === "prequel",
+    )
+    .map((relation) => {
+      relation.anime.relationType = relation.role;
+      return relation.anime;
+    });
 
   const [currTab, setCurrTab, subscribeCurrTab] = createSignal(0);
   const [sourcePanelIndex, setSourcePanelIndex, subscribeSourcePanelIndex] =
@@ -85,10 +62,10 @@ export default async function Anime(query: AnimeQuery) {
       label: "Episodes",
       handler: () => (
         <EpisodeView
-          anime={anime}
-          episodes={episodes.map((episode) => {
+          anime={kitsuAnime.anime}
+          episodes={kitsuAnime.episodes.map((episode) => {
             const progress = episodeProgress.find(
-              (progress) => progress.episode === parseInt(episode.episode),
+              (progress) => progress.episode === episode.attributes.number,
             );
 
             episode.leftoff = progress?.leftoff ?? 0;
@@ -140,7 +117,10 @@ export default async function Anime(query: AnimeQuery) {
         <div class="absolute -z-1 top-0 left-0 right-0 w-full h-48 md:h-96 object-cover">
           <img
             class="w-full h-full object-cover object-center overflow-hidden"
-            src={anime.bannerImage || anime.trailer.thumbnail}
+            src={
+              kitsuAnime.anime.attributes?.coverImage?.original ||
+              kitsuAnime.anime.attributes?.posterImage?.original
+            }
           />
           <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
         </div>
@@ -150,7 +130,7 @@ export default async function Anime(query: AnimeQuery) {
           {/* Cover Image */}
           <div class="w-24 md:w-56 h-fit shrink-0 space-y-3 md:space-y-6">
             <img
-              src={anime.coverImage.large}
+              src={kitsuAnime.anime.attributes?.posterImage?.original}
               class="w-full aspect-[5/7] object-cover rounded-md"
             />
           </div>
@@ -158,7 +138,8 @@ export default async function Anime(query: AnimeQuery) {
           {/* Info */}
           <div class="flex-1 h-fit md:mt-18 p-4 space-y-2 md:space-y-4 overflow-hidden">
             <h1 class="w-full text-xl md:text-4xl font-bold flex items-center space-x-4 truncate">
-              {anime.title.english || anime.title.romaji}
+              {kitsuAnime.anime.attributes?.titles?.en ||
+                kitsuAnime.anime.attributes?.titles?.en_jp}
             </h1>
 
             {/* Chips */}
@@ -174,8 +155,11 @@ export default async function Anime(query: AnimeQuery) {
             <div
               class="w-full text-sm text-neutral-600 line-clamp-3"
               dangerouslySetInnerHTML={{
-                __html: anime.description
-                  .substring(0, anime.description.indexOf("(Source:"))
+                __html: kitsuAnime.anime.attributes?.description
+                  .substring(
+                    0,
+                    kitsuAnime.anime.attributes.description.indexOf("(Source:"),
+                  )
                   .replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, ""),
               }}
             />
@@ -194,13 +178,13 @@ export default async function Anime(query: AnimeQuery) {
                 if (episodes.length === 0) return;
 
                 const episodesWithMal = episodes.map((episode: any) => {
-                  episode.mal_id = anime.idMal || 0;
+                  episode.mal_id = kitsuAnime.anime.idMal || 0;
                   return episode;
                 });
 
                 if (!authService.getUser() || !episodeProgress) {
                   const sourcePanel = SourcePanel({
-                    anime: anime,
+                    anime: kitsuAnime.anime,
                     episodes: episodesWithMal,
                     initialIndex: 0,
                   });
@@ -216,7 +200,7 @@ export default async function Anime(query: AnimeQuery) {
                   0,
                 );
                 const sourcePanel = SourcePanel({
-                  anime: anime,
+                  anime: kitsuAnime.anime,
                   episodes: episodesWithMal,
                   initialIndex: lastProgress - 1,
                 });
@@ -246,7 +230,7 @@ export default async function Anime(query: AnimeQuery) {
               class="size-10 bg-neutral-900 rounded-md flex items-center justify-center cursor-pointer"
               onClick={async () => {
                 const result = await API.setBookmark(
-                  anime.id,
+                  parseInt(kitsuAnime.anime.id),
                   !bookmark(),
                   false,
                   false,
@@ -277,9 +261,9 @@ export default async function Anime(query: AnimeQuery) {
 
         {/* Tags */}
         <div class="w-full mt-4 flex items-center space-x-2 md:space-x-4 overflow-hidden">
-          {anime.genres.map((genre: string) => (
-            <span class="px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-neutral-900 text-white">
-              {genre}
+          {kitsuAnime.genres.map((genre) => (
+            <span class="px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-neutral-900 text-white shrink-0">
+              {genre.attributes.title}
             </span>
           ))}
         </div>
@@ -290,8 +274,7 @@ export default async function Anime(query: AnimeQuery) {
         <div class="w-full h-fit space-y-4 mt-12">
           <h2 class="text-2xl font-bold">Relations</h2>
           <div class="flex overflow-y-scroll gap-4">
-            {relations.map((relation: any, index: number) => {
-              relation.relationType = anime.relations.edges[index].relationType;
+            {relations.map((relation) => {
               return (
                 <Card
                   item={relation}
@@ -338,8 +321,8 @@ export default async function Anime(query: AnimeQuery) {
     console.log(value);
 
     const sourcePanel = SourcePanel({
-      anime: anime,
-      episodes: episodes,
+      anime: kitsuAnime.anime,
+      episodes: kitsuAnime.episodes,
       initialIndex: value - 1,
     });
     page.appendChild(sourcePanel);

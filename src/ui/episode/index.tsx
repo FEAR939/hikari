@@ -1,6 +1,7 @@
 import { Episode } from "../../lib/anizip";
 import { createSignal, bind } from "../../lib/jsx/reactive";
 import { h } from "../../lib/jsx/runtime";
+import { KitsuEpisode } from "../../lib/kitsu";
 
 interface EpElement extends HTMLDivElement {
   updateProgress?: (progress: number) => void;
@@ -11,16 +12,16 @@ export function Episode({
   index,
   sourcepanel_callback,
 }: {
-  episode: Episode;
+  episode: KitsuEpisode;
   index: number;
   sourcepanel_callback: (index: number) => void;
 }): EpElement {
   const [progress, setProgress, subscribeProgress] = createSignal(
-    (episode.leftoff / (episode.runtime * 60)) * 100,
+    (episode.leftoff / (episode.attributes.length! * 60)) * 100,
   );
 
   function renderProgress(prog: number) {
-    const duration = (prog / (episode.runtime * 60)) * 100;
+    const duration = (prog / (episode.attributes.length! * 60)) * 100;
     const progPercent = duration;
     setProgress(progPercent);
   }
@@ -28,22 +29,22 @@ export function Episode({
   const div = (
     <div
       class="relative h-fit w-full shadow-lg overflow-hidden cursor-pointer"
-      onclick={() => sourcepanel_callback(parseInt(episode.episode))}
+      onclick={() => sourcepanel_callback(episode.attributes.number)}
     >
       <div class="relative w-full bg-neutral-800 aspect-video rounded-lg">
-        {episode.image && (
+        {episode.attributes.thumbnail?.original && (
           <img
-            src={episode.image}
+            src={episode.attributes.thumbnail.original}
             class="w-full aspect-video object-cover rounded-lg"
           />
         )}
         <div class="absolute bottom-2 right-2 px-2 py-1 text-xs text-neutral-300 bg-[#1a1a1a]/50 backdrop-blur-sm rounded">
-          {episode.runtime || "N/A"} Min
+          {episode.attributes.length || "N/A"} Min
         </div>
       </div>
       <div class="relative h-fit w-full space-y-1 md:space-y-2 overflow-hidden py-2">
         <div class="text-sm font-medium truncate">
-          {`${episode.episode}. ${episode.title.en || ""}` ||
+          {`${episode.attributes.number}. ${episode.attributes.titles.en || ""}` ||
             `Episode ${index + 1}`}
         </div>
         {bind([progress, setProgress, subscribeProgress], (value) => (
@@ -54,10 +55,10 @@ export function Episode({
           </div>
         ))}
         <div class="text-xs font-medium text-neutral-500 line-clamp-2">
-          {episode.overview}
+          {episode.attributes.description || "No description available"}
         </div>
         <div class="text-xs font-medium m-0 text-neutral-500">
-          {getRelativeTime(episode.airdate) || "Unknown"}
+          {getRelativeTime(episode.attributes.airdate) || "Unknown"}
         </div>
       </div>
     </div>

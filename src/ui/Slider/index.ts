@@ -1,6 +1,6 @@
 import { router } from "../../lib/router";
 
-export default function CategorySlider(label, children) {
+export default function CategorySlider({ label, children }) {
   const categorySlider = document.createElement("div");
   categorySlider.className =
     "group relative h-fit w-full overflow-hidden flex items-center p-4 pt-12";

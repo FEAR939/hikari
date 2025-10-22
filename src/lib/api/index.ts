@@ -3,20 +3,20 @@ import { authService } from "../../services/auth";
 type AniListID = number;
 
 type SET_Episode = {
-  anilist_id: AniListID;
+  kitsu_id: AniListID;
   episode: number;
   leftoff: number;
 };
 
 type GET_Episode = {
-  anilist_id: AniListID;
+  kitsu_id: AniListID;
   ident: number;
 };
 
 type LeftOffEntry = {
   id: number;
   user_id: number;
-  anilist_id: AniListID;
+  kitsu_id: AniListID;
   episode: number;
   leftoff: number;
   created_at: string;
@@ -25,14 +25,14 @@ type LeftOffEntry = {
 export interface AnimeProgress {
   id: number;
   user_id: number;
-  anilist_id: AniListID;
+  kitsu_id: AniListID;
   episode: number;
   leftoff: number;
   created_at: string;
 }
 
 export interface Bookmark {
-  anilist_id: AniListID;
+  kitsu_id: AniListID;
   subscribed: boolean;
   notifications: boolean;
 }
@@ -82,7 +82,7 @@ export class Client implements APIClient {
 
   async setLeftoff(episode: SET_Episode): Promise<void> {
     const formData = new FormData();
-    formData.append("anilist_id", episode.anilist_id.toString());
+    formData.append("kitsu_id", episode.kitsu_id.toString());
     formData.append("episode", episode.episode.toString());
     formData.append("leftoff", episode.leftoff.toString());
 
@@ -102,7 +102,7 @@ export class Client implements APIClient {
   async getLeftoff(episode: GET_Episode): Promise<LeftOffEntry[]> {
     try {
       const formData = new FormData();
-      formData.append("anilist_id", episode.anilist_id.toString());
+      formData.append("kitsu_id", episode.kitsu_id.toString());
       formData.append("episode_filter", `${episode.ident}-${episode.ident}`);
 
       const response = await fetch(`${this.baseurl}/get-leftoff-at`, {
@@ -121,7 +121,7 @@ export class Client implements APIClient {
       const data = await response.json();
 
       return data.map((entry: LeftOffEntry) => ({
-        anilist_id: entry.anilist_id,
+        kitsu_id: entry.kitsu_id,
         episode: entry.episode,
         leftoff: entry.leftoff,
       }));
@@ -132,12 +132,12 @@ export class Client implements APIClient {
   }
 
   async getAnimeProgress(
-    anilist_id: string,
+    kitsu_id: string,
     episode_start: number,
     episode_end: number,
   ): Promise<AnimeProgress[]> {
     const formData = new FormData();
-    formData.append("anilist_id", anilist_id);
+    formData.append("kitsu_id", kitsu_id);
     formData.append("episode_filter", `${episode_start}-${episode_end}`);
 
     const response = await fetch(`${this.baseurl}/get-leftoff-at`, {
@@ -158,13 +158,13 @@ export class Client implements APIClient {
   }
 
   async setBookmark(
-    anilist_id: number,
+    kitsu_id: number,
     subscribe: boolean,
     notify: boolean,
     remove: boolean,
   ) {
     const formData = new FormData();
-    formData.append("anilist_id", anilist_id.toString());
+    formData.append("kitsu_id", kitsu_id.toString());
     formData.append("subscribed", subscribe.toString());
     formData.append("notifications", notify.toString());
     formData.append("remove", remove.toString());
@@ -185,16 +185,16 @@ export class Client implements APIClient {
     return true;
   }
 
-  async getBookmarks(anilist_id?: number): Promise<BookmarkResponse> {
+  async getBookmarks(kitsu_id?: number): Promise<BookmarkResponse> {
     const response = await fetch(`${this.baseurl}/get-bookmarks`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
       body: (() => {
-        if (!anilist_id) return null;
+        if (!kitsu_id) return null;
         const formData = new FormData();
-        formData.append("anilist_id", anilist_id.toString());
+        formData.append("kitsu_id", kitsu_id.toString());
         return formData;
       })(),
     });

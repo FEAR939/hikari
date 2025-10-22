@@ -4,17 +4,18 @@ import { router } from "../../lib/router";
 import { Episode } from "../episode";
 import { PageControls } from "../pageControls";
 import { SourcePanel } from "../sourcePanel";
+import { KitsuAnime, KitsuEpisode } from "../../lib/kitsu";
 
 const [visibleEpisodes, setVisibleEpisodes, subscribeVisibleEpisodes] =
-  createSignal([]);
+  createSignal<KitsuEpisode[]>([]);
 
 export function EpisodeView({
   anime,
   episodes,
   sourcepanel_callback,
 }: {
-  anime: any;
-  episodes: any;
+  anime: KitsuAnime;
+  episodes: KitsuEpisode[];
   sourcepanel_callback: any;
 }) {
   console.log(episodes);
@@ -26,7 +27,7 @@ export function EpisodeView({
         [visibleEpisodes, setVisibleEpisodes, subscribeVisibleEpisodes],
         (value) => (
           <div class="h-fit w-full grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
-            {value.map((episode: any, index) => (
+            {value.map((episode: KitsuEpisode, index) => (
               <Episode
                 episode={episode}
                 index={index}
@@ -45,22 +46,21 @@ export function EpisodeView({
   );
 }
 
-function episodeHandler(anime, episodes, page: number) {
+function episodeHandler(
+  anime: KitsuAnime,
+  episodes: KitsuEpisode[],
+  page: number,
+) {
   const episodesPerPage = 15;
 
-  const episodesPart = [];
+  const episodesPart: KitsuEpisode[] = [];
 
   for (let index = 0; index < episodes.length; index++) {
-    const episode = episodes[index] as any;
-    if (
-      isNaN(parseInt(episode.episode)) ||
-      page * episodesPerPage > index ||
-      index >= (page + 1) * episodesPerPage
-    )
+    const episode = episodes[index];
+    if (page * episodesPerPage > index || index >= (page + 1) * episodesPerPage)
       continue;
 
-    episode.mal_id = anime.idMal || 0;
-    episode.anilist_id = anime.id || 0;
+    episode.kitsu_id = anime.id || 0;
 
     // const episodeCard = Episode(episode, index);
     // episodeList.appendChild(episodeCard);
@@ -81,27 +81,17 @@ function episodeHandler(anime, episodes, page: number) {
     episodesPart.push(episode);
   }
 
-  if (episodes.length === 0 && anime.format === "MOVIE") {
-    const epObj = {
-      episode: "1",
-      runtime: 0,
-      image: "",
-      overview: "",
-      title: { en: "" },
-      airdate: "",
-    };
-    episodesPart.push(epObj);
-  }
-
   setVisibleEpisodes(episodesPart);
 
   router.route("/anime/updateEpisodeProgress", (query: any) => {
-    if (parseInt(query.anilist_id) !== anime.id) return;
-    episodes.find((episode) => episode.episode === query.episode).leftoff =
-      query.leftoff;
+    if (query.kitsu_id !== anime.id) return;
+    episodes.find(
+      (episode) => episode.attributes.number === parseInt(query.episode),
+    )!.leftoff = query.leftoff;
     const episodeTarget = visibleEpisodes().find(
-      (episode) => episode.episode === query.episode,
+      (episode) => episode.attributes.number === parseInt(query.episode),
     );
+
     if (!episodeTarget) return;
 
     episodeTarget.leftoff = query.leftoff;

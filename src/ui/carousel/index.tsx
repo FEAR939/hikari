@@ -2,7 +2,7 @@ import { h } from "../../lib/jsx/runtime";
 import { router } from "../../lib/router";
 import { createSignal, bind } from "../../lib/jsx/reactive";
 
-export function Carousel(items: any[]) {
+export function Carousel({ items }: { items: any[] }) {
   const [slideIndex, setSlideIndex, subscribeSlideIndex] = createSignal(0);
   let timeout: NodeJS.Timeout | null = null;
   const indicators: Array<
@@ -60,22 +60,30 @@ export function Carousel(items: any[]) {
       {bind([slideIndex, setSlideIndex, subscribeSlideIndex], (index) => (
         <img
           class="w-full h-full object-cover brightness-50 mask-b-from-50% bg-[#080808]"
-          src={items[index].bannerImage || items[index].trailer.thumbnail}
+          src={
+            items[index].attributes?.coverImage?.original ||
+            items[index].attributes?.posterImage?.original
+          }
         />
       ))}
 
       {/* Reactively update title */}
       {bind([slideIndex, setSlideIndex, subscribeSlideIndex], (index) => (
         <div class="absolute z-1 top-20 md:top-48 left-4 text-white text-sm md:text-3xl font-bold max-w-1/2 truncate">
-          {items[index].title.english || items[index].title.romaji}
+          {items[index].attributes?.titles?.en ||
+            items[index].attributes?.titles?.en_jp ||
+            items[index].attributes?.titles?.ja_jp}
         </div>
       ))}
 
       {/* Reactively update description */}
       {bind([slideIndex, setSlideIndex, subscribeSlideIndex], (index) => (
         <div class="absolute z-1 top-24 md:top-58 left-4 text-neutral-400 text-xs md:text-sm max-w-1/2 line-clamp-2">
-          {items[index].description
-            .substring(0, items[index].description.indexOf("(Source:"))
+          {items[index].attributes.description
+            .substring(
+              0,
+              items[index].attributes.description.indexOf("(Source:"),
+            )
             .replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, "")}
         </div>
       ))}
