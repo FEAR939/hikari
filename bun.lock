@@ -3,19 +3,20 @@
   "workspaces": {
     "": {
       "dependencies": {
-        "@tailwindcss/vite": "^4.1.14",
+        "@tailwindcss/vite": "^4.1.15",
         "date-fns": "^4.1.0",
         "electron-updater": "^6.6.2",
         "ffprobe-static": "^3.1.0",
         "gql.tada": "^1.8.13",
         "jszip": "^3.10.1",
-        "rolldown-vite": "^7.1.17",
-        "tailwindcss": "^4.1.14",
+        "rolldown-vite": "^7.1.19",
+        "tailwind-merge": "^3.3.1",
+        "tailwindcss": "^4.1.15",
         "urql": "^5.0.1",
       },
       "devDependencies": {
         "@types/bun": "latest",
-        "electron": "^37.7.0",
+        "electron": "^37.7.1",
         "electron-builder": "^26.0.12",
       },
       "peerDependencies": {
@@ -841,6 +842,8 @@
     "sumchecker": ["sumchecker@3.0.1", "", { "dependencies": { "debug": "^4.1.0" } }, "sha512-MvjXzkz/BOfyVDkG0oFOtBxHX2u3gKbMHIF/dXblZsgD3BWOFLmHovIpZY7BykJdAjcqRCBi1WYBNdEC9yI7vg=="],
 
     "supports-color": ["supports-color@7.2.0", "", { "dependencies": { "has-flag": "^4.0.0" } }, "sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw=="],
+
+    "tailwind-merge": ["tailwind-merge@3.3.1", "", {}, "sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g=="],
 
     "tailwindcss": ["tailwindcss@4.1.15", "", {}, "sha512-k2WLnWkYFkdpRv+Oby3EBXIyQC8/s1HOFMBUViwtAh6Z5uAozeUSMQlIsn/c6Q2iJzqG6aJT3wdPaRNj70iYxQ=="],
 
