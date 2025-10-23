@@ -19,6 +19,7 @@ declare global {
       enterFullscreen: () => void;
       exitFullscreen: () => void;
       getLocalMedia: () => Promise<any>;
+      getAppVersion: () => Promise<string>;
       loadExtensions: () => Promise<any>;
       installExtension: (url: string) => Promise<any>;
       removeExtension: (name: string) => Promise<any>;
