@@ -217,7 +217,7 @@ export class KitsuClient {
 
     switch (category) {
       case "trending":
-        url = `${this.baseUrl}/trending/anime?limit=${limit}`;
+        url = `${this.baseUrl}/trending/anime?filter[subtype]=TV,ONA,OVA,special,movie&limit=${limit}`;
         break;
       case "seasonal":
         const season = this.getCurrentSeason();
@@ -405,7 +405,7 @@ export class KitsuClient {
       "page[offset]": offset.toString(),
     });
 
-    const url = `${this.baseUrl}/anime?${params.toString()}`;
+    const url = `${this.baseUrl}/anime?${params.toString()}&filter[subtype]=TV,ONA,OVA,special,movie`;
 
     if (cache.get(url)) {
       return cache.get(url);
@@ -475,7 +475,7 @@ export class KitsuClient {
     params.append("page[limit]", (options.limit || 20).toString());
     params.append("page[offset]", (options.offset || 0).toString());
 
-    const url = `${this.baseUrl}/anime?${params.toString()}`;
+    const url = `${this.baseUrl}/anime?${params.toString()}&filter[subtype]=TV,ONA,OVA,special,movie`;
 
     if (cache.get(url)) {
       return cache.get(url);
