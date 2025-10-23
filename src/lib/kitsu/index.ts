@@ -222,7 +222,7 @@ export class KitsuClient {
       case "seasonal":
         const season = this.getCurrentSeason();
         const year = new Date().getFullYear();
-        url = `${this.baseUrl}/anime?filter[season]=${season}&filter[seasonYear]=${year}&sort=-averageRating&limit=${limit}`;
+        url = `${this.baseUrl}/anime?filter[season]=${season}&filter[seasonYear]=${year}&sort=averageRating&page[limit]=${limit}`;
         break;
       default:
         throw new Error(`Unknown category: ${category}`);
