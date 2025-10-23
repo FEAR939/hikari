@@ -11,16 +11,25 @@ import { kitsu, KitsuAnime } from "../../lib/kitsu";
 
 export default async function Home(query) {
   let continueList: KitsuAnime[] = [];
+  let bookmarkList: KitsuAnime[] = [];
   if (authService.getUser()) {
     try {
       const continueAnime = await API.getContinueAnime();
+      const bookmarkAnime = await API.getBookmarks();
 
-      const ids: string[] = continueAnime
+      const continueIds: string[] = continueAnime
         .filter((item) => item.kitsu_id != null)
         .map((item) => String(item.kitsu_id));
 
-      if (ids.length > 0) {
-        continueList = (await kitsu.getAnimeByIds(ids)) as KitsuAnime[];
+      const bookmarkIds: string[] = bookmarkAnime
+        .filter((item) => item.kitsu_id != null)
+        .map((item) => String(item.kitsu_id));
+
+      if (continueIds.length > 0) {
+        continueList = (await kitsu.getAnimeByIds(continueIds)) as KitsuAnime[];
+      }
+      if (bookmarkIds.length > 0) {
+        bookmarkList = (await kitsu.getAnimeByIds(bookmarkIds)) as KitsuAnime[];
       }
     } catch (error) {
       console.error("Error fetching continue watching:", error);
@@ -29,15 +38,18 @@ export default async function Home(query) {
 
   const categories = await kitsu.getCategories(
     [
-      { type: "trending", title: "Trending Now" },
       { type: "seasonal", title: "Popular this season" },
+      { type: "trending", title: "Trending Now" },
     ],
-    30,
+    20,
   );
 
   const homeCategories = [
     continueList.length !== 0
       ? { type: "continue", title: "Continue Watching", data: continueList }
+      : null,
+    bookmarkList.length !== 0
+      ? { type: "bookmark", title: "Your List", data: bookmarkList }
       : null,
     ...categories,
   ].filter(Boolean);
@@ -55,15 +67,12 @@ export default async function Home(query) {
       ></Carousel>
       {homeCategories.map((categorie) => {
         const entries = categorie.data.map((item) => {
-          return <Card item={item} />;
+          return <Card item={item} className="snap-start" />;
         });
 
-        const slider = CategorySlider({
-          label: categorie.title,
-          children: entries,
-        });
-
-        return slider;
+        return (
+          <CategorySlider label={categorie.title}>{entries}</CategorySlider>
+        );
       })}
     </div>
   ) as HTMLElement;
