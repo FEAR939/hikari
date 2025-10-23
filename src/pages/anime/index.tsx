@@ -139,6 +139,7 @@ export default async function Anime(query: AnimeQuery) {
           <div class="flex-1 h-fit md:mt-18 p-4 space-y-2 md:space-y-4 overflow-hidden">
             <h1 class="w-full text-xl md:text-4xl font-bold flex items-center space-x-4 truncate">
               {kitsuAnime.anime.attributes?.titles?.en ||
+                kitsuAnime.anime.attributes?.titles?.en_us ||
                 kitsuAnime.anime.attributes?.titles?.en_jp}
             </h1>
 
@@ -152,17 +153,9 @@ export default async function Anime(query: AnimeQuery) {
             </div>
 
             {/* Description */}
-            <div
-              class="w-full text-sm text-neutral-600 line-clamp-3"
-              dangerouslySetInnerHTML={{
-                __html: kitsuAnime.anime.attributes?.description
-                  .substring(
-                    0,
-                    kitsuAnime.anime.attributes.description.indexOf("(Source:"),
-                  )
-                  .replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, ""),
-              }}
-            />
+            <div class="w-full text-sm text-neutral-600 line-clamp-3">
+              {kitsuAnime.anime.attributes.description}
+            </div>
           </div>
 
           {/* Button Row */}
