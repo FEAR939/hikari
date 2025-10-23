@@ -42,7 +42,9 @@ export function Card({
         {options.label && (
           <div class="text-sm mt-2 font-medium space-y-1">
             <div class="text-white line-clamp-2">
-              {item.attributes.titles.en_jp || item.attributes.titles.en_us}
+              {item.attributes.titles.en ||
+                item.attributes.titles.en_us ||
+                item.attributes.titles.en_jp}
             </div>
             {item.relationType && (
               <div class="text-neutral-500 text-xs">{item.relationType}</div>
