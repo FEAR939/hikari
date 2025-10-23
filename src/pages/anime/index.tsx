@@ -26,7 +26,7 @@ export default async function Anime(query: AnimeQuery) {
       await API.getAnimeProgress(
         kitsuAnime.anime.id,
         1,
-        kitsuAnime.episodes.length,
+        kitsuAnime.anime.attributes.episodeCount!,
       ),
       await API.getBookmarks(parseInt(kitsuAnime.anime.id)),
     ]);
@@ -63,15 +63,6 @@ export default async function Anime(query: AnimeQuery) {
       handler: () => (
         <EpisodeView
           anime={kitsuAnime.anime}
-          episodes={kitsuAnime.episodes.map((episode) => {
-            const progress = episodeProgress.find(
-              (progress) => progress.episode === episode.attributes.number,
-            );
-
-            episode.leftoff = progress?.leftoff ?? 0;
-
-            return episode;
-          })}
           sourcepanel_callback={sourcepanel_callback}
         ></EpisodeView>
       ),
@@ -163,22 +154,9 @@ export default async function Anime(query: AnimeQuery) {
             <div
               class="w-24 md:w-56 h-full py-1 md:py-2 rounded-md bg-neutral-900 text-xs md:text-base text-white flex items-center justify-center space-x-2 cursor-pointer"
               onClick={() => {
-                const episodes = Object.values(anime_anizip.episodes).filter(
-                  (episode: any) =>
-                    episode.episode && !isNaN(parseInt(episode.episode)),
-                );
-
-                if (episodes.length === 0) return;
-
-                const episodesWithMal = episodes.map((episode: any) => {
-                  episode.mal_id = kitsuAnime.anime.idMal || 0;
-                  return episode;
-                });
-
                 if (!authService.getUser() || !episodeProgress) {
                   const sourcePanel = SourcePanel({
                     anime: kitsuAnime.anime,
-                    episodes: episodesWithMal,
                     initialIndex: 0,
                   });
                   (page as HTMLDivElement).appendChild(sourcePanel);
@@ -194,7 +172,6 @@ export default async function Anime(query: AnimeQuery) {
                 );
                 const sourcePanel = SourcePanel({
                   anime: kitsuAnime.anime,
-                  episodes: episodesWithMal,
                   initialIndex: lastProgress - 1,
                 });
                 (page as HTMLDivElement).appendChild(sourcePanel);
@@ -315,7 +292,6 @@ export default async function Anime(query: AnimeQuery) {
 
     const sourcePanel = SourcePanel({
       anime: kitsuAnime.anime,
-      episodes: kitsuAnime.episodes,
       initialIndex: value - 1,
     });
     page.appendChild(sourcePanel);

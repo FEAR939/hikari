@@ -4,7 +4,7 @@ import { router } from "../../lib/router/index";
 import { Timer } from "../timer";
 import { NumberInput } from "../numberInput";
 import { cache } from "../../services/cache";
-import { KitsuAnime, KitsuEpisode } from "../../lib/kitsu";
+import { kitsu, KitsuAnime, KitsuEpisode } from "../../lib/kitsu";
 
 interface Episode {
   episode: string;
@@ -29,11 +29,9 @@ interface Anime {
 
 export function SourcePanel({
   anime,
-  episodes,
   initialIndex,
 }: {
   anime: KitsuAnime;
-  episodes: KitsuEpisode[];
   initialIndex: number;
 }) {
   const [currentIndex, setCurrentIndex, subscribeIndex] =
@@ -194,6 +192,21 @@ export function SourcePanel({
   }
 
   async function loadSource() {
+    const episodePageIndex = Math.floor(currentIndex() / 15);
+
+    console.log(episodePageIndex);
+
+    const episodes = (
+      await kitsu.getEpisodesPagination(anime.id, episodePageIndex, 15)
+    ).map((episode) => {
+      // For compatibility with the extensions
+      return {
+        ...episode,
+        episode: episode.attributes.number,
+      };
+    });
+
+    console.log(episodes);
     sourceElementList.innerHTML = "";
 
     const extensions = await window.electronAPI.loadExtensions();
@@ -290,7 +303,7 @@ export function SourcePanel({
           onClick={() => {
             episodeSelected = true;
             router.navigate(
-              `/player?streamurl=${encodeURIComponent(local.path)}&title=${encodeURIComponent(anime.attributes.titles.en_jp)}&episode=${JSON.stringify(episodes[currentIndex()])}&kitsu_id=${anime.id}`,
+              `/player?streamurl=${encodeURIComponent(local.path)}&title=${encodeURIComponent(anime.attributes.titles.en_jp)}&episode=${JSON.stringify(episodes.find((episode) => episode.attributes.number === currentIndex() + 1))}&kitsu_id=${anime.id}`,
             );
           }}
         >
@@ -407,7 +420,7 @@ export function SourcePanel({
               onClick={() => {
                 episodeSelected = true;
                 router.navigate(
-                  `/player?streamurl=${encodeURIComponent(stream.mp4)}&title=${encodeURIComponent(anime.attributes.titles.en_jp)}&episode=${JSON.stringify(episodes[currentIndex()])}&kitsu_id=${anime.id}`,
+                  `/player?streamurl=${encodeURIComponent(stream.mp4)}&title=${encodeURIComponent(anime.attributes.titles.en_jp)}&episode=${JSON.stringify(episodes.find((episode) => episode.attributes.number === currentIndex() + 1))}&kitsu_id=${anime.id}`,
                 );
               }}
             >
@@ -507,19 +520,28 @@ export function SourcePanel({
           {(() => {
             episodePickerInput = NumberInput();
             episodePickerInput.field.min = "1";
-            episodePickerInput.field.max = String(episodes.length);
+            episodePickerInput.field.max = String(
+              anime.attributes.episodeCount,
+            );
             episodePickerInput.field.value = String(currentIndex() + 1);
 
             episodePickerInput.field.addEventListener("input", () => {
               const value = parseInt(episodePickerInput.field.value);
 
-              if (value > episodes.length) {
-                episodePickerInput.field.value = String(episodes.length);
+              if (value > anime.attributes.episodeCount!) {
+                episodePickerInput.field.value = String(
+                  anime.attributes.episodeCount!,
+                );
               }
               if (value < 1) {
                 episodePickerInput.field.value = "1";
               }
-              if (isNaN(value) || value < 1 || value > episodes.length) return;
+              if (
+                isNaN(value) ||
+                value < 1 ||
+                value > anime.attributes.episodeCount!
+              )
+                return;
 
               setCurrentIndex(value - 1);
             });

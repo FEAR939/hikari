@@ -4,22 +4,20 @@ import { router } from "../../lib/router";
 import { Episode } from "../episode";
 import { PageControls } from "../pageControls";
 import { SourcePanel } from "../sourcePanel";
-import { KitsuAnime, KitsuEpisode } from "../../lib/kitsu";
+import { kitsu, KitsuAnime, KitsuEpisode } from "../../lib/kitsu";
+import { API } from "../../app";
 
 const [visibleEpisodes, setVisibleEpisodes, subscribeVisibleEpisodes] =
   createSignal<KitsuEpisode[]>([]);
 
 export function EpisodeView({
   anime,
-  episodes,
   sourcepanel_callback,
 }: {
   anime: KitsuAnime;
-  episodes: KitsuEpisode[];
   sourcepanel_callback: any;
 }) {
-  console.log(episodes);
-  episodeHandler(anime, episodes, 0);
+  episodeHandler(anime, 0);
 
   return (
     <div>
@@ -38,50 +36,35 @@ export function EpisodeView({
         ),
       )}
       <PageControls
-        totalPages={Math.ceil(episodes.length / 15)}
+        totalPages={Math.ceil(anime.attributes.episodeCount! / 15)}
         currentPage={1}
-        callback={(page) => episodeHandler(anime, episodes, page - 1)}
+        callback={(page) => episodeHandler(anime, page - 1)}
       />
     </div>
   );
 }
 
-function episodeHandler(
-  anime: KitsuAnime,
-  episodes: KitsuEpisode[],
-  page: number,
-) {
+async function episodeHandler(anime: KitsuAnime, page: number) {
   const episodesPerPage = 15;
 
-  const episodesPart: KitsuEpisode[] = [];
+  const [episodes, episodesProgress] = await Promise.all([
+    await kitsu.getEpisodesPagination(anime.id, page, episodesPerPage),
+    await API.getAnimeProgress(
+      anime.id,
+      page * episodesPerPage,
+      page * episodesPerPage + episodesPerPage,
+    ),
+  ]);
 
-  for (let index = 0; index < episodes.length; index++) {
-    const episode = episodes[index];
-    if (page * episodesPerPage > index || index >= (page + 1) * episodesPerPage)
-      continue;
+  episodes.map((episode) => {
+    const progress = episodesProgress.find(
+      (progress) => progress.episode === episode.attributes.number,
+    );
+    console.log(progress);
+    episode.leftoff = progress ? progress.leftoff : 0;
+  });
 
-    episode.kitsu_id = anime.id || 0;
-
-    // const episodeCard = Episode(episode, index);
-    // episodeList.appendChild(episodeCard);
-
-    // episodeCard.addEventListener("click", () => {
-    //   const sourcepanel = SourcePanel(
-    //     anime,
-    //     Object.values(anime_anizip.episodes).filter(
-    //       (episode: any) => episode.episodeNumber,
-    //     ),
-    //     index,
-    //   );
-    //   page.appendChild(sourcepanel);
-    // });
-
-    // episodes.set(episode.episode, episodeCard);
-
-    episodesPart.push(episode);
-  }
-
-  setVisibleEpisodes(episodesPart);
+  setVisibleEpisodes(episodes);
 
   router.route("/anime/updateEpisodeProgress", (query: any) => {
     if (query.kitsu_id !== anime.id) return;

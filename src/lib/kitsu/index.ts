@@ -10,6 +10,7 @@ interface KitsuAnime {
     canonicalTitle: string;
     titles: {
       en?: string;
+      en_us?: string;
       en_jp?: string;
       ja_jp?: string;
     };
@@ -142,7 +143,6 @@ interface AnimeWithDetails {
   anime: KitsuAnime;
   genres: KitsuCategory[];
   relations: RelatedAnime[];
-  episodes: KitsuEpisode[];
 }
 
 interface KitsuResponse<T> {
@@ -276,6 +276,11 @@ export class KitsuClient {
 
     const json: KitsuResponse<KitsuAnime> = await response.json();
 
+    if (json.data.attributes.episodeCount === null) {
+      const episodeCount = await this.getEpisodeCount(json.data.id);
+      json.data.attributes.episodeCount = episodeCount;
+    }
+
     // Extract genres (categories) from included data
     const genres: KitsuCategory[] = [];
     const relationshipMap = new Map<string, KitsuMediaRelationship>();
@@ -315,16 +320,12 @@ export class KitsuClient {
       }
     }
 
-    // Step 2: Fetch episodes separately
-    const episodes = await this.getEpisodes(id, episodeLimit);
-
     cache.set(
       url,
       {
         anime: json.data,
         genres,
         relations,
-        episodes,
       },
       1000 * 60 * 60 * 1,
     ); // Cache for 1 hour
@@ -333,42 +334,61 @@ export class KitsuClient {
       anime: json.data,
       genres,
       relations,
-      episodes,
     };
   }
 
   /**
-   * Get all episodes for an anime
+   * Get specific range of episodes
    * @param animeId - Kitsu anime ID
-   * @param limit - Maximum number of episodes to fetch per request
+   * @param start - Start episode number
+   * @param end - End episode number
    */
-  async getEpisodes(
+  async getEpisodesPagination(
     animeId: string,
-    limit: number = 2000,
+    page: number,
+    limit: number,
   ): Promise<KitsuEpisode[]> {
-    const allEpisodes: KitsuEpisode[] = [];
-    let url: string | null =
-      `${this.baseUrl}/episodes?filter[mediaId]=${animeId}`;
+    const url = `${this.baseUrl}/episodes?filter[mediaId]=${animeId}&page[limit]=${limit}&page[offset]=${page * limit}`;
 
-    while (url) {
-      const response = await fetch(url, { headers: this.headers });
-
-      if (!response.ok) {
-        console.warn(`Failed to fetch episodes: ${response.status}`);
-        break;
-      }
-
-      const json: KitsuResponse<KitsuEpisode[]> = await response.json();
-
-      if (json.data && json.data.length > 0) {
-        allEpisodes.push(...json.data);
-      }
-
-      // Check if there's a next page
-      url = json.links?.next || null;
+    if (cache.get(url)) {
+      return cache.get(url);
     }
 
-    return allEpisodes;
+    const response = await fetch(url, { headers: this.headers });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch episodes: ${response.status}`);
+    }
+
+    const json: KitsuResponse<KitsuEpisode[]> = await response.json();
+
+    cache.set(url, json.data || [], 1000 * 60 * 60 * 0.5); // Cache for 30 minutes
+
+    return json.data || [];
+  }
+
+  /**
+   * Get episodeCount by anime ID
+   * @param animeId - Kitsu anime ID
+   */
+  async getEpisodeCount(animeId: string): Promise<number> {
+    const url = `${this.baseUrl}/episodes?filter[mediaId]=${animeId}&page[limit]=1&page[offset]=0`;
+
+    if (cache.get(url)) {
+      return cache.get(url);
+    }
+
+    const response = await fetch(url, { headers: this.headers });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch episodes: ${response.status}`);
+    }
+
+    const json: KitsuResponse<number> = await response.json();
+
+    cache.set(url, json.meta || 0, 1000 * 60 * 60 * 0.5); // Cache for 30 minutes
+
+    return json.meta!.count || 0;
   }
 
   /**
