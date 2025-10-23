@@ -44,6 +44,9 @@ export default async function Settings(query) {
               ),
             )}
           </div>
+          <div class="absolute bottom-4 text-neutral-500">
+            {`Hikari version: ${await window.electronAPI.getAppVersion()}`}
+          </div>
         </div>
         <div class="h-full w-full p-4 pt-12">
           {bind(
