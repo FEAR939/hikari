@@ -1,13 +1,11 @@
 import { h } from "../../lib/jsx/runtime";
 import { createSignal, bind } from "../../lib/jsx/reactive";
 import { router } from "../../lib/router/index";
-import { getAnimeAnizip } from "../../lib/anizip/index";
 import { authService } from "../../services/auth";
 import { SourcePanel } from "../../ui/sourcePanel/index";
 import { Card, CardType } from "../../ui/card";
 import { API } from "../../app";
-import { fetchSections } from "../../lib/anilist";
-import { EpisodeView } from "../../ui/episodeGrid";
+import { EpisodeView } from "../../ui/episodeView";
 import { kitsu } from "../../lib/kitsu";
 
 interface AnimeQuery {
