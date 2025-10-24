@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer, app } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  openDevTools: () => ipcRenderer.send("open-devtools"),
   enterFullscreen: () => ipcRenderer.send("enter-fullscreen"),
   exitFullscreen: () => ipcRenderer.send("exit-fullscreen"),
   getLocalMedia: (dirPath) => {

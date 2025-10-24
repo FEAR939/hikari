@@ -16,6 +16,7 @@ import { Sidebar } from "./ui/sidebar";
 declare global {
   interface Window {
     electronAPI?: {
+      openDevTools: () => void;
       enterFullscreen: () => void;
       exitFullscreen: () => void;
       getLocalMedia: () => Promise<any>;

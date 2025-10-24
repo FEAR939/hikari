@@ -4,6 +4,7 @@ import { createSignal, bind } from "../../lib/jsx/reactive";
 import ClientSettings from "../../ui/settings/client/index";
 import AccountSettings from "../../ui/settings/account/index";
 import ExtensionSettings from "../../ui/settings/extensions/index";
+import DeveloperSettings from "../../ui/settings/developer/index";
 
 const settingsTree = [
   {
@@ -18,6 +19,10 @@ const settingsTree = [
   {
     label: "Extensions",
     handler: ExtensionSettings,
+  },
+  {
+    label: "Developer",
+    handler: DeveloperSettings,
   },
 ];
 

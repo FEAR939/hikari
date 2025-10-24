@@ -38,7 +38,11 @@ function createWindow() {
 
   win.loadFile(path.join(dirname, "../dist/index.html"));
 
-  win.webContents.openDevTools();
+  ipcMain.on("open-devtools", () => {
+    if (win) {
+      win.webContents.openDevTools();
+    }
+  });
 
   ipcMain.on("enter-fullscreen", () => {
     if (win) {
