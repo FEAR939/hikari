@@ -239,7 +239,16 @@ export function SourcePanel({
           ?.enabled,
     );
 
-    let toLoad = activeExtensions.length + 1;
+    console.log("Active Extensions:", activeExtensions);
+
+    let toLoad =
+      extensions.filter(
+        (extension: any) =>
+          extensionsConfig.find(
+            (config: any) =>
+              config.id === extension.github && extension.type === "source",
+          )?.enabled,
+      ).length + 1;
     let loaded = 0;
     let sources: Array<{ name: string; node: HTMLElement }> = [];
     let episodeSelected = false;
@@ -251,6 +260,8 @@ export function SourcePanel({
       } else {
         toLoad -= 1;
       }
+
+      console.log(`Extension Loading Progress: ${loaded} of ${toLoad}`);
 
       if (
         loaded === toLoad &&
@@ -297,6 +308,7 @@ export function SourcePanel({
     if (!local) {
       updateLoaded(false);
     } else {
+      let currEpisode = currentIndex();
       const localElement = (
         <div
           class="relative w-full h-28 p-4 bg-neutral-950 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2"
@@ -345,6 +357,8 @@ export function SourcePanel({
         </div>
       ) as HTMLDivElement;
 
+      if (currEpisode !== currentIndex()) return;
+
       sourceElementList.appendChild(localElement);
       sources.push({ name: "local", node: localElement });
       updateLoaded(true);
@@ -358,6 +372,8 @@ export function SourcePanel({
           `${source_extension.path}/${source_extension.main}`
         );
         const SourceExtensionClass = new imported_extension.Extension(cache);
+
+        let currEpisode = currentIndex();
 
         const skeletonExt = SkeletonLoader();
         sourceElementList.appendChild(skeletonExt as HTMLElement);
@@ -373,6 +389,10 @@ export function SourcePanel({
           updateLoaded(false);
           return;
         }
+
+        toLoad += source.hosters.length;
+
+        updateLoaded(true);
 
         source.hosters.forEach(async (source_hoster: any) => {
           const extensionIndex = activeExtensions.findIndex(
@@ -454,6 +474,8 @@ export function SourcePanel({
               {getQualityBadgeFromString(stream.quality)}
             </div>
           ) as HTMLDivElement;
+
+          if (currEpisode !== currentIndex()) return;
 
           sourceElementList.appendChild(hosterElement);
           sources.push({ name: source_hoster.label, node: hosterElement });
