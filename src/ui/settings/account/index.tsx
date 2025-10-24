@@ -19,14 +19,21 @@ export default function AccountSettings() {
       {bind([isAuth, setIsAuth, subscribeIsAuth], (value) =>
         value ? (
           <div class="group w-20 space-y-2">
-            <div class="relative size-20">
-              <AccountAvatar className="size-20" />
-              <input
-                type="file"
-                accept="image/*"
-                class="absolute inset-0 opacity-0 cursor-pointer"
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
+            <div
+              class="relative size-20"
+              onClick={async () => {
+                try {
+                  const [fileHandle] = await window.showOpenFilePicker({
+                    types: [
+                      {
+                        description: "Images",
+                        accept: { "image/*": [".png", ".jpg", ".jpeg"] },
+                      },
+                    ],
+                    multiple: false,
+                  });
+
+                  const file = await fileHandle.getFile();
                   if (!file) return;
                   const path = await API.uploadAvatar(file);
                   if (!path) return;
@@ -34,8 +41,12 @@ export default function AccountSettings() {
                   const user = authService.getUser();
                   user!.avatar = path as string;
                   authService.setUser(user);
-                }}
-              />
+                } catch (error) {
+                  console.error(error);
+                }
+              }}
+            >
+              <AccountAvatar className="size-20" />
               <div class="absolute right-0 bottom-0 bg-white text-black rounded-full size-6 grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
