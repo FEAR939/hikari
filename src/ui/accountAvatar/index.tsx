@@ -2,50 +2,56 @@ import { authService } from "../../services/auth";
 import { API } from "../../app";
 import { h } from "../../lib/jsx/runtime";
 import { createSignal, bind } from "../../lib/jsx/reactive";
+import { cn } from "../../lib/util";
 
-export function AccountAvatar() {
+export function AccountAvatar({ className = "" }: { className?: string } = {}) {
   const [user, setUser, subscribeUser] = createSignal<{
-    username: string;
+    username: string | null;
     avatar: string | null;
   } | null>(null);
 
   authService.subscribe((user) => {
-    setUser({
-      username: user?.username || "",
-      avatar: user?.avatar || null,
-    });
+    setUser(
+      user
+        ? {
+            username: user.username || null,
+            avatar: user.avatar || null,
+          }
+        : null,
+    );
   });
 
   const authUser = authService.getUser();
-  setUser({
-    username: authUser?.username || "",
-    avatar: authUser?.avatar || null,
-  });
+  setUser(
+    authUser
+      ? {
+          username: authUser?.username || null,
+          avatar: authUser?.avatar || null,
+        }
+      : null,
+  );
 
   return (
-    <div class="relative size-8">
+    <div class={cn("relative size-8", className)}>
       <div class="absolute inset-0 flex items-center justify-center cursor-pointer">
         {bind([user, setUser, subscribeUser], (value) => {
-          if (value) {
-            if (value.avatar !== null) {
-              return (
-                <img
-                  src={`${API.baseurl}${value.avatar}`}
-                  alt="Avatar"
-                  class="absolute inset-0 w-full h-full object-cover object-center rounded-full"
-                />
-              );
-            } else if (value.avatar === null) {
-              console.log(value.avatar);
-              return (
-                <div class="h-full w-full flex items-center justify-center bg-pink-500 rounded-full">
-                  {(value?.username)
-                    .replaceAll(" ", "")
-                    .substring(0, 2)
-                    .toUpperCase()}
-                </div>
-              );
-            }
+          if (value && value.avatar !== null) {
+            return (
+              <img
+                src={`${API.baseurl}${value.avatar}`}
+                alt="Avatar"
+                class="absolute inset-0 w-full h-full object-cover object-center rounded-full"
+              />
+            );
+          } else if (value && value.avatar === null) {
+            return (
+              <div class="h-full w-full flex items-center justify-center bg-pink-500 rounded-full">
+                {value
+                  ?.username!.replaceAll(" ", "")
+                  .substring(0, 2)
+                  .toUpperCase()}
+              </div>
+            );
           } else {
             return (
               <svg

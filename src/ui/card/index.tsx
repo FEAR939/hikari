@@ -1,6 +1,6 @@
 import { router } from "../../lib/router";
 import { h } from "../../lib/jsx/runtime";
-import { twMerge } from "tailwind-merge";
+import { cn } from "../../lib/util";
 import { createSignal, bind } from "../../lib/jsx/reactive";
 import { authService } from "../../services/auth";
 import { API } from "../../app";
@@ -21,15 +21,17 @@ export enum CardSize {
   MANUAL = 1,
 }
 
-export function Card({
-  item,
-  className = "",
-  options = {},
-}: {
-  item: any;
-  className?: string;
-  options?: CardOptions;
-}) {
+export function Card(
+  {
+    item,
+    className = "",
+    options = {},
+  }: {
+    item: any;
+    className?: string;
+    options?: CardOptions;
+  } = { item: null, className: "", options: {} },
+) {
   if (!options.size) options.size = CardSize.MANUAL;
   if (!options.type) options.type = CardType.DEFAULT;
   if (!options.label) options.label = false;
@@ -42,9 +44,9 @@ export function Card({
   return (
     <div
       ref={(el) => (cardRef = el as HTMLDivElement)}
-      class={twMerge(
-        className,
+      class={cn(
         `h-fit ${options.size === CardSize.MANUAL ? "w-36 md:w-48" : "w-full"} cursor-pointer shrink-0 overflow-visible`,
+        className,
       )}
       onclick={() => router.navigate(`/anime?id=${item.id}`)}
       onmouseenter={() => (timeout = setTimeout(() => setHovered(true), 500))}
