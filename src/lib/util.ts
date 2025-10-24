@@ -1,3 +1,6 @@
+import { twMerge } from "tailwind-merge";
+import { clsx, ClassValue } from "clsx";
+
 export function debounce(callback, wait) {
   let timeoutId = null;
   return (...args) => {
@@ -6,4 +9,8 @@ export function debounce(callback, wait) {
       callback(...args);
     }, wait);
   };
+}
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
 }
