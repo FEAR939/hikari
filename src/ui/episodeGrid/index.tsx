@@ -60,7 +60,6 @@ async function episodeHandler(anime: KitsuAnime, page: number) {
     const progress = episodesProgress.find(
       (progress) => progress.episode === episode.attributes.number,
     );
-    console.log(progress);
     episode.leftoff = progress ? progress.leftoff : 0;
   });
 
