@@ -43,7 +43,7 @@ export function Card(
 
   return (
     <div
-      ref={(el) => (cardRef = el as HTMLDivElement)}
+      ref={(el: HTMLElement) => (cardRef = el as HTMLDivElement)}
       class={cn(
         `h-fit ${options.size === CardSize.MANUAL ? "w-36 md:w-48" : "w-full"} cursor-pointer shrink-0 overflow-visible`,
         className,
@@ -57,7 +57,7 @@ export function Card(
     >
       <img
         src={item.attributes.posterImage.original}
-        class="w-full aspect-[5/7] object-cover rounded-lg"
+        class="w-full aspect-5/7 object-cover rounded-lg"
         loading="lazy"
       />
       {options.label && (
@@ -102,7 +102,7 @@ export function Card(
           <div
             class="fixed z-50 h-72 w-72 bg-neutral-950 rounded-lg shadow-2xl space-y-2 cursor-default transition-all ease-in-out duration-150 opacity-0 scale-75"
             style={`top: ${finalTop}px; left: ${finalLeft}px;`}
-            onClick={(e) => {
+            onClick={(e: MouseEvent) => {
               e.stopPropagation();
             }}
           >
