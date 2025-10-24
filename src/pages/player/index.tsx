@@ -446,7 +446,7 @@ export default async function Player(query: PlayerQuery) {
     handleBeforeClose();
     player.remove();
     router.navigate(
-      `/anime/episodes/sourcePanel?episode=${parseInt(episodeData.episode) + 1}`,
+      `/anime/episodes/sourcePanel?episode=${parseInt(episodeData.attributes.number) + 1}`,
     );
   });
 
