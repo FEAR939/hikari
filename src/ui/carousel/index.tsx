@@ -72,6 +72,7 @@ export function Carousel({ items }: { items: any[] }) {
         <div class="absolute z-1 top-20 md:top-48 left-4 text-white text-sm md:text-3xl font-bold max-w-1/2 truncate">
           {items[index].attributes?.titles?.en ||
             items[index].attributes?.titles?.en_jp ||
+            items[index].attributes?.titles?.en_cn ||
             items[index].attributes?.titles?.ja_jp}
         </div>
       ))}
@@ -79,12 +80,7 @@ export function Carousel({ items }: { items: any[] }) {
       {/* Reactively update description */}
       {bind([slideIndex, setSlideIndex, subscribeSlideIndex], (index) => (
         <div class="absolute z-1 top-24 md:top-58 left-4 text-neutral-400 text-xs md:text-sm max-w-1/2 line-clamp-2">
-          {items[index].attributes.description
-            .substring(
-              0,
-              items[index].attributes.description.indexOf("(Source:"),
-            )
-            .replaceAll(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, "")}
+          {items[index].attributes.description}
         </div>
       ))}
 

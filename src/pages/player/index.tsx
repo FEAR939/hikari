@@ -165,7 +165,12 @@ export default async function Player(query: PlayerQuery) {
   const titleAndTime = (
     <div class="h-fit flex items-center justify-between space-x-2">
       <div class="h-6 max-w-1/2 text-white text-base truncate">
-        {episodeData.attributes.titles.en_jp || "No Episode Title found"}
+        {episodeData.attributes.titles.en ||
+          episodeData.attributes.titles.en_us ||
+          episodeData.attributes.titles.en_jp ||
+          episodeData.attributes.titles.en_cn ||
+          episodeData.attributes.titles.ja_jp ||
+          "No Episode Title found"}
       </div>
       {time}
     </div>

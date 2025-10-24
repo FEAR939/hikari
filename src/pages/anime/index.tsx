@@ -131,7 +131,8 @@ export default async function Anime(query: AnimeQuery) {
             <h1 class="w-full text-xl md:text-4xl font-bold flex items-center space-x-4 truncate">
               {kitsuAnime.anime.attributes?.titles?.en ||
                 kitsuAnime.anime.attributes?.titles?.en_us ||
-                kitsuAnime.anime.attributes?.titles?.en_jp}
+                kitsuAnime.anime.attributes?.titles?.en_jp ||
+                kitsuAnime.anime.attributes?.titles?.en_cn}
             </h1>
 
             {/* Chips */}
