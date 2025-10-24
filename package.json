@@ -7,6 +7,7 @@
   "main": "./electron/main.ts",
   "dependencies": {
     "@tailwindcss/vite": "^4.1.15",
+    "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "electron-updater": "^6.6.2",
     "ffprobe-static": "^3.1.0",
