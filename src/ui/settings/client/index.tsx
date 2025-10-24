@@ -78,48 +78,5 @@ export default function ClientSettings() {
     </div>
   ) as HTMLDivElement;
 
-  // settings.map((setting) => {
-  //   const settingNode = document.createElement("div");
-  //   settingNode.className =
-  //     "relative flex flex-col justify-center h-fit w-full space-y-2";
-
-  //   const settingLabel = document.createElement("div");
-  //   settingLabel.className = "text-sm";
-  //   settingLabel.textContent = setting.name;
-
-  //   settingNode.appendChild(settingLabel);
-
-  //   const settingDescription = document.createElement("div");
-  //   settingDescription.className = "text-sm text-neutral-500";
-  //   settingDescription.textContent = setting.description;
-
-  //   settingNode.appendChild(settingDescription);
-
-  //   switch (setting.type) {
-  //     case "input":
-  //       const settingInput = document.createElement("input");
-  //       settingInput.className =
-  //         "absolute right-0 w-1/3 px-4 py-2 text-neutral-500 border-1 border-[#1a1a1a] bg-[#080808] rounded-md outline-none";
-  //       settingInput.value =
-  //         localStorage.getItem(setting.storageKey) || setting.default;
-
-  //       settingNode.appendChild(settingInput);
-
-  //       const handleSettingChange = debounce(() => {
-  //         localStorage.setItem(setting.storageKey, setting.newValue);
-  //         setting.onchange(setting.newValue);
-  //       }, 250);
-
-  //       settingInput.addEventListener("input", () => {
-  //         setting.newValue = settingInput.value;
-  //         handleSettingChange();
-  //       });
-
-  //       break;
-  //   }
-
-  //   page.appendChild(settingNode);
-  // });
-
   return page;
 }
