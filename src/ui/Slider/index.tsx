@@ -1,4 +1,4 @@
-import { h, Fragment } from "../../lib/jsx/runtime";
+import { h } from "../../lib/jsx/runtime";
 
 interface CategorySliderProps {
   label: string;
@@ -85,7 +85,7 @@ export default function CategorySlider({
             window.removeEventListener("resize", handleResize);
           };
         }}
-        class="flex gap-x-2 md:gap-x-4 overflow-x-scroll scroll-smooth snap-x snap-mandatory"
+        class="flex space-x-2 md:space-x-4 overflow-x-scroll scroll-smooth snap-x snap-mandatory"
       >
         {children}
       </div>
