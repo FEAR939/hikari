@@ -20,8 +20,12 @@ async function getVideoMetadata(filePath) {
 
 const dirname = fileURLToPath(new URL(".", import.meta.url));
 
+let hasUpdate = false;
+
+let win: BrowserWindow;
+
 function createWindow() {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1600,
     height: 900,
     autoHideMenuBar: true,
@@ -164,7 +168,7 @@ function createWindow() {
   });
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   createWindow();
 
   app.on("activate", () => {
@@ -173,10 +177,18 @@ app.whenReady().then(() => {
     }
   });
 
-  autoUpdater.checkForUpdatesAndNotify();
+  const updaterResult = await autoUpdater.checkForUpdatesAndNotify();
+  if (updaterResult !== null && updaterResult.isUpdateAvailable) {
+    hasUpdate = true;
+    win.webContents.send("update-available");
+  }
   setInterval(
-    () => {
-      autoUpdater.checkForUpdatesAndNotify();
+    async () => {
+      const updaterResult = await autoUpdater.checkForUpdatesAndNotify();
+      if (updaterResult !== null && updaterResult.isUpdateAvailable) {
+        hasUpdate = true;
+        win.webContents.send("update-available");
+      }
     },
     1000 * 60 * 30,
   ).unref(); // 30 mins
