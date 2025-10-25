@@ -81,7 +81,7 @@ export function Card(
         const top = rect.top + rect.height / 2 - 72 * 2;
 
         const minLeft = 8 * 8 + 8;
-        const minTop = 0;
+        const minTop = 8;
 
         const maxLeft = window.innerWidth - 72 * 4 - 8;
         const maxTop = window.innerHeight - 72 * 4 - 8;
@@ -123,7 +123,7 @@ export function Card(
             </div>
             <div class="flex h-6 space-x-2 px-4">
               <div
-                class="w-full py-0.75 h-full bg-neutral-200 rounded text-black text-xs flex items-center justify-center space-x-2 cursor-pointer"
+                class="w-full h-full bg-neutral-200 rounded text-black text-xs flex items-center justify-center space-x-1 cursor-pointer"
                 onclick={() => router.navigate(`/anime?id=${item.id}`)}
               >
                 <svg
@@ -136,11 +136,11 @@ export function Card(
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="lucide lucide-play size-3"
+                  class="lucide lucide-play size-2.5"
                 >
                   <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />
                 </svg>
-                <span>Watch Now</span>
+                <div class="h-2.75 leading-none">Watch Now</div>
               </div>
               <div
                 class="size-6 bg-neutral-800 rounded flex items-center justify-center cursor-pointer"
