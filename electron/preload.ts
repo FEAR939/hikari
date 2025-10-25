@@ -3,6 +3,7 @@ const { contextBridge, ipcRenderer, app } = require("electron");
 contextBridge.exposeInMainWorld("electronAPI", {
   onUpdateAvailable: (callback) =>
     ipcRenderer.on("update-available", () => callback()),
+  restartAndUpdate: () => ipcRenderer.send("restart-and-update"),
   openDevTools: () => ipcRenderer.send("open-devtools"),
   enterFullscreen: () => ipcRenderer.send("enter-fullscreen"),
   exitFullscreen: () => ipcRenderer.send("exit-fullscreen"),

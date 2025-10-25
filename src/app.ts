@@ -17,6 +17,7 @@ declare global {
   interface Window {
     electronAPI?: {
       onUpdateAvailable: (callback: () => void) => void;
+      restartAndUpdate: () => void;
       openDevTools: () => void;
       enterFullscreen: () => void;
       exitFullscreen: () => void;

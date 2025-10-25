@@ -48,6 +48,20 @@ function createWindow() {
     }
   });
 
+  ipcMain.on("restart-and-update", () => {
+    if (win && hasUpdate) {
+      autoUpdater.quitAndInstall();
+    }
+  });
+
+  autoUpdater.on("update-available", () => {
+    autoUpdater.downloadUpdate();
+  });
+
+  autoUpdater.on("update-downloaded", () => {
+    win.webContents.send("update-available");
+  });
+
   ipcMain.on("enter-fullscreen", () => {
     if (win) {
       win.setFullScreen(true);
@@ -177,17 +191,19 @@ app.whenReady().then(async () => {
     }
   });
 
-  const updaterResult = await autoUpdater.checkForUpdatesAndNotify();
-  if (updaterResult !== null && updaterResult.isUpdateAvailable) {
+  const updaterResult = await autoUpdater.checkForUpdates();
+  if (updaterResult !== null && updaterResult.isUpdateAvailable && !hasUpdate) {
     hasUpdate = true;
-    win.webContents.send("update-available");
   }
   setInterval(
     async () => {
-      const updaterResult = await autoUpdater.checkForUpdatesAndNotify();
-      if (updaterResult !== null && updaterResult.isUpdateAvailable) {
+      const updaterResult = await autoUpdater.checkForUpdates();
+      if (
+        updaterResult !== null &&
+        updaterResult.isUpdateAvailable &&
+        !hasUpdate
+      ) {
         hasUpdate = true;
-        win.webContents.send("update-available");
       }
     },
     1000 * 60 * 30,
