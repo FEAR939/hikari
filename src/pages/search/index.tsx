@@ -7,6 +7,7 @@ import { kitsu } from "../../lib/kitsu";
 
 export default async function Search(query) {
   const [results, setResults, subscribeResults] = createSignal([]);
+  let isSearching = false;
 
   const page = (
     <div class="relative h-full w-full p-4 pt-12 space-y-4 overflow-y-scroll">
@@ -54,35 +55,44 @@ export default async function Search(query) {
           placeholder="Search"
           onKeyUp={async (e) => {
             if (e.keyCode == 13) {
+              isSearching = true;
+              setResults([]);
               const results = await kitsu.searchAnime(e.target.value);
 
+              isSearching = false;
               return setResults(results.data);
             }
           }}
         ></input>
       </div>
       {bind([results, setResults, subscribeResults], (value) => (
-        <div class="h-fit w-full grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4">
-          {value.length === 0 ? (
-            <div>No results found</div>
-          ) : (
-            value.map((result) => (
+        <div class="relative h-fit w-full grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-2">
+          {(() => {
+            if (value.length === 0 && !isSearching) {
+              return (
+                <div class="col-span-full mt-12 flex items-center justify-center">
+                  No results found
+                </div>
+              );
+            }
+            if (value.length === 0 && isSearching) {
+              return (
+                <div class="col-span-full mt-12 flex items-center justify-center animate-pulse">
+                  Searching...
+                </div>
+              );
+            }
+            return value.map((result) => (
               <Card
                 item={result}
                 options={{ label: true, size: CardSize.AUTO }}
               />
-            ))
-          )}
+            ));
+          })()}
         </div>
       ))}
     </div>
   ) as HTMLElement;
 
   router.container!.appendChild(page);
-
-  const resultContainer = document.createElement("div");
-  resultContainer.className =
-    "h-fit w-full grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-4";
-
-  page.appendChild(resultContainer);
 }
