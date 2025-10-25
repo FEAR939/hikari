@@ -1,7 +1,19 @@
-export function Toggle(callback) {
+import { cn } from "../../lib/util";
+
+export function Toggle({
+  callback,
+  className = "",
+  initial = false,
+}: {
+  callback: (state: boolean) => void;
+  className?: string;
+  initial?: boolean;
+}) {
   const toggle = document.createElement("div");
-  toggle.className =
-    "h-4 min-w-8 w-8 max-w-8 rounded-full transition-background duration-150 bg-neutral-800";
+  toggle.className = cn(
+    `h-4 min-w-8 w-8 max-w-8 rounded-full transition-background duration-150 bg-neutral-800`,
+    className,
+  );
 
   const toggleNob = document.createElement("div");
   toggleNob.className =
@@ -9,7 +21,7 @@ export function Toggle(callback) {
 
   toggle.appendChild(toggleNob);
 
-  let toggleState = false;
+  let toggleState = initial;
 
   function updateState() {
     if (toggleState) {
@@ -45,6 +57,8 @@ export function Toggle(callback) {
   };
 
   toggle.getState = () => toggleState;
+
+  updateState();
 
   return toggle;
 }
