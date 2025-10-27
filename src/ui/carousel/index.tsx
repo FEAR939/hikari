@@ -85,7 +85,7 @@ export function Carousel({ items }: { items: any[] }) {
       ))}
 
       <div
-        class="absolute z-1 top-34 md:top-72 left-4 h-6 flex items-center justify-center space-x-1 bg-white text-black text-xs px-10 rounded-md cursor-pointer"
+        class="absolute z-1 top-34 md:top-72 left-4 h-6 flex items-center justify-center space-x-1 bg-neutral-200 hover:bg-neutral-400 text-black text-xs px-10 rounded-md cursor-pointer transition-colors duration-150"
         onClick={() => {
           router.navigate(`/anime?id=${items[slideIndex()].id}`);
         }}

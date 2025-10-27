@@ -1,7 +1,7 @@
 export function NumberInput() {
   const wrapper = document.createElement("div");
   wrapper.className =
-    "relative w-full px-4 space-x-2 bg-[#080808] outline-1 outline-[#1a1a1a] rounded-md flex items-center";
+    "relative w-full px-4 space-x-2 bg-[#080808] outline-1 outline-[#1a1a1a] rounded-md flex items-center active:bg-[#1a1a1a] active:scale-99 transition-all duration-150";
 
   const icon = document.createElement("div");
   icon.className = "size-4 text-neutral-500";
@@ -15,8 +15,7 @@ export function NumberInput() {
   input.type = "number";
 
   const arrowBox = document.createElement("div");
-  arrowBox.className =
-    "absolute right-2 h-fit w-fit bg-[#080808] overflow-hidden";
+  arrowBox.className = "absolute right-2 h-fit w-fit overflow-hidden";
 
   const upArrow = document.createElement("div");
   upArrow.className =

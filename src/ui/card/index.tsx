@@ -123,7 +123,7 @@ export function Card(
             </div>
             <div class="flex h-6 space-x-2 px-4">
               <div
-                class="w-full h-full bg-neutral-200 rounded text-black text-xs flex items-center justify-center space-x-1 cursor-pointer"
+                class="w-full h-full bg-neutral-200 hover:bg-neutral-400 rounded text-black text-xs flex items-center justify-center space-x-1 cursor-pointer transition-colors duration-150"
                 onclick={() => router.navigate(`/anime?id=${item.id}`)}
               >
                 <svg
