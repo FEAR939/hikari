@@ -6,16 +6,16 @@
   "version": "2.2.2",
   "main": "./electron/main.ts",
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.15",
+    "@tailwindcss/vite": "^4.1.16",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "electron-updater": "^6.6.2",
     "ffprobe-static": "^3.1.0",
     "gql.tada": "^1.8.13",
     "jszip": "^3.10.1",
-    "rolldown-vite": "^7.1.19",
+    "rolldown-vite": "^7.1.20",
     "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.15",
+    "tailwindcss": "^4.1.16",
     "urql": "^5.0.1"
   },
   "devDependencies": {
