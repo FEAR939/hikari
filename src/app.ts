@@ -10,7 +10,7 @@ import Settings from "./pages/settings/index";
 import Auth from "./pages/auth/index";
 import News from "./pages/news/index";
 import Schedule from "./pages/schedule";
-import { topBar } from "./ui/topbar";
+import { TopBar } from "./ui/topbar";
 import { Sidebar } from "./ui/sidebar";
 
 declare global {
@@ -45,7 +45,7 @@ export const API = api;
 async function main() {
   const root = document.getElementById("root")!;
 
-  const topbar = topBar();
+  const topbar = TopBar();
   root.appendChild(topbar);
 
   const sidebar = Sidebar();
