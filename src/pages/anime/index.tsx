@@ -72,34 +72,13 @@ export default async function Anime(query: AnimeQuery) {
     },
   ];
 
+  const minRepeats = Math.max(
+    3,
+    Math.ceil((window.innerWidth * 3) / (kitsuAnime.genres.length * 100)),
+  );
+
   const page = (
     <div class="relative h-full w-full px-4 md:px-12 pb-4 space-y-4 overflow-y-scroll">
-      {/* Back Button */}
-      <div
-        class="absolute z-10 top-2 left-4 size-8 flex items-center justify-center cursor-pointer"
-        onClick={() => {
-          router.removeRoute("/anime/updateEpisodeProgress");
-          router.navigate("/");
-        }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="lucide lucide-arrow-left-to-line"
-        >
-          <path d="M3 19V5" />
-          <path d="m13 6-6 6 6 6" />
-          <path d="M7 12h14" />
-        </svg>
-      </div>
-
       {/* Hero Section */}
       <div class="h-fit w-full">
         {/* Banner */}
@@ -134,7 +113,7 @@ export default async function Anime(query: AnimeQuery) {
             </h1>
 
             {/* Chips */}
-            <div class="w-full flex items-center space-x-2 md:space-x-4 overflow-hidden">
+            <div class="w-full flex items-center space-x-1 md:space-x-2 overflow-hidden">
               {chips.map((chip) => (
                 <span class="px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-neutral-900 text-white">
                   {chip.text}
@@ -149,7 +128,7 @@ export default async function Anime(query: AnimeQuery) {
           </div>
 
           {/* Button Row */}
-          <div class="w-full h-10 flex items-center space-x-2 md:space-x-4 overflow-hidden shrink-0 grow-0">
+          <div class="w-full h-10 flex items-center space-x-1 md:space-x-2 overflow-hidden shrink-0 grow-0">
             <div
               class="w-24 md:w-56 h-full py-1 md:py-2 rounded-md bg-neutral-900 text-xs md:text-base text-white flex items-center justify-center space-x-2 cursor-pointer"
               onClick={() => {
@@ -219,7 +198,7 @@ export default async function Anime(query: AnimeQuery) {
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="lucide lucide-bookmark size-6"
+                  class="lucide lucide-bookmark size-5"
                 >
                   <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
                 </svg>
@@ -229,11 +208,15 @@ export default async function Anime(query: AnimeQuery) {
         </div>
 
         {/* Tags */}
-        <div class="w-full mt-4 flex items-center space-x-2 md:space-x-4 overflow-hidden">
-          {kitsuAnime.genres.map((genre) => (
-            <span class="px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-neutral-900 text-white shrink-0">
-              {genre.attributes.title}
-            </span>
+        <div class="w-full inline-flex flex-nowrap pt-4 mask-l-from-98% mask-r-from-98% mask-x-[#080808]">
+          {Array.from({ length: minRepeats }).map(() => (
+            <div class="flex items-center [&_span]:mx-1 animate-infinite-scroll">
+              {kitsuAnime.genres.map((genre) => (
+                <span class="px-2 md:px-4 py-1 md:py-2 text-sm rounded-md bg-neutral-900 text-white text-nowrap">
+                  {genre.attributes.title}
+                </span>
+              ))}
+            </div>
           ))}
         </div>
       </div>
