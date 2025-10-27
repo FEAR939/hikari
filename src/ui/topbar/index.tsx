@@ -28,7 +28,8 @@ export function TopBar() {
   });
 
   return (
-    <div class="absolute z-4 top-0 left-0 right-0 h-16 w-full px-4 flex items-center justify-end space-x-4 bg-gradient-to-t from-transparent to-[#0d0d0d]">
+    <div class="absolute z-4 top-0 left-0 right-0 pr-36 h-16 w-full px-4 flex items-center justify-end space-x-4 bg-gradient-to-t from-transparent to-[#0d0d0d]">
+      <div class="ml-12 mb-auto w-full h-8 [app-region:drag]"></div>
       {/* Update Available Button */}
       {bind([hasUpdate, setHasUpdate, subscribeUpdate], (updateAvailable) => (
         <Tooltip

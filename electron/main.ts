@@ -28,6 +28,16 @@ function createWindow() {
   win = new BrowserWindow({
     width: 1600,
     height: 900,
+    titleBarStyle: "hidden",
+    ...(process.platform !== "darwin"
+      ? {
+          titleBarOverlay: {
+            color: "rgba(0, 0, 0, 0)",
+            symbolColor: "#ffffff",
+            height: 60,
+          },
+        }
+      : {}),
     autoHideMenuBar: true,
     fullscreenable: true,
     title: "Hikari",
