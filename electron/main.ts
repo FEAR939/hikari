@@ -50,7 +50,7 @@ function createWindow() {
 
   ipcMain.on("restart-and-update", () => {
     if (win && hasUpdate) {
-      autoUpdater.quitAndInstall();
+      autoUpdater.quitAndInstall(true, true);
     }
   });
 
