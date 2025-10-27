@@ -31,29 +31,29 @@ export function Episode({
       class="relative h-fit w-full shadow-lg overflow-hidden cursor-pointer"
       onclick={() => sourcepanel_callback(episode.attributes.number)}
     >
-      <div class="relative w-full bg-neutral-800 aspect-video rounded-lg">
+      <div class="relative w-full bg-neutral-800 aspect-video rounded-lg overflow-hidden">
         {episode.attributes.thumbnail?.original && (
           <img
             src={episode.attributes.thumbnail.original}
             class="w-full aspect-video object-cover rounded-lg"
           />
         )}
-        <div class="absolute bottom-2 right-2 px-2 py-1 text-xs text-neutral-300 bg-[#1a1a1a]/50 backdrop-blur-sm rounded">
+        <div class="absolute bottom-2 right-2 px-2 py-1 text-xs text-neutral-300 bg-neutral-950/50 backdrop-blur-sm rounded">
           {episode.attributes.length || "N/A"} Min
-        </div>
-      </div>
-      <div class="relative h-fit w-full space-y-1 md:space-y-2 overflow-hidden py-2">
-        <div class="text-sm font-medium truncate">
-          {`${episode.attributes.number}. ${episode.attributes.titles.en || ""}` ||
-            `Episode ${index + 1}`}
         </div>
         {bind([progress, setProgress, subscribeProgress], (value) => (
           <div
-            class={`h-0.5 bg-neutral-800 rounded ${value > 0 ? "" : "hidden"}`}
+            class={`absolute bottom-0 right-0 left-0 h-0.5 bg-neutral-700 rounded ${value > 0 ? "" : "hidden"}`}
           >
             <div class="h-full bg-[#DC143C]" style={{ width: `${value}%` }} />
           </div>
         ))}
+      </div>
+      <div class="relative h-fit w-full space-y-1 md:space-y-2 overflow-hidden px-1 py-2">
+        <div class="text-sm font-medium truncate">
+          {`${episode.attributes.number}. ${episode.attributes.titles.en || episode.attributes.titles.en_us || episode.attributes.titles.en_ja || episode.attributes.titles.en_cn}` ||
+            `Episode ${index + 1}`}
+        </div>
         <div class="text-xs font-medium text-neutral-500 line-clamp-2">
           {episode.attributes.description || "No description available"}
         </div>
