@@ -36,6 +36,7 @@ export function EpisodeView({
         ),
       )}
       <PageControls
+        className="ml-auto"
         totalPages={Math.ceil(anime.attributes.episodeCount! / 15)}
         currentPage={1}
         callback={(page) => episodeHandler(anime, page - 1)}
