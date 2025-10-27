@@ -5,6 +5,30 @@
     src: url("/src/fonts/Roboto-VariableFont_wdth,wght.ttf") format("truetype");
 }
 
+@theme {
+    --animate-infinite-scroll: infinite-scroll 25s linear infinite;
+
+    @keyframes infinite-scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-4px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
 html,
 body {
     scroll-behavior: smooth;
