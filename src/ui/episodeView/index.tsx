@@ -24,7 +24,12 @@ export function EpisodeView({
       {bind(
         [visibleEpisodes, setVisibleEpisodes, subscribeVisibleEpisodes],
         (value) => (
-          <div class="h-fit w-full grid grid-cols-[repeat(auto-fill,minmax(250px,1fr))] gap-4">
+          <div
+            class="h-fit w-full grid grid-cols-1
+            lg:max-3xl:grid-cols-3
+            4xl:grid-cols-5
+            gap-4"
+          >
             {value.map((episode: KitsuEpisode, index) => (
               <Episode
                 episode={episode}

@@ -7,6 +7,8 @@
 
 @theme {
     --animate-infinite-scroll: infinite-scroll 25s linear infinite;
+    --breakpoint-3xl: 120rem;
+    --breakpoint-4xl: 140rem;
 
     @keyframes infinite-scroll {
         0% {
