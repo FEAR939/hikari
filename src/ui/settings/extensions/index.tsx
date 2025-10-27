@@ -22,7 +22,7 @@ export default function ExtensionSettings() {
   let installInput: HTMLInputElement;
 
   const page = (
-    <div class="h-full w-full space-y-2">
+    <div class="h-full w-full space-y-4">
       <div class="text-xl">Extension Settings</div>
       <div class="flex h-fit w-full space-x-2">
         <div class="flex items-center space-x-2 px-4 h-10 w-full text-neutral-500 border border-[#1a1a1a] bg-[#080808] rounded-md">
@@ -50,7 +50,7 @@ export default function ExtensionSettings() {
           />
         </div>
         <div
-          class="w-1/3 px-4 py-2 flex items-center justify-center text-black bg-linear-to-tr from-pink-500 to-rose-500 rounded-md cursor-pointer space-x-2"
+          class="w-1/3 px-4 py-2 flex items-center justify-center text-black bg-neutral-200 hover:bg-neutral-400 rounded-md cursor-pointer space-x-2 transition-colors duration-150"
           onClick={async () => {
             const url = installInput.value;
             if (!url || !url.match(/https:\/\/github\.com\/.*\.git/)) return;
@@ -102,7 +102,7 @@ export default function ExtensionSettings() {
               }
 
               return (
-                <div class="relative p-4 h-fit rounded-md bg-neutral-950 border border-neutral-700/50">
+                <div class="relative p-4 h-fit rounded-md bg-neutral-950 border border-neutral-800/50">
                   <div class="flex items-center">
                     <img
                       src={`${extension.path}/icon.png`}
@@ -114,10 +114,10 @@ export default function ExtensionSettings() {
                     </div>
                   </div>
                   <div class="min-h-6 flex space-x-2 pt-4">
-                    <div class="h-full flex items-center px-2 rounded bg-neutral-800">
+                    <div class="h-full flex items-center px-2 py-0.5 rounded bg-neutral-800/75">
                       {extension.version}
                     </div>
-                    <div class="h-full flex items-center px-2 rounded bg-neutral-800">
+                    <div class="h-full flex items-center px-2 py-0.5 rounded bg-neutral-800/75">
                       {extension.type}
                     </div>
                   </div>

@@ -13,7 +13,7 @@ export default function DeveloperSettings() {
         window.electronAPI?.openDevTools();
       },
       newValue: null,
-      default: "Open",
+      default: "Open Devtools",
     },
   ];
 
@@ -21,18 +21,15 @@ export default function DeveloperSettings() {
     <div class="h-full w-full space-y-4 overflow-y-scroll">
       <div class="text-xl">Developer Settings</div>
       {settings.map((setting) => (
-        <div class="relative flex flex-col justify-center h-fit w-full bg-neutral-900 border-1 border-neutral-700/50 rounded-md overflow-hidden">
-          <div class="px-3 py-2 text-sm border-b-1 border-neutral-700/50 text-neutral-400 space-x-2">
-            <span class="text-blue-400">{setting.category}</span>
-            <span>{setting.name}</span>
+        <div class="bg-neutral-950 rounded-md h-fit w-full p-4 flex gap-2">
+          <div class="h-fit w-full space-y-1">
+            <div class="text-neutral-200 text-sm">{setting.name}</div>
+            <div class="text-neutral-500 text-xs">{setting.description}</div>
           </div>
-          <div class="text-sm text-neutral-400 px-3 py-2 whitespace-pre-wrap">
-            {setting.description}
-          </div>
-          <div class="px-1.5 pb-1.5 w-full">
+          <div class="flex items-center">
             {setting.type === "button" && (
               <div
-                class="px-2 py-1 w-fit text-sm bg-neutral-800 text-neutral-200 rounded cursor-pointer"
+                class="px-4 py-2 w-fit text-sm bg-neutral-200 hover:bg-neutral-400 text-black rounded cursor-pointer transition-colors duration-150 text-nowrap"
                 onClick={() => {
                   setting.onclick?.();
                 }}

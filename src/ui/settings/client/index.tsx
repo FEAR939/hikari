@@ -16,9 +16,9 @@ interface Setting {
 export default function ClientSettings() {
   const settings: Setting[] = [
     {
-      name: "Local Media Path",
+      name: "Media on this device",
       description:
-        "This is where the app creates the directories for the anime. Once the directory is created, you can start putting the episode files in it.\n\nNote: The name of the episode files is pretty much irrelevant but they must have an episode identifier in the filename. For example, *EP01* or *ep.01*",
+        "This is where the app creates the directories for the anime. Once the directory is created, you can start putting the episode files in it. The name of the episode files is pretty much irrelevant but they must have an episode identifier in the filename. For example, *EP01* or *ep.01*",
       type: "input",
       category: "Media",
       storageKey: "app_local_media_path",
@@ -27,9 +27,9 @@ export default function ClientSettings() {
       default: "",
     },
     {
-      name: "Server Adress",
+      name: "API Server",
       description:
-        "This is the address of the API server, where the app will send requests to.\n\nNote: If the URL is invalid, the app will not be able to connect to the server.",
+        "This is the address of the API server, where the app will send requests to. If the URL is invalid, the app will not be able to connect to the server.",
       type: "input",
       category: "API",
       storageKey: "app_server_adress",
@@ -50,15 +50,12 @@ export default function ClientSettings() {
     <div class="h-full w-full space-y-4 overflow-y-scroll">
       <div class="text-xl">Client Settings</div>
       {settings.map((setting) => (
-        <div class="relative flex flex-col justify-center h-fit w-full bg-neutral-900 border-1 border-neutral-700/50 rounded-md overflow-hidden">
-          <div class="px-3 py-2 text-sm border-b-1 border-neutral-700/50 text-neutral-400 space-x-2">
-            <span class="text-blue-400">{setting.category}</span>
-            <span>{setting.name}</span>
+        <div class="bg-neutral-950 rounded-md h-fit w-full p-4 flex gap-2">
+          <div class="h-fit w-full space-y-1">
+            <div class="text-neutral-200 text-sm">{setting.name}</div>
+            <div class="text-neutral-500 text-xs">{setting.description}</div>
           </div>
-          <div class="text-sm text-neutral-400 px-3 py-2 whitespace-pre-wrap">
-            {setting.description}
-          </div>
-          <div class="px-1.5 pb-1.5 w-full">
+          <div class="flex items-center">
             {setting.type === "input" && (
               <input
                 type="text"
@@ -69,7 +66,7 @@ export default function ClientSettings() {
 
                   handleSettingChange(setting);
                 }}
-                class="px-2 py-1 w-md bg-neutral-900 border-1 border-neutral-700 text-neutral-300 rounded leading-none text-sm placeholder:text-sm outline-none"
+                class="px-4 py-2 h-fit w-64 bg-[#080808] border border-neutral-800/50 text-neutral-300 rounded leading-none text-sm placeholder:text-sm outline-none"
               />
             )}
           </div>
