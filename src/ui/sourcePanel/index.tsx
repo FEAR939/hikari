@@ -5,6 +5,7 @@ import { Timer } from "../timer";
 import { NumberInput } from "../numberInput";
 import { cache } from "../../services/cache";
 import { kitsu, KitsuAnime, KitsuEpisode } from "../../lib/kitsu";
+import { Tooltip } from "../Tooltip";
 
 interface Episode {
   episode: string;
@@ -122,10 +123,10 @@ export function SourcePanel({
     } else {
       switch (codec) {
         case "h264":
-          text = "AVC";
+          text = "H.264";
           break;
         case "h265":
-          text = "HEVC";
+          text = "H.265";
           break;
         case "av1":
           text = "AV1";
@@ -579,64 +580,71 @@ export function SourcePanel({
 
         {/* Button Row */}
         <div class="flex space-x-2">
-          <div
-            class="size-8 grid place-items-center outline-1 outline-[#1a1a1a] rounded-md cursor-pointer"
-            onClick={async () => {
-              const local_media_path = localStorage.getItem(
-                "app_local_media_path",
-              );
-              if (!local_media_path) {
-                console.warn("Local media path not found");
-                return;
-              }
-              const animeTitle = anime.attributes.titles.en_jp
-                .replaceAll(" ", "-")
-                .replaceAll(":", "")
-                .replaceAll("'", "")
-                .replaceAll('"', "");
-              window.electronAPI.createLocalMediaDir(
-                `${local_media_path}${animeTitle}`,
-              );
-            }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-folder-cog size-5"
+          <Tooltip content="Create Local Folder">
+            <div
+              class="size-8 grid place-items-center outline-1 outline-[#1a1a1a] rounded-md cursor-pointer"
+              onClick={async () => {
+                const local_media_path = localStorage.getItem(
+                  "app_local_media_path",
+                );
+                if (!local_media_path) {
+                  console.warn("Local media path not found");
+                  return;
+                }
+                const animeTitle = anime.attributes.titles.en_jp
+                  .replaceAll(" ", "-")
+                  .replaceAll(":", "")
+                  .replaceAll("'", "")
+                  .replaceAll('"', "");
+                window.electronAPI.createLocalMediaDir(
+                  `${local_media_path}${animeTitle}`,
+                );
+              }}
             >
-              <path d="M10.3 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.98a2 2 0 0 1 1.69.9l.66 1.2A2 2 0 0 0 12 6h8a2 2 0 0 1 2 2v3.3" />
-              <path d="m14.305 19.53.923-.382" />
-              <path d="m15.228 16.852-.923-.383" />
-              <path d="m16.852 15.228-.383-.923" />
-              <path d="m16.852 20.772-.383.924" />
-              <path d="m19.148 15.228.383-.923" />
-              <path d="m19.53 21.696-.382-.924" />
-              <path d="m20.772 16.852.924-.383" />
-              <path d="m20.772 19.148.924.383" />
-              <circle cx="18" cy="18" r="3" />
-            </svg>
-          </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-folder-cog size-5"
+              >
+                <path d="M10.3 20H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.98a2 2 0 0 1 1.69.9l.66 1.2A2 2 0 0 0 12 6h8a2 2 0 0 1 2 2v3.3" />
+                <path d="m14.305 19.53.923-.382" />
+                <path d="m15.228 16.852-.923-.383" />
+                <path d="m16.852 15.228-.383-.923" />
+                <path d="m16.852 20.772-.383.924" />
+                <path d="m19.148 15.228.383-.923" />
+                <path d="m19.53 21.696-.382-.924" />
+                <path d="m20.772 16.852.924-.383" />
+                <path d="m20.772 19.148.924.383" />
+                <circle cx="18" cy="18" r="3" />
+              </svg>
+            </div>
+          </Tooltip>
 
           {/* Auto Select Toggle */}
-          {bind([autoSelect, setAutoSelect, subscribeAutoSelect], (isAuto) => (
-            <div
-              class={
-                isAuto
-                  ? "px-2 py-1 bg-white text-black rounded-md cursor-pointer"
-                  : "px-2 py-1 bg-black text-white outline-1 outline-[#1a1a1a] rounded-md cursor-pointer"
-              }
-              onClick={() => setAutoSelect(!isAuto)}
-            >
-              AUTO
-            </div>
-          ))}
+          <Tooltip content="Selection Mode">
+            {bind(
+              [autoSelect, setAutoSelect, subscribeAutoSelect],
+              (isAuto) => (
+                <div
+                  class={
+                    isAuto
+                      ? "px-2 py-1 bg-white text-black rounded-md cursor-pointer"
+                      : "px-2 py-1 bg-black text-white outline-1 outline-[#1a1a1a] rounded-md cursor-pointer"
+                  }
+                  onClick={() => setAutoSelect(!isAuto)}
+                >
+                  AUTO
+                </div>
+              ),
+            )}
+          </Tooltip>
         </div>
 
         {/* Insert Space for Timer */}
