@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "electron": "^37.7.1",
+    "electron": "^39.0.0",
     "electron-builder": "^26.0.12"
   },
   "peerDependencies": {
