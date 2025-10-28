@@ -1,6 +1,9 @@
 const { contextBridge, ipcRenderer, app } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  windowControlsVisible: (visible) => {
+    ipcRenderer.send("window-controls-visible", visible);
+  },
   onUpdateAvailable: (callback) =>
     ipcRenderer.on("update-available", () => callback()),
   restartAndUpdate: () => ipcRenderer.send("restart-and-update"),
