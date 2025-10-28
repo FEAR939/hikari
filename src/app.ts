@@ -16,6 +16,7 @@ import { Sidebar } from "./ui/sidebar";
 declare global {
   interface Window {
     electronAPI?: {
+      windowControlsVisible: (visible: boolean) => void;
       onUpdateAvailable: (callback: () => void) => void;
       restartAndUpdate: () => void;
       openDevTools: () => void;
