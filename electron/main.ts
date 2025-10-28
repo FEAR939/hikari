@@ -4,13 +4,13 @@ const { autoUpdater } = electronUpdater;
 import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
-import extensionManager from "./services/extensionManager.ts";
+import extensionManager from "./services/extensionManager";
 import * as ffprobe from "ffprobe-static";
 import childProcess from "child_process";
 import { promisify } from "util";
 const exec = promisify(childProcess.exec);
 
-async function getVideoMetadata(filePath) {
+async function getVideoMetadata(filePath: string) {
   const { stdout } = await exec(
     `"${ffprobe.path.replace("app.asar", "app.asar.unpacked")}" -v quiet -print_format json -show_format -show_streams "${filePath}"`,
   );
@@ -24,6 +24,8 @@ let hasUpdate = false;
 
 let win: BrowserWindow;
 
+console.log(path.join(dirname, "preload.ts"));
+
 function createWindow() {
   win = new BrowserWindow({
     width: 1600,
@@ -34,7 +36,7 @@ function createWindow() {
           titleBarOverlay: {
             color: "rgba(0, 0, 0, 0)",
             symbolColor: "#ffffff",
-            height: 60,
+            height: 48,
           },
         }
       : {}),
@@ -46,11 +48,18 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(dirname, "preload.ts"),
+      webSecurity: true,
+      preload: path.join(dirname, "preload.js"),
     },
   });
 
   win.loadFile(path.join(dirname, "../dist/index.html"));
+
+  ipcMain.on("window-controls-visible", (event, visible: boolean) => {
+    if (win) {
+      win.setWindowButtonVisibility(visible);
+    }
+  });
 
   ipcMain.on("open-devtools", () => {
     if (win) {
@@ -119,10 +128,10 @@ function createWindow() {
   ipcMain.handle("get-local-media-metadata", async (event, filepath) => {
     const file_metadata = await getVideoMetadata(filepath);
     const video_metadata = file_metadata.streams.find(
-      (stream) => stream.codec_type === "video",
+      (stream: any) => stream.codec_type === "video",
     );
     const audio_metadata = file_metadata.streams.find(
-      (stream) => stream.codec_type === "audio",
+      (stream: any) => stream.codec_type === "audio",
     );
 
     const metadata = {
