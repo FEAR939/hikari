@@ -83,8 +83,14 @@ export default async function Player(query: PlayerQuery) {
     }
   };
 
+  const hideEverything = () => {
+    controls.classList.add("hidden");
+    pageback.classList.add("hidden");
+    player!.style.cursor = "none";
+    windowControls.setVisibility(false);
+  };
+
   const handleMove = () => {
-    if (!canPlay || video.paused) return;
     controls.classList.remove("hidden");
     pageback.classList.remove("hidden");
     player!.style.cursor = "default";
@@ -93,10 +99,7 @@ export default async function Player(query: PlayerQuery) {
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => {
       if (!canPlay || video.paused) return;
-      controls.classList.add("hidden");
-      pageback.classList.add("hidden");
-      player!.style.cursor = "none";
-      windowControls.setVisibility(false);
+      hideEverything();
     }, 3000);
   };
 
@@ -426,8 +429,7 @@ export default async function Player(query: PlayerQuery) {
     canPlay = true;
     loading_indicator.remove();
     video.play();
-    controls.classList.add("hidden");
-    pageback.classList.add("hidden");
+    hideEverything();
 
     const malId = episodeData.mal_id;
     const episodeNumber = episodeData.episode;
