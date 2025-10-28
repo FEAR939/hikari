@@ -112,7 +112,7 @@ export function Card(
                 item.attributes.coverImage?.original ||
                 item.attributes.posterImage?.original
               }
-              class="w-full aspect-[2.5/1] object-cover rounded-t-lg"
+              class="w-full aspect-[2.5/1] object-cover rounded-t-lg mask-y-from-98% mask-y-neutral-950"
               loading="lazy"
             />
             <div class="text-neutral-300 line-clamp-2 text-sm px-4">
