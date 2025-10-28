@@ -502,7 +502,7 @@ export function SourcePanel({
 
   const container = (
     <div class="fixed inset-0 p-4 pt-12 flex items-center justify-center backdrop-brightness-50 backdrop-blur-md">
-      <div class="relative w-full max-w-4xl h-full p-4 pt-8 space-y-4 overflow-y-scroll bg-[#080808] rounded-xl">
+      <div class="relative w-full max-w-1/2 3xl:max-w-7xl h-full p-4 pt-8 3xl:pt-32 space-y-4 overflow-y-scroll bg-[#080808] rounded-xl">
         {/* Close Button */}
         <div
           class="absolute z-10 top-2 right-4 size-8 flex items-center justify-center cursor-pointer"
@@ -530,7 +530,7 @@ export function SourcePanel({
 
         {/* Banner */}
         <img
-          class="absolute top-0 left-0 right-0 w-full h-32 object-cover brightness-50 mask-b-from-50% bg-[#080808]"
+          class="absolute top-0 left-0 right-0 w-full h-32 3xl:h-64 object-cover brightness-50 mask-b-from-50% bg-[#080808]"
           src={
             anime.attributes.coverImage?.original ||
             anime.attributes.posterImage?.original
