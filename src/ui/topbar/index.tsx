@@ -28,7 +28,7 @@ export function TopBar() {
   });
 
   return (
-    <div class="absolute z-4 top-0 left-0 right-0 pr-36 h-16 w-full px-4 flex items-center justify-end space-x-4 bg-gradient-to-t from-transparent to-[#0d0d0d]">
+    <div class="absolute z-4 top-0 left-0 right-0 pr-36 h-12 w-full px-4 flex items-center justify-end space-x-4">
       <div class="ml-12 mb-auto w-full h-8 [app-region:drag]"></div>
       {/* Update Available Button */}
       {bind([hasUpdate, setHasUpdate, subscribeUpdate], (updateAvailable) => (
@@ -74,19 +74,20 @@ export function TopBar() {
           onClick={() => router.navigate("/search")}
         >
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="100%"
+            height="100%"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-search size-5"
+            xmlns="http://www.w3.org/2000/svg"
+            class="size-6"
           >
-            <path d="m21 21-4.34-4.34" />
-            <circle cx="11" cy="11" r="8" />
+            <path
+              d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </div>
       </Tooltip>
