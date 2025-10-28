@@ -81,7 +81,7 @@ export default async function Schedule() {
   console.log(scheduleMap);
 
   const page = (
-    <div class="relative h-full w-full px-4 md:px-6 pt-16 pb-4 space-y-4 overflow-y-scroll">
+    <div class="relative h-full w-full px-4 md:px-6 pt-16 pb-4 space-y-4 overflow-y-scroll flex justify-center">
       <div class="grid grid-cols-7 border rounded-lg [&>*:not(:nth-child(7n+1)):nth-child(n+8)]:border-r [&>*:nth-last-child(n+8)]:border-b [&>*:nth-child(-n+8)]:border-b border-neutral-900 w-full max-w-[1800px]">
         <div class="col-span-full flex justify-between items-center p-4 border-neutral-900">
           <div class="text-center font-bold text-xl">{monthName}</div>
