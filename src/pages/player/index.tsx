@@ -52,6 +52,7 @@ export default async function Player(query: PlayerQuery) {
 
   // Event Handlers
   const handleBeforeClose = async () => {
+    window.electronAPI?.windowControlsVisible(true);
     router.navigate(
       `/anime/updateEpisodeProgress?kitsu_id=${query.kitsu_id}&episode=${episodeData.attributes.number}&leftoff=${Math.floor(video.currentTime)}`,
     );
@@ -83,9 +84,11 @@ export default async function Player(query: PlayerQuery) {
   };
 
   const handleMove = () => {
+    if (!canPlay || video.paused) return;
     controls.classList.remove("hidden");
     pageback.classList.remove("hidden");
     player!.style.cursor = "default";
+    window.electronAPI?.windowControlsVisible(true);
 
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => {
@@ -93,6 +96,7 @@ export default async function Player(query: PlayerQuery) {
       controls.classList.add("hidden");
       pageback.classList.add("hidden");
       player!.style.cursor = "none";
+      window.electronAPI?.windowControlsVisible(false);
     }, 3000);
   };
 
@@ -344,7 +348,7 @@ export default async function Player(query: PlayerQuery) {
   ) as HTMLDivElement;
 
   const controls = (
-    <div class="absolute bottom-0 left-0 right-0 h-26 bg-gradient bg-gradient-to-t from-black to-transparent px-4 py-2 space-y-2 flex flex-col justify-around">
+    <div class="absolute bottom-0 left-0 right-0 h-26 bg-gradient bg-linear-to-t from-black to-transparent px-4 py-2 space-y-2 flex flex-col justify-around">
       {titleAndTime}
       {seekbar}
       {buttonRow}
@@ -455,6 +459,7 @@ export default async function Player(query: PlayerQuery) {
     switch (event.key) {
       case " ":
         video.paused ? video.play() : video.pause();
+        handleMove();
         break;
       case "f":
         fullscreenbutton.dispatchEvent(new Event("click"));
