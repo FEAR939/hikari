@@ -12,11 +12,16 @@ import News from "./pages/news/index";
 import Schedule from "./pages/schedule";
 import { TopBar } from "./ui/topbar";
 import { Sidebar } from "./ui/sidebar";
+import WindowControls from "./ui/windowControls";
 
 declare global {
   interface Window {
     electronAPI?: {
-      windowControlsVisible: (visible: boolean) => void;
+      quit: () => void;
+      windowMinimize: () => void;
+      windowMaximized: (state: boolean) => void;
+      onmaximized: (callback: () => void) => void;
+      onunmaximized: (callback: () => void) => void;
       onUpdateAvailable: (callback: () => void) => void;
       restartAndUpdate: () => void;
       openDevTools: () => void;
@@ -42,9 +47,12 @@ console.log("API Base URL: ", apiBaseUrl);
 let api = new Client(apiBaseUrl);
 
 export const API = api;
+export const windowControls = WindowControls();
 
 async function main() {
   const root = document.getElementById("root")!;
+
+  root.appendChild(windowControls);
 
   const topbar = TopBar();
   root.appendChild(topbar);

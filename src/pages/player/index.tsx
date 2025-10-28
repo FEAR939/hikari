@@ -2,7 +2,7 @@ import { h } from "../../lib/jsx/runtime";
 import { router } from "../../lib/router/index";
 import { getSkipTimes, SkipResult } from "../../lib/aniskip";
 import { authService } from "../../services/auth";
-import { API } from "../../app";
+import { API, windowControls } from "../../app";
 import { Seekbar } from "../../ui/seekbar";
 import { Volume } from "../../ui/volume";
 import { PlayerSettingsMenu } from "../../ui/playerSettingsMenu";
@@ -88,7 +88,7 @@ export default async function Player(query: PlayerQuery) {
     controls.classList.remove("hidden");
     pageback.classList.remove("hidden");
     player!.style.cursor = "default";
-    window.electronAPI?.windowControlsVisible(true);
+    windowControls.setVisibility(true);
 
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => {
@@ -96,7 +96,7 @@ export default async function Player(query: PlayerQuery) {
       controls.classList.add("hidden");
       pageback.classList.add("hidden");
       player!.style.cursor = "none";
-      window.electronAPI?.windowControlsVisible(false);
+      windowControls.setVisibility(false);
     }, 3000);
   };
 

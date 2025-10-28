@@ -31,15 +31,6 @@ function createWindow() {
     width: 1600,
     height: 900,
     titleBarStyle: "hidden",
-    ...(process.platform !== "darwin"
-      ? {
-          titleBarOverlay: {
-            color: "rgba(0, 0, 0, 0)",
-            symbolColor: "#ffffff",
-            height: 48,
-          },
-        }
-      : {}),
     autoHideMenuBar: true,
     fullscreenable: true,
     title: "Hikari",
@@ -55,10 +46,25 @@ function createWindow() {
 
   win.loadFile(path.join(dirname, "../dist/index.html"));
 
-  ipcMain.on("window-controls-visible", (event, visible: boolean) => {
-    if (win) {
-      win.setWindowButtonVisibility(visible);
-    }
+  ipcMain.on("minimize", () => {
+    win.minimize();
+  });
+
+  ipcMain.on("quit", () => {
+    app.quit();
+  });
+
+  ipcMain.on("window-maximized", (event, state) => {
+    console.log(state);
+    state ? win.maximize() : win.unmaximize();
+  });
+
+  win.on("maximize", () => {
+    win.webContents.send("window-maximized");
+  });
+
+  win.on("unmaximize", () => {
+    win.webContents.send("window-unmaximized");
   });
 
   ipcMain.on("open-devtools", () => {
