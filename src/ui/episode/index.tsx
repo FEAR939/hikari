@@ -49,7 +49,7 @@ export function Episode({
           </div>
         ))}
       </div>
-      <div class="relative h-fit w-full space-y-1 md:space-y-2 overflow-hidden px-1 py-2">
+      <div class="relative h-fit w-full space-y-1 md:space-y-2 overflow-hidden py-2">
         <div class="text-sm font-medium truncate lg:text-lg">
           {`E${episode.attributes.number} | ${episode.attributes.titles.en || episode.attributes.titles.en_us || episode.attributes.titles.en_ja || episode.attributes.titles.en_cn || "No title available"}`}
         </div>
