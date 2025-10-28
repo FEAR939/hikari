@@ -340,11 +340,11 @@ export function SourcePanel({
             </svg>
             <span>This Device</span>
           </div>
-          <img
-            src="./icons/icon.png"
-            class="absolute right-4 top-4 w-4 h-4"
-            title="Provided by this Device"
-          />
+          <div class="absolute right-4 top-4">
+            <Tooltip content="Provided by this Device">
+              <img src="./icons/icon.png" class="size-6" />
+            </Tooltip>
+          </div>
           <div class="text-[#a2a2a2] text-xs">{local.name}</div>
           <div class="absolute left-4 bottom-4 text-[#f0f0f0] text-xs py-1 m-0">
             {formatBytes(local.size)}
@@ -463,11 +463,16 @@ export function SourcePanel({
                 </svg>
                 <span>{source_hoster.label}</span>
               </div>
-              <img
-                src={`${source_extension.path}\\icon.png`}
-                class="absolute right-4 top-4 w-4 h-4"
-                title={`Provided by ${source_extension.name}`}
-              />
+              <div class="absolute right-4 top-4">
+                <Tooltip content={`Provided by ${source_extension.name}`}>
+                  <img
+                    src={`${source_extension.path}\\icon.png`}
+                    class="size-6"
+                    title={`Provided by ${source_extension.name}`}
+                  />
+                </Tooltip>
+              </div>
+
               <div class="text-[#a2a2a2] text-xs">{stream.name}</div>
               <div class="absolute left-4 bottom-4 text-[#f0f0f0] text-xs py-1 m-0">
                 {stream.size}
