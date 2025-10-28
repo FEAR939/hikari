@@ -4,7 +4,7 @@ const { autoUpdater } = electronUpdater;
 import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
-import extensionManager from "./services/extensionManager";
+import extensionManager from "./services/extensionManager.ts";
 import * as ffprobe from "ffprobe-static";
 import childProcess from "child_process";
 import { promisify } from "util";
@@ -49,7 +49,7 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: true,
-      preload: path.join(dirname, "preload.js"),
+      preload: path.join(dirname, "preload.ts"),
     },
   });
 
