@@ -14,19 +14,20 @@ export default async function Search(query) {
       <div class="rounded-lg border border-neutral-700/50 bg-neutral-950 h-10 w-64 px-3 flex items-center overflow-hidden">
         <div class="h-full flex items-center shrink-0 text-neutral-700">
           <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
+            width="100%"
+            height="100%"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-search-icon lucide-search size-4"
+            xmlns="http://www.w3.org/2000/svg"
+            class="size-4"
           >
-            <path d="m21 21-4.34-4.34" />
-            <circle cx="11" cy="11" r="8" />
+            <path
+              d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </div>
         <input
