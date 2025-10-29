@@ -121,7 +121,13 @@ export default function ExtensionSettings() {
                       {extension.type}
                     </div>
                   </div>
-                  <div class="absolute right-4 top-4 size-4 cursor-pointer text-red-500">
+                  <div
+                    class="absolute right-4 top-4 size-4 cursor-pointer text-red-500"
+                    onClick={async () => {
+                      await window.electronAPI?.removeExtension(extension.name);
+                      load_extensions();
+                    }}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
