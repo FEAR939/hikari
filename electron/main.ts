@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, session } from "electron";
+import { app, BrowserWindow, ipcMain, session, protocol, net } from "electron";
 import electronUpdater from "electron-updater";
 const { autoUpdater } = electronUpdater;
 import { fileURLToPath } from "url";
@@ -8,6 +8,20 @@ import extensionManager from "./services/extensionManager.ts";
 import * as ffprobe from "ffprobe-static";
 import childProcess from "child_process";
 import { promisify } from "util";
+
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: "mediaproxy",
+    privileges: {
+      standard: true,
+      secure: true,
+      supportFetchAPI: true,
+      stream: true, // This is crucial for video seeking!
+      corsEnabled: true,
+    },
+  },
+]);
+
 const exec = promisify(childProcess.exec);
 
 async function getVideoMetadata(filePath: string) {
@@ -207,8 +221,104 @@ function createWindow() {
   });
 }
 
-app.whenReady().then(async () => {
+app.once("ready", async () => {
+  session.defaultSession.protocol.handle("mediaproxy", async (request) => {
+    try {
+      const requestUrl = new URL(request.url);
+      const mediaUrl = requestUrl.searchParams.get("url");
+      const headersParam = requestUrl.searchParams.get("headers");
+
+      if (!mediaUrl) {
+        return new Response("Bad Request: No URL provided", { status: 400 });
+      }
+
+      // Decode custom headers
+      let customHeaders = {};
+      if (headersParam) {
+        try {
+          const headersJson = Buffer.from(headersParam, "base64").toString(
+            "utf-8",
+          );
+          customHeaders = JSON.parse(JSON.parse(headersJson)); // Stupid? yes... but works...
+        } catch (e) {
+          console.error("Failed to decode headers:", e);
+        }
+      }
+
+      // Get range header
+      const range = request.headers.get("range");
+
+      // Prepare headers for the actual request
+      const fetchHeaders = new Headers(customHeaders);
+      if (range) {
+        fetchHeaders.set("Range", range);
+        console.log("Range request:", range);
+      }
+
+      // Use Electron's net module which properly handles redirects and streams
+      const response = await net.fetch(mediaUrl, {
+        headers: fetchHeaders,
+        method: "GET",
+      });
+
+      console.log("Response status:", response.status);
+      console.log(
+        "Response headers:",
+        Object.fromEntries(response.headers.entries()),
+      );
+
+      // Create new headers for the response
+      const responseHeaders = new Headers();
+      responseHeaders.set(
+        "Content-Type",
+        response.headers.get("content-type") || "video/mp4",
+      );
+      responseHeaders.set("Accept-Ranges", "bytes");
+
+      if (response.headers.get("content-length")) {
+        responseHeaders.set(
+          "Content-Length",
+          response.headers.get("content-length"),
+        );
+      }
+      if (response.headers.get("content-range")) {
+        responseHeaders.set(
+          "Content-Range",
+          response.headers.get("content-range"),
+        );
+      }
+      if (response.headers.get("etag")) {
+        responseHeaders.set("ETag", response.headers.get("etag"));
+      }
+      if (response.headers.get("last-modified")) {
+        responseHeaders.set(
+          "Last-Modified",
+          response.headers.get("last-modified"),
+        );
+      }
+      if (response.headers.get("cache-control")) {
+        responseHeaders.set(
+          "Cache-Control",
+          response.headers.get("cache-control"),
+        );
+      }
+
+      // Return the response with the body stream
+      return new Response(response.body, {
+        status: response.status,
+        headers: responseHeaders,
+      });
+    } catch (error) {
+      console.error("Protocol handler error:", error);
+      return new Response("Internal Server Error: " + error.message, {
+        status: 500,
+      });
+    }
+  });
+
   createWindow();
+
+  console.log(protocol.isProtocolHandled("mediaproxy"));
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {

@@ -52,7 +52,7 @@ export default async function Player(query: PlayerQuery) {
 
   // Event Handlers
   const handleBeforeClose = async () => {
-    window.electronAPI?.windowControlsVisible(true);
+    windowControls.setVisibility(true);
     router.navigate(
       `/anime/updateEpisodeProgress?kitsu_id=${query.kitsu_id}&episode=${episodeData.attributes.number}&leftoff=${Math.floor(video.currentTime)}`,
     );
@@ -492,7 +492,21 @@ export default async function Player(query: PlayerQuery) {
     return;
   }
 
-  video.src = query.streamurl;
+  // This will be moved elsewhere at some point
+  function create(url, headers = {}) {
+    const headersBase64 = btoa(JSON.stringify(headers));
+    const encodedUrl = encodeURIComponent(url);
+    return `mediaproxy://video?url=${encodedUrl}&headers=${headersBase64}`;
+  }
+
+  const proxiedUrl = create(query.streamurl, query.headers);
+
+  console.log("Proxied URL:", proxiedUrl);
+
+  video.src =
+    query.streamurl.includes("http") || query.streamurl.includes("https")
+      ? proxiedUrl
+      : query.streamurl;
 
   // Load saved progress
   if (authService.getUser()) {
