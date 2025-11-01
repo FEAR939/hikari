@@ -55,6 +55,14 @@ export function SourcePanel({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
   }
 
+  async function sanitizeTitle(title: string) {
+    return title
+      .replaceAll(" ", "-")
+      .replaceAll(":", "")
+      .replaceAll("'", "")
+      .replaceAll('"', "");
+  }
+
   async function getLocalEpisode() {
     const local_media_path = localStorage.getItem("app_local_media_path");
     if (!local_media_path) {
@@ -62,14 +70,18 @@ export function SourcePanel({
       return;
     }
 
-    const animeTitle = anime.attributes.titles.en_jp
-      .replaceAll(" ", "-")
-      .replaceAll(":", "")
-      .replaceAll("'", "")
-      .replaceAll('"', "");
+    const animeTitles = [
+      await sanitizeTitle(anime.attributes.titles.en || ""),
+      await sanitizeTitle(anime.attributes.titles.en_us || ""),
+      await sanitizeTitle(anime.attributes.titles.en_jp || ""),
+      await sanitizeTitle(anime.attributes.titles.en_cn || ""),
+    ].filter((title) => title !== "");
+
+    console.log(animeTitles);
 
     const animeDirContents = await window.electronAPI.getLocalMedia(
-      `${local_media_path}${animeTitle}`,
+      local_media_path,
+      animeTitles,
     );
 
     if (!animeDirContents || animeDirContents.length === 0) {
@@ -596,13 +608,15 @@ export function SourcePanel({
                   console.warn("Local media path not found");
                   return;
                 }
-                const animeTitle = anime.attributes.titles.en_jp
-                  .replaceAll(" ", "-")
-                  .replaceAll(":", "")
-                  .replaceAll("'", "")
-                  .replaceAll('"', "");
-                window.electronAPI.createLocalMediaDir(
-                  `${local_media_path}${animeTitle}`,
+                const animeTitles = [
+                  await sanitizeTitle(anime.attributes.titles.en || ""),
+                  await sanitizeTitle(anime.attributes.titles.en_us || ""),
+                  await sanitizeTitle(anime.attributes.titles.en_jp || ""),
+                  await sanitizeTitle(anime.attributes.titles.en_cn || ""),
+                ].filter((title) => title !== "");
+
+                window.electronAPI?.createLocalMediaDir(
+                  `${local_media_path}${animeTitles[0]}`,
                 );
               }}
             >
