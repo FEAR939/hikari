@@ -3,7 +3,7 @@
   "author": "F E A R",
   "private": true,
   "description": "Hikari is an app for watching anime from your favorite sources",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": "./electron/main.ts",
   "dependencies": {
     "@tailwindcss/vite": "^4.1.16",
