@@ -113,37 +113,48 @@ function createWindow() {
     }
   });
 
-  ipcMain.handle("get-local-media", async (event, dirPath) => {
-    try {
-      const exists = fs.existsSync(dirPath);
-      if (!exists) {
-        console.warn("Directory does not exist:", dirPath);
-        return [];
+  ipcMain.handle(
+    "get-local-media",
+    async (event, dirPath: string, titles: string[]) => {
+      try {
+        const baseDirExists = fs.existsSync(dirPath);
+        if (!baseDirExists) {
+          console.warn("Directory does not exist:", dirPath);
+          return [];
+        }
+
+        const existsDirs = titles.map((title: string) =>
+          fs.existsSync(path.join(dirPath, title)),
+        );
+
+        const existsIndex = existsDirs.findIndex((exists) => exists);
+
+        const finalPath = path.join(dirPath, titles[existsIndex]);
+
+        const files = fs.readdirSync(finalPath);
+
+        // Optional: Get full file info
+        const fileInfo = [];
+        for (const file of files) {
+          const fullPath = path.join(finalPath, file);
+          const stats = fs.statSync(fullPath);
+
+          fileInfo.push({
+            name: file,
+            path: fullPath,
+            isDirectory: stats.isDirectory(),
+            size: stats.size,
+            modified: stats.mtime,
+          });
+        }
+
+        return fileInfo;
+      } catch (error) {
+        console.error("Error reading directory:", error);
+        throw error;
       }
-
-      const files = fs.readdirSync(dirPath);
-
-      // Optional: Get full file info
-      const fileInfo = [];
-      for (const file of files) {
-        const fullPath = path.join(dirPath, file);
-        const stats = fs.statSync(fullPath);
-
-        fileInfo.push({
-          name: file,
-          path: fullPath,
-          isDirectory: stats.isDirectory(),
-          size: stats.size,
-          modified: stats.mtime,
-        });
-      }
-
-      return fileInfo;
-    } catch (error) {
-      console.error("Error reading directory:", error);
-      throw error;
-    }
-  });
+    },
+  );
 
   ipcMain.handle("get-local-media-metadata", async (event, filepath) => {
     const file_metadata = await getVideoMetadata(filepath);
@@ -189,6 +200,38 @@ function createWindow() {
 
   ipcMain.handle("create-local-media-dir", async (event, path) => {
     fs.mkdirSync(path);
+  });
+
+  ipcMain.handle("get-dir", async (event, path) => {
+    const dir = await fs.promises.readdir(path);
+    return dir;
+  });
+
+  ipcMain.handle("get-dir-size", async (event, dirPath) => {
+    const dirSize = async (dir) => {
+      const files = await fs.promises.readdir(dir, { withFileTypes: true });
+
+      const paths = files.map(async (file) => {
+        const filepath = path.join(dir, file.name);
+
+        if (file.isDirectory()) return await dirSize(filepath);
+
+        if (file.isFile()) {
+          const { size } = await fs.promises.stat(filepath);
+
+          return size;
+        }
+
+        return 0;
+      });
+
+      return (await Promise.all(paths))
+        .flat(Infinity)
+        .reduce((i, size) => i + size, 0);
+    };
+
+    const size = await dirSize(dirPath);
+    return size;
   });
 
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {

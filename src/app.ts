@@ -10,6 +10,7 @@ import Settings from "./pages/settings/index";
 import Auth from "./pages/auth/index";
 import News from "./pages/news/index";
 import Schedule from "./pages/schedule";
+import Files from "./pages/files";
 import { TopBar } from "./ui/topbar";
 import { Sidebar } from "./ui/sidebar";
 import WindowControls from "./ui/windowControls";
@@ -28,6 +29,9 @@ declare global {
       enterFullscreen: () => void;
       exitFullscreen: () => void;
       getLocalMedia: () => Promise<any>;
+      createLocalMediaDir: (path: string) => Promise<void>;
+      getDir: (path: string) => Promise<string>;
+      getDirSize: (path: string) => Promise<number>;
       getAppVersion: () => Promise<string>;
       loadExtensions: () => Promise<any>;
       installExtension: (url: string) => Promise<any>;
@@ -74,6 +78,7 @@ async function main() {
   router.route("/auth", Auth);
   router.route("/news", News);
   router.route("/schedule", Schedule);
+  router.route("/files", Files);
 
   await authService.authenticate();
 

@@ -22,8 +22,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   openDevTools: () => ipcRenderer.send("open-devtools"),
   enterFullscreen: () => ipcRenderer.send("enter-fullscreen"),
   exitFullscreen: () => ipcRenderer.send("exit-fullscreen"),
-  getLocalMedia: (dirPath) => {
-    const files = ipcRenderer.invoke("get-local-media", dirPath);
+  getLocalMedia: (dirPath, titles) => {
+    const files = ipcRenderer.invoke("get-local-media", dirPath, titles);
     return files;
   },
   getLocalMediaMetadata: async (filePath) => {
@@ -52,5 +52,13 @@ contextBridge.exposeInMainWorld("electronAPI", {
   createLocalMediaDir: async (path) => {
     ipcRenderer.invoke("create-local-media-dir", path);
     return true;
+  },
+  getDir: async (path) => {
+    const dir = await ipcRenderer.invoke("get-dir", path);
+    return dir;
+  },
+  getDirSize: async (path) => {
+    const size = await ipcRenderer.invoke("get-dir-size", path);
+    return size;
   },
 });
