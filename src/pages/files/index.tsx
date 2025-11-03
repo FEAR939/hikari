@@ -8,7 +8,7 @@ export default async function Files(query) {
   const [baseDir, setBaseDir, subscribeBaseDir] = createSignal<string[]>([]);
   const [episodeCount, setEpisodeCount, subscribeEpisodeCount] =
     createSignal(0);
-  const [dirSize, setDirSize, subscribeDirSize] = createSignal < 0;
+  const [dirSize, setDirSize, subscribeDirSize] = createSignal(0);
 
   const page = (
     <div class="h-full w-full p-4 pt-12 space-y-4 overflow-y-scroll">
