@@ -30,7 +30,7 @@ declare global {
       exitFullscreen: () => void;
       getLocalMedia: () => Promise<any>;
       createLocalMediaDir: (path: string) => Promise<void>;
-      getDir: (path: string) => Promise<string>;
+      getDir: (path: string) => Promise<string[]>;
       getDirSize: (path: string) => Promise<number>;
       getAppVersion: () => Promise<string>;
       loadExtensions: () => Promise<any>;
