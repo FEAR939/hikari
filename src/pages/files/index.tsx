@@ -36,7 +36,7 @@ export default async function Files(query) {
         </div>
       </div>
       {bind([baseDir, setBaseDir, subscribeBaseDir], (value) => (
-        <div class="border border-neutral-900 rounded-lg">
+        <div class="border border-neutral-900 rounded-lg [&>*:last-of-type]:rounded-b-lg">
           <div class="px-6 py-3 grid grid-cols-3 text-sm text-neutral-500 border-b border-neutral-900">
             <div>Title</div>
             <div>Episodes</div>
