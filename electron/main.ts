@@ -38,8 +38,6 @@ let hasUpdate = false;
 
 let win: BrowserWindow;
 
-console.log(path.join(dirname, "preload.ts"));
-
 function createWindow() {
   win = new BrowserWindow({
     width: 1600,
@@ -69,7 +67,6 @@ function createWindow() {
   });
 
   ipcMain.on("window-maximized", (event, state) => {
-    console.log(state);
     state ? win.maximize() : win.unmaximize();
   });
 
@@ -129,7 +126,18 @@ function createWindow() {
 
         const existsIndex = existsDirs.findIndex((exists) => exists);
 
-        const finalPath = path.join(dirPath, titles[existsIndex]);
+        if (existsIndex === -1) {
+          console.warn("No existing directory found");
+          return [];
+        }
+
+        const selectedTitle = titles[existsIndex];
+        if (!selectedTitle) {
+          console.warn("Selected title is undefined");
+          return [];
+        }
+
+        const finalPath = path.join(dirPath, selectedTitle);
 
         const files = fs.readdirSync(finalPath);
 
@@ -208,7 +216,7 @@ function createWindow() {
   });
 
   ipcMain.handle("get-dir-size", async (event, dirPath) => {
-    const dirSize = async (dir) => {
+    const dirSize = async (dir: string): Promise<number> => {
       const files = await fs.promises.readdir(dir, { withFileTypes: true });
 
       const paths = files.map(async (file) => {
@@ -295,7 +303,6 @@ app.once("ready", async () => {
       const fetchHeaders = new Headers(customHeaders);
       if (range) {
         fetchHeaders.set("Range", range);
-        console.log("Range request:", range);
       }
 
       // Use Electron's net module which properly handles redirects and streams
@@ -303,12 +310,6 @@ app.once("ready", async () => {
         headers: fetchHeaders,
         method: "GET",
       });
-
-      console.log("Response status:", response.status);
-      console.log(
-        "Response headers:",
-        Object.fromEntries(response.headers.entries()),
-      );
 
       // Create new headers for the response
       const responseHeaders = new Headers();
@@ -321,28 +322,28 @@ app.once("ready", async () => {
       if (response.headers.get("content-length")) {
         responseHeaders.set(
           "Content-Length",
-          response.headers.get("content-length"),
+          response.headers.get("content-length")!,
         );
       }
       if (response.headers.get("content-range")) {
         responseHeaders.set(
           "Content-Range",
-          response.headers.get("content-range"),
+          response.headers.get("content-range")!,
         );
       }
       if (response.headers.get("etag")) {
-        responseHeaders.set("ETag", response.headers.get("etag"));
+        responseHeaders.set("ETag", response.headers.get("etag")!);
       }
       if (response.headers.get("last-modified")) {
         responseHeaders.set(
           "Last-Modified",
-          response.headers.get("last-modified"),
+          response.headers.get("last-modified")!,
         );
       }
       if (response.headers.get("cache-control")) {
         responseHeaders.set(
           "Cache-Control",
-          response.headers.get("cache-control"),
+          response.headers.get("cache-control")!,
         );
       }
 
@@ -353,15 +354,15 @@ app.once("ready", async () => {
       });
     } catch (error) {
       console.error("Protocol handler error:", error);
-      return new Response("Internal Server Error: " + error.message, {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      return new Response("Internal Server Error: " + errorMessage, {
         status: 500,
       });
     }
   });
 
   createWindow();
-
-  console.log(protocol.isProtocolHandled("mediaproxy"));
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {

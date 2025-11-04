@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "outDir": "./electron-dist",
+    "rootDir": "./electron",
+    "composite": true,
+    "allowImportingTsExtensions": true,
+    "emitDeclarationOnly": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "maxNodeModuleJsDepth": 1,
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "declaration": true
+  },
+  "include": ["./electron/**/*"]
+}

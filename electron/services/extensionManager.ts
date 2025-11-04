@@ -1,16 +1,19 @@
 import { app } from "electron";
 import fs from "fs-extra";
 import path from "path";
-import JSZip from "jszip";
+import JSZip, { JSZipObject } from "jszip";
 
 class ExtensionManager {
-  constructor(extensionsDir) {
+  extensionsDir: string;
+  metadataPath: string;
+
+  constructor(extensionsDir: string) {
     this.extensionsDir = extensionsDir;
     this.metadataPath = path.join(extensionsDir, "metadata.json");
     fs.ensureDirSync(extensionsDir);
   }
 
-  async downloadFromGitHub(repoUrl, branch = "main") {
+  async downloadFromGitHub(repoUrl: string, branch = "main") {
     const zipUrl = `${repoUrl.replace(".git", "")}/archive/refs/heads/${branch}.zip`;
     const tempPath = path.join(this.extensionsDir, "temp.zip");
 
@@ -25,7 +28,7 @@ class ExtensionManager {
     return tempPath;
   }
 
-  async installExtension(zipPath) {
+  async installExtension(zipPath: string) {
     // Read the zip file
     const zipData = await fs.readFile(zipPath);
     const zip = await JSZip.loadAsync(zipData);
@@ -46,17 +49,17 @@ class ExtensionManager {
     }
 
     // Read and parse manifest
-    const manifestContent = await manifestFile.async("string");
+    const manifestContent = await (manifestFile as JSZipObject).async("string");
     const manifest = JSON.parse(manifestContent);
 
     // Determine the root folder in the zip (GitHub adds a folder like "repo-name-branch/")
-    const rootFolder = manifestPath.split("/")[0];
+    const rootFolder = manifestPath!.split("/")[0];
 
     // Extract all files
     const extensionPath = path.join(this.extensionsDir, manifest.name);
     await fs.ensureDir(extensionPath);
 
-    const filePromises = [];
+    const filePromises: Promise<void>[] = [];
 
     zip.forEach((relativePath, file) => {
       // Skip if it's a directory
@@ -102,7 +105,7 @@ class ExtensionManager {
     return extensions;
   }
 
-  async removeExtension(extensionName) {
+  async removeExtension(extensionName: string) {
     const extensionPath = path.join(this.extensionsDir, extensionName);
     await fs.remove(extensionPath);
 

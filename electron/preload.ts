@@ -1,4 +1,4 @@
-const { contextBridge, ipcRenderer, app } = require("electron");
+import { contextBridge, ipcRenderer, app } from "electron";
 
 contextBridge.exposeInMainWorld("electronAPI", {
   quit: () => {
@@ -7,26 +7,30 @@ contextBridge.exposeInMainWorld("electronAPI", {
   windowMinimize: () => {
     ipcRenderer.send("minimize");
   },
-  windowMaximized: (state) => {
+  windowMaximized: (state: boolean) => {
     ipcRenderer.send("window-maximized", state);
   },
-  onmaximized: (callback) => {
+  onmaximized: (
+    callback: (event: Electron.IpcRendererEvent, state: boolean) => void,
+  ) => {
     ipcRenderer.on("window-maximized", callback);
   },
-  onunmaximized: (callback) => {
+  onunmaximized: (
+    callback: (event: Electron.IpcRendererEvent, state: boolean) => void,
+  ) => {
     ipcRenderer.on("window-unmaximized", callback);
   },
-  onUpdateAvailable: (callback) =>
+  onUpdateAvailable: (callback: () => void) =>
     ipcRenderer.on("update-available", () => callback()),
   restartAndUpdate: () => ipcRenderer.send("restart-and-update"),
   openDevTools: () => ipcRenderer.send("open-devtools"),
   enterFullscreen: () => ipcRenderer.send("enter-fullscreen"),
   exitFullscreen: () => ipcRenderer.send("exit-fullscreen"),
-  getLocalMedia: (dirPath, titles) => {
+  getLocalMedia: (dirPath: string, titles: string[]) => {
     const files = ipcRenderer.invoke("get-local-media", dirPath, titles);
     return files;
   },
-  getLocalMediaMetadata: async (filePath) => {
+  getLocalMediaMetadata: async (filePath: string) => {
     const metadata = await ipcRenderer.invoke(
       "get-local-media-metadata",
       filePath,
@@ -41,23 +45,23 @@ contextBridge.exposeInMainWorld("electronAPI", {
     const extensions = await ipcRenderer.invoke("load-extensions");
     return extensions;
   },
-  installExtension: async (url) => {
+  installExtension: async (url: string) => {
     const extension = await ipcRenderer.invoke("install-extension", url);
     return extension;
   },
-  removeExtension: async (name) => {
+  removeExtension: async (name: string) => {
     const extension = await ipcRenderer.invoke("remove-extension", name);
     return extension;
   },
-  createLocalMediaDir: async (path) => {
+  createLocalMediaDir: async (path: string) => {
     ipcRenderer.invoke("create-local-media-dir", path);
     return true;
   },
-  getDir: async (path) => {
+  getDir: async (path: string) => {
     const dir = await ipcRenderer.invoke("get-dir", path);
     return dir;
   },
-  getDirSize: async (path) => {
+  getDirSize: async (path: string) => {
     const size = await ipcRenderer.invoke("get-dir-size", path);
     return size;
   },
