@@ -131,6 +131,9 @@ export function SourcePanel({
         case "opus":
           text = "Opus";
           break;
+        case "ac3":
+          text = "AC3";
+          break;
       }
     } else {
       switch (codec) {
@@ -138,6 +141,7 @@ export function SourcePanel({
           text = "H.264";
           break;
         case "h265":
+        case "hevc":
           text = "H.265";
           break;
         case "av1":
@@ -146,14 +150,14 @@ export function SourcePanel({
       }
     }
 
-    return <div class={classes}>{text}</div>;
+    return text ? <div class={classes}>{text}</div> : null;
   }
 
   function getBitDepthBadge(bitdepth: string) {
     const text = bitdepth === "8" ? "8 Bit" : bitdepth === "10" ? "10 Bit" : "";
-    return (
+    return text ? (
       <div class="px-2 py-1 text-xs text-white bg-blue-500 rounded">{text}</div>
-    );
+    ) : null;
   }
 
   function getQualityBadge(height: number) {
@@ -169,9 +173,9 @@ export function SourcePanel({
         text = "HD";
         break;
     }
-    return (
-      <div class="px-2 py-1 text-xs text-white bg-lime-300 rounded">{text}</div>
-    );
+    return text ? (
+      <div class="px-2 py-1 text-xs text-white bg-blue-500 rounded">{text}</div>
+    ) : null;
   }
 
   function getQualityBadgeFromString(quality: string) {
@@ -187,11 +191,11 @@ export function SourcePanel({
         text = "HD";
         break;
     }
-    return (
+    return text ? (
       <div class="absolute right-4 bottom-4 px-2 py-1 text-xs text-white bg-lime-300 rounded">
         {text}
       </div>
-    );
+    ) : null;
   }
 
   function SkeletonLoader() {
