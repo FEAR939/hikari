@@ -31,12 +31,15 @@ export function Episode({
       class="relative h-fit w-full shadow-lg overflow-hidden cursor-pointer"
       onclick={() => sourcepanel_callback(episode.attributes.number)}
     >
-      <div class="relative w-full bg-neutral-800 aspect-video rounded-lg overflow-hidden">
-        {episode.attributes.thumbnail?.original && (
+      <div class="relative w-full bg-neutral-800 aspect-video rounded-lg overflow-hidden flex items-center justify-center">
+        {episode.attributes.thumbnail?.original ? (
           <img
             src={episode.attributes.thumbnail.original}
             class="w-full aspect-video object-cover rounded-lg"
+            alt="No thumbnail available"
           />
+        ) : (
+          <div class="text-neutral-300">No thumbnail available</div>
         )}
         <div class="absolute bottom-2 right-2 px-2 py-1 text-xs text-neutral-300 bg-neutral-950/50 backdrop-blur-sm rounded">
           {episode.attributes.length || "N/A"} Min
@@ -57,7 +60,7 @@ export function Episode({
           {episode.attributes.description || "No description available"}
         </div>
         <div class="text-xs font-medium m-0 text-neutral-500 lg:max-3xl:text-sm 4xl:text-md">
-          {getRelativeTime(episode.attributes.airdate) || "Unknown"}
+          {getRelativeTime(episode.attributes.airdate) || "Unknown airdate"}
         </div>
       </div>
     </div>
