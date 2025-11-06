@@ -121,32 +121,10 @@ export function Card(
           if (e.origin !== "https://www.youtube-nocookie.com") return;
 
           clearInterval(timeout);
-
-          const json = JSON.parse(e.data);
-
-          if (json.event === "onReady") {
-            console.log("YouTube player ready!");
-            // Player is ready, Error 153 should be gone
-          }
-
-          if (
-            json.event === "initialDelivery" &&
-            !json.info.videoData.isPlayable
-          ) {
-            console.log("Video not playable");
-          }
         }
 
         // Add message listener
         window.addEventListener("message", handleYouTubeMessage);
-
-        // Cleanup
-        function cleanup() {
-          clearInterval(timeout);
-          window.removeEventListener("message", handleYouTubeMessage);
-        }
-
-        console.log(item.attributes.youtubeVideoId);
 
         const expandedCard = (
           <div
