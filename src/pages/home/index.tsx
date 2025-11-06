@@ -29,7 +29,13 @@ export default async function Home(query) {
             ></Carousel>
             {value.map((categorie) => {
               const entries = categorie.data.map((item) => {
-                return <Card item={item} className="snap-start" />;
+                return (
+                  <Card
+                    item={item}
+                    className="snap-start"
+                    options={{ label: true }}
+                  />
+                );
               });
 
               return (
