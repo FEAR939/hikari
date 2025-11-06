@@ -277,6 +277,10 @@ export default async function Anime(query: AnimeQuery) {
       initialIndex: value - 1,
     });
     page.appendChild(sourcePanel);
+    sourcePanel.offsetWidth;
+    sourcePanel.classList.remove("opacity-0");
+    sourcePanel.getPanel().offsetWidth;
+    sourcePanel.getPanel().classList.remove("scale-75");
   });
 
   router.container!.appendChild(page);

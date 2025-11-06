@@ -516,9 +516,14 @@ export function SourcePanel({
     localStorage.setItem("autoSelect", String(autoSelect()));
   });
 
+  let panel: HTMLDivElement;
+
   const container = (
-    <div class="fixed inset-0 p-4 pt-12 flex items-center justify-center backdrop-brightness-50 backdrop-blur-md">
-      <div class="relative w-full max-w-1/2 3xl:max-w-7xl h-full p-4 pt-8 3xl:pt-32 space-y-4 overflow-y-scroll bg-[#080808] rounded-xl">
+    <div class="fixed inset-0 p-4 pt-12 flex items-center justify-center backdrop-brightness-50 backdrop-blur-md transition-all duration-150 ease-in-out opacity-0">
+      <div
+        class="relative w-full max-w-1/2 3xl:max-w-7xl h-full p-4 pt-8 3xl:pt-32 space-y-4 overflow-y-scroll bg-[#080808] rounded-xl transition-all duration-150 ease-in-out scale-75"
+        ref={(el: HTMLDivElement) => (panel = el)}
+      >
         {/* Close Button */}
         <div
           class="absolute z-10 top-2 right-4 size-8 flex items-center justify-center cursor-pointer"
@@ -687,6 +692,8 @@ export function SourcePanel({
       </div>
     </div>
   ) as HTMLDivElement;
+
+  container.getPanel = () => panel;
 
   return container;
 }
