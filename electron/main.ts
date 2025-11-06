@@ -4,7 +4,7 @@ const { autoUpdater } = electronUpdater;
 import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
-import extensionManager from "./services/extensionManager.ts";
+import extensionManager from "./services/extension.manager/index.js";
 import * as ffprobe from "ffprobe-static";
 import childProcess from "child_process";
 import { promisify } from "util";
@@ -52,9 +52,13 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: true,
-      preload: path.join(dirname, "preload.ts"),
+      allowRunningInsecureContent: true,
+      preload: path.join(dirname, "preload.js"),
     },
   });
+
+  !app.isPackaged ? win.webContents.openDevTools() : null;
+  console.log(path.join(dirname, "preload.js"));
 
   win.loadFile(path.join(dirname, "../dist/index.html"));
 
@@ -243,12 +247,33 @@ function createWindow() {
   });
 
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
+    const url = new URL(details.url);
+
     if (details.url.startsWith("https://graphql.anilist.co")) {
       details.requestHeaders.Referer = "https://anilist.co/";
       details.requestHeaders.Origin = "https://anilist.co";
       delete details.requestHeaders["User-Agent"];
+    } else if (
+      !details.requestHeaders["Referer"] ||
+      details.url.startsWith("https://hikari.app")
+    ) {
+      details.requestHeaders.Referer = "https://hikari.app/";
+      details.requestHeaders.Origin = "https://hikari.app";
     }
+
     callback({ cancel: false, requestHeaders: details.requestHeaders });
+  });
+
+  win.webContents.on("frame-created", (_, { frame }) => {
+    frame?.once("dom-ready", () => {
+      if (frame.url.startsWith("https://www.youtube-nocookie.com")) {
+        frame.executeJavaScript(/* js */ `
+              new MutationObserver(() => {
+                if (document.querySelector('div.ytp-error-content-wrap-subreason a[href*="www.youtube"]')) location.reload()
+              }).observe(document.body, { childList: true, subtree: true })
+            `);
+      }
+    });
   });
 
   // anilist.... forgot to set the cache header on their preflights..... pathetic.... this just wastes rate limits, this fixes it!
