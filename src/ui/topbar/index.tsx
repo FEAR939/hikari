@@ -3,7 +3,7 @@ import { router } from "../../lib/router/index";
 import { AccountAvatar } from "../accountAvatar/index";
 import { accountMenu } from "../accountMenu/index";
 import { createSignal, bind } from "../../lib/jsx/reactive";
-import { Tooltip } from "../tooltip";
+import { Tooltip } from "../Tooltip";
 
 export function TopBar() {
   const [hasUpdate, setHasUpdate, subscribeUpdate] = createSignal(false);
