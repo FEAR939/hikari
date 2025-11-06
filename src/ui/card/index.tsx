@@ -4,6 +4,7 @@ import { cn } from "../../lib/util";
 import { createSignal, bind } from "../../lib/jsx/reactive";
 import { authService } from "../../services/auth";
 import { API } from "../../app";
+import { KitsuAnime } from "../../lib/kitsu";
 
 interface CardOptions {
   label?: boolean;
@@ -23,14 +24,14 @@ export enum CardSize {
 
 export function Card(
   {
-    item,
+    item = {},
     className = "",
     options = {},
   }: {
     item: any;
     className?: string;
     options?: CardOptions;
-  } = { item: null, className: "", options: {} },
+  } = { item: {}, className: "", options: {} },
 ) {
   if (!options.size) options.size = CardSize.MANUAL;
   if (!options.type) options.type = CardType.DEFAULT;
@@ -78,13 +79,13 @@ export function Card(
 
         const rect = cardRef.getBoundingClientRect();
         const left = rect.left + rect.width / 2 - 72 * 2;
-        const top = rect.top + rect.height / 2 - 72 * 2;
+        const top = rect.top + rect.height / 2 - 88 * 2;
 
         const minLeft = 8 * 8 + 8;
         const minTop = 8;
 
         const maxLeft = window.innerWidth - 72 * 4 - 8;
-        const maxTop = window.innerHeight - 72 * 4 - 8;
+        const maxTop = window.innerHeight - 88 * 4 - 8;
 
         const finalLeft = Math.min(Math.max(left, minLeft), maxLeft);
         const finalTop = Math.min(Math.max(top, minTop), maxTop);
@@ -98,30 +99,92 @@ export function Card(
           })();
         }
 
+        let frame;
+        let timeout;
+
+        function initFrame() {
+          // Send listening event repeatedly until YouTube responds
+          timeout = setInterval(() => {
+            frame.contentWindow?.postMessage(
+              '{"event":"listening","id":1,"channel":"widget"}',
+              "*",
+            );
+          }, 100);
+
+          frame.contentWindow?.postMessage(
+            '{"event":"listening","id":1,"channel":"widget"}',
+            "*",
+          );
+        }
+
+        function handleYouTubeMessage(e) {
+          if (e.origin !== "https://www.youtube-nocookie.com") return;
+
+          clearInterval(timeout);
+
+          const json = JSON.parse(e.data);
+
+          if (json.event === "onReady") {
+            console.log("YouTube player ready!");
+            // Player is ready, Error 153 should be gone
+          }
+
+          if (
+            json.event === "initialDelivery" &&
+            !json.info.videoData.isPlayable
+          ) {
+            console.log("Video not playable");
+          }
+        }
+
+        // Add message listener
+        window.addEventListener("message", handleYouTubeMessage);
+
+        // Cleanup
+        function cleanup() {
+          clearInterval(timeout);
+          window.removeEventListener("message", handleYouTubeMessage);
+        }
+
+        console.log(item.attributes.youtubeVideoId);
+
         const expandedCard = (
           <div
-            class="fixed z-50 h-72 w-72 bg-neutral-950 rounded-lg shadow-2xl space-y-2 cursor-default transition-all ease-in-out duration-150 opacity-0 scale-75"
+            class="fixed z-50 h-88 w-72 bg-neutral-950 rounded-lg shadow-2xl space-y-2 cursor-default transition-all ease-in-out duration-150 opacity-0 scale-75"
             style={`top: ${finalTop}px; left: ${finalLeft}px;`}
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
             }}
           >
             {/* Expanded content */}
-            <img
+            {/*<img
               src={
                 item.attributes.coverImage?.original ||
                 item.attributes.posterImage?.original
               }
               class="w-full aspect-[2.5/1] object-cover rounded-t-lg mask-b-to-95% mask-y-neutral-950"
               loading="lazy"
-            />
-            <div class="text-neutral-300 line-clamp-2 text-sm px-4">
+            />*/}
+            <div class="w-full aspect-video relative">
+              <div class="w-full h-full overflow-clip rounded-t-lg mask-b-to-95% mask-y-neutral-950 absolute top-0">
+                <iframe
+                  class="w-full border-0 left-0 h-[calc(100%+200px)] pointer-events-none absolute top-1/2 transform-gpu -translate-y-1/2"
+                  title="trailer"
+                  allow="autoplay"
+                  allowfullscreen
+                  ref={(el: HTMLIFrameElement) => (frame = el)}
+                  onLoad={initFrame}
+                  src={`https://www.youtube-nocookie.com/embed/${item.attributes.youtubeVideoId}?autoplay=1&controls=0&mute=1&disablekb=1&loop=1&playlist=${item.attributes.youtubeVideoId}&cc_lang_pref=ja`}
+                ></iframe>
+              </div>
+            </div>
+            <div class="text-neutral-100 truncate text-lg px-4">
               {item.attributes.titles.en ||
                 item.attributes.titles.en_us ||
                 item.attributes.titles.en_cn ||
                 item.attributes.titles.en_jp}
             </div>
-            <div class="flex h-6 space-x-2 px-4">
+            <div class="flex h-7 space-x-2 px-4">
               <div
                 class="w-full h-full bg-neutral-200 hover:bg-neutral-400 rounded text-black text-xs flex items-center justify-center space-x-1 cursor-pointer transition-colors duration-150"
                 onclick={() => router.navigate(`/anime?id=${item.id}`)}
@@ -143,7 +206,7 @@ export function Card(
                 <div class="h-2.75 leading-none">Watch Now</div>
               </div>
               <div
-                class="size-6 bg-neutral-800 rounded flex items-center justify-center cursor-pointer"
+                class="size-7 bg-neutral-800 rounded flex items-center justify-center cursor-pointer"
                 onClick={async () => {
                   const result = await API.setBookmark(
                     parseInt(item.id),
