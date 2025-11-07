@@ -51,7 +51,7 @@
     "files": [
       "dist/**/*",
       "node_modules/**/*",
-      "electron/**/*"
+      "electron-dist/**/*"
     ],
     "win": {
       "icon": "public/icons/icon.png"
