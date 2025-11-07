@@ -16,7 +16,7 @@ export default async function Home(query) {
   >([]);
 
   const page = (
-    <div class="h-full w-full space-y-4 overflow-y-scroll">
+    <div class="h-full w-full space-y-4 overflow-y-scroll transform-gpu">
       {bind([categories, setCategories, subscribeCategories], (value) =>
         value.length > 0 ? (
           <div>
