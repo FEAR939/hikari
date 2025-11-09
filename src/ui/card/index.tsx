@@ -56,11 +56,14 @@ export function Card(
         setHovered(false);
       }}
     >
-      <img
-        src={item.attributes.posterImage.original}
-        class="w-full aspect-5/7 object-cover rounded-lg"
-        loading="lazy"
-      />
+      <div class="w-full aspect-3/4 transform-gpu">
+        <img
+          src={item.attributes.posterImage.medium}
+          class="block h-full w-full object-cover rounded-lg "
+          alt="Cover"
+          loading="lazy"
+        />
+      </div>
       {options.label && (
         <div class="text-sm mt-2 font-medium space-y-1">
           <div class="text-white line-clamp-2">
