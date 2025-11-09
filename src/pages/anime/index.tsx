@@ -6,6 +6,7 @@ import { SourcePanel } from "../../ui/sourcePanel/index";
 import { Card, CardType } from "../../ui/card";
 import { API } from "../../app";
 import { EpisodeView } from "../../ui/episodeView";
+import ThreadView from "@ui/threadView";
 import { kitsu } from "../../lib/kitsu";
 
 interface AnimeQuery {
@@ -68,7 +69,7 @@ export default async function Anime(query: AnimeQuery) {
     },
     {
       label: "Threads",
-      handler: () => {},
+      handler: () => <ThreadView></ThreadView>,
     },
   ];
 
@@ -242,12 +243,12 @@ export default async function Anime(query: AnimeQuery) {
       )}
 
       {/* Tab Section */}
-      <div class="w-full h-fit space-y-4 mt-12">
-        <div class="flex justify-center w-fit">
-          {tabs.map((tab, index) => {
+      <div class="w-full h-fit space-y-4 mt-12 shrink-0">
+        <div class="flex w-full">
+          {tabs.map((tab, index) =>
             bind([currTab, setCurrTab, subscribeCurrTab], (value) => (
               <div
-                class={`px-4 py-2 rounded-md text-sm cursor-pointer ${value === index ? "bg-neutral-900 text-white" : "text-neutral-500"}`}
+                class={`px-6 py-2 rounded-lg text-sm cursor-pointer ${value === index ? "bg-neutral-900 text-white" : "text-neutral-500"}`}
                 onClick={() => {
                   setCurrTab(index);
 
@@ -256,8 +257,8 @@ export default async function Anime(query: AnimeQuery) {
               >
                 {tab.label}
               </div>
-            ));
-          })}
+            )),
+          )}
         </div>
         {bind([currTab, setCurrTab, subscribeCurrTab], (value) => (
           <div class="w-full h-fit">{tabs[currTab()].handler()}</div>
