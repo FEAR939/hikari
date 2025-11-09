@@ -8,6 +8,7 @@ import extensionManager from "./services/extension.manager/index.js";
 import * as ffprobe from "ffprobe-static";
 import childProcess from "child_process";
 import { promisify } from "util";
+import sharp from "sharp";
 
 protocol.registerSchemesAsPrivileged([
   {
@@ -60,9 +61,7 @@ function createWindow() {
   !app.isPackaged ? win.webContents.openDevTools() : null;
   console.log(path.join(dirname, "preload.js"));
 
-  !app.isPackaged
-    ? win.loadURL("http://localhost:5173")
-    : win.loadFile(path.join(dirname, "../dist/index.html"));
+  win.loadFile(path.join(dirname, "../dist/index.html"));
 
   ipcMain.on("minimize", () => {
     win.minimize();
