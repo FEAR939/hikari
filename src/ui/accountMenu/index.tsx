@@ -10,8 +10,8 @@ export function accountMenu() {
     email: string;
   }>(null);
   const menu = (
-    <div class="absolute z-5 top-8 right-0 translate-x-1/2 h-fit w-64 p-1 opacity-0 hidden bg-neutral-900 backdrop-blur-md rounded-lg ring-1 ring-neutral-700/50 shadow-lg space-y-1 scale-75 transition-all ease-in-out duration-150">
-      <div class="flex space-x-2 p-1 pb-2 mb-2 items-center border-b border-neutral-700/50">
+    <div class="absolute z-5 top-8 right-0 translate-x-1/2 h-fit w-64 p-1 opacity-0 hidden bg-neutral-900 backdrop-blur-md rounded-lg ring-1 ring-neutral-800 shadow-lg space-y-1 scale-75 transition-all ease-in-out duration-150">
+      <div class="flex space-x-2 p-1 pb-2 mb-2 items-center border-b border-neutral-800">
         <AccountAvatar />
         {bind([user, setUser, subscribeUser], (value) => (
           <div class="h-8 flex flex-col justify-around">
@@ -25,7 +25,7 @@ export function accountMenu() {
         ))}
       </div>
       <div
-        class="w-full px-3 py-2 rounded-md text-sm text-[#e0e0e0] flex items-center space-x-2 cursor-pointer hover:bg-[#2d2d2d] transition-all duration-100"
+        class="w-full px-3 py-2 rounded-md text-sm text-neutral-500 flex items-center space-x-2 cursor-pointer hover:bg-[#2d2d2d] hover:text-neutral-300 transition-all duration-100"
         onclick={() => {
           router.navigate("/settings");
           menu.toggleVisibility();
@@ -49,7 +49,7 @@ export function accountMenu() {
         <span class="leading-none">Settings</span>
       </div>
       <div
-        class="w-full px-3 py-2 rounded-md text-sm text-[#e0e0e0] flex items-center space-x-2 cursor-pointer hover:bg-[#2d2d2d] transition-all duration-100"
+        class="w-full px-3 py-2 rounded-md text-sm text-neutral-500 flex items-center space-x-2 cursor-pointer hover:bg-[#2d2d2d] hover:text-neutral-300 transition-all duration-100"
         onclick={() => {
           menu.toggleVisibility();
           if (user() === null) return router.navigate("/auth");
