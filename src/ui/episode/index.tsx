@@ -35,7 +35,7 @@ export function Episode({
         {episode.attributes.thumbnail?.original ? (
           <img
             src={episode.attributes.thumbnail.original}
-            class="w-full aspect-video object-cover rounded-lg"
+            class="block w-full aspect-video object-cover rounded-lg"
             alt="No thumbnail available"
           />
         ) : (
