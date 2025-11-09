@@ -68,7 +68,7 @@ export default async function Anime(query: AnimeQuery) {
       default: true,
     },
     {
-      label: "Threads",
+      label: "Thread",
       handler: () => <ThreadView></ThreadView>,
     },
   ];
