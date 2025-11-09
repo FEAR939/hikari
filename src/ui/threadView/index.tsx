@@ -7,27 +7,36 @@ export default function ThreadView() {
   return (
     <div className="h-fit w-full">
       <div class="w-full p-4 h-fit bg-neutral-950 border border-neutral-800 rounded-lg">
-        {!authService.getUser() ? (
-          <div class="flex items-center space-x-2">
-            <AccountAvatar className="size-10" />
-            <div class="w-full"></div>
-            <div class="size-10 rounded-full bg-neutral-500 text-black flex items-center justify-center">
-              <svg
-                width="100%"
-                height="100%"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                class="size-5"
-              >
-                <path
-                  d="M12 19V5M12 5L5 12M12 5L19 12"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
+        {authService.getUser() ? (
+          <div>
+            <div class="h-24 w-full p-2">
+              <textarea
+                class="resize-none h-full w-full border-none outline-none text-sm text-neutral-300 placeholder:text-neutral-500"
+                placeholder="Share you thoughts!"
+                rows="2"
+              ></textarea>
+            </div>
+            <div class="flex items-center space-x-2">
+              <AccountAvatar className="size-10" />
+              <div class="w-full"></div>
+              <div class="size-10 rounded-full bg-neutral-500 text-black flex items-center justify-center">
+                <svg
+                  width="100%"
+                  height="100%"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="size-5"
+                >
+                  <path
+                    d="M12 19V5M12 5L5 12M12 5L19 12"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
             </div>
           </div>
         ) : (
