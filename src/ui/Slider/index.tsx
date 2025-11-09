@@ -93,7 +93,7 @@ export default function CategorySlider({
       {/* Previous Button */}
       <div
         ref={(el) => (prevButton = el as HTMLDivElement)}
-        class="absolute left-5 top-1/2 -translate-y-1/2 h-12 w-12 flex items-center justify-center bg-neutral-800/80 backdrop-blur-md rounded-full cursor-pointer opacity-0 group-hover:opacity-100 hover:bg-neutral-700/80 transition-all duration-300 z-10"
+        class="absolute left-0 top-0 bottom-0 h-full w-16 bg-linear-to-r from-black to-transparent flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all duration-300 z-10"
         style="display: none;"
         onClick={handlePrev}
       >
@@ -116,7 +116,7 @@ export default function CategorySlider({
       {/* Next Button */}
       <div
         ref={(el) => (nextButton = el as HTMLDivElement)}
-        class="absolute right-5 top-1/2 -translate-y-1/2 h-12 w-12 flex items-center justify-center bg-neutral-800/80 backdrop-blur-md rounded-full cursor-pointer opacity-0 group-hover:opacity-100 hover:bg-neutral-700/80 transition-all duration-300 z-10"
+        class="absolute right-0 top-0 bottom-0 h-full w-16 bg-linear-to-l from-black to-transparent flex items-center justify-center rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-all duration-300 z-10"
         onClick={handleNext}
       >
         <svg
