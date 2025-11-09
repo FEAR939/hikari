@@ -12,6 +12,11 @@
     "noEmit": true,
     "jsx": "react",
     "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment"
+    "jsxFragmentFactory": "Fragment",
+    "paths": {
+      "@lib/*": ["./src/lib/*"],
+      "@ui/*": ["./src/ui/*"],
+      "@service/*": ["./src/services/*"]
+    }
   }
 }
