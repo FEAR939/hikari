@@ -51,7 +51,9 @@ export default async function Files(query) {
               </div>
             ))
           ) : (
-            <div>No Anime found</div>
+            <div class="w-full p-2 flex items-center justify-center">
+              No Anime found
+            </div>
           )}
         </div>
       ))}
