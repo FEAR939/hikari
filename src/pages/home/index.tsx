@@ -16,14 +16,14 @@ export default async function Home(query) {
   >([]);
 
   const page = (
-    <div class="h-full w-full space-y-4 overflow-y-scroll">
+    <div class="h-full w-full overflow-y-scroll">
       {bind([categories, setCategories, subscribeCategories], (value) =>
         value.length > 0 ? (
-          <div>
+          <div class="space-y-4">
             <Carousel
               items={
                 value
-                  .find((category) => category.type === "seasonal")
+                  .find((category) => category.type === "upcoming")
                   ?.data.slice(0, 5) ?? []
               }
             ></Carousel>
@@ -103,6 +103,14 @@ export default async function Home(query) {
 
   const categoriesdefault = await kitsu.getCategories(
     [
+      {
+        type: "upcoming",
+        title: "Top Upcoming",
+      },
+      {
+        type: "highest_rated",
+        title: "Highest Rated",
+      },
       {
         type: "seasonal",
         title: "Popular this season",
