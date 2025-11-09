@@ -16,7 +16,7 @@
     "paths": {
       "@lib/*": ["./src/lib/*"],
       "@ui/*": ["./src/ui/*"],
-      "@service/*": ["./src/services/*"]
+      "@services/*": ["./src/services/*"]
     }
   }
 }
