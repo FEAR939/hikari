@@ -1,39 +1,64 @@
 import { h } from "@lib/jsx/runtime";
+import { router } from "@lib/router";
+import { authService } from "@services/auth";
 import { AccountAvatar } from "@ui/accountAvatar";
 
 export default function ThreadView() {
   return (
     <div className="h-fit w-full">
       <div class="w-full p-4 h-fit bg-neutral-950 border border-neutral-800 rounded-lg">
-        <div class="h-24 w-full p-2">
-          <textarea
-            class="resize-none h-full w-full border-none outline-none text-sm text-neutral-300 placeholder:text-neutral-500"
-            placeholder="Share you thoughts!"
-            rows="2"
-          ></textarea>
-        </div>
-        <div class="w-full h-12 flex items-center">
-          <AccountAvatar className="size-10" />
-          <div class="w-full"></div>
-          <div class="size-10 rounded-full bg-neutral-500 text-black flex items-center justify-center">
-            <svg
-              width="100%"
-              height="100%"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              class="size-5"
+        {!authService.getUser() ? (
+          <div class="flex items-center space-x-2">
+            <AccountAvatar className="size-10" />
+            <div class="w-full"></div>
+            <div class="size-10 rounded-full bg-neutral-500 text-black flex items-center justify-center">
+              <svg
+                width="100%"
+                height="100%"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="size-5"
+              >
+                <path
+                  d="M12 19V5M12 5L5 12M12 5L19 12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+        ) : (
+          <div class="flex flex-col items-center justify-center">
+            <span class="text-neutral-500">
+              You need to be logged in to participate in this thread.
+            </span>
+            <div
+              class="flex space-x-1 hover:underline cursor-pointer"
+              onClick={() => router.navigate("/auth")}
             >
-              <path
-                d="M12 19V5M12 5L5 12M12 5L19 12"
+              <span>Sign in here</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
                 stroke="currentColor"
                 stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-              />
-            </svg>
+                class="lucide lucide-square-arrow-out-up-right-icon lucide-square-arrow-out-up-right size-4"
+              >
+                <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
+                <path d="m21 3-9 9" />
+                <path d="M15 3h6v6" />
+              </svg>
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <div class="h-full p-8 flex items-center justify-center space-x-4">
         <svg
