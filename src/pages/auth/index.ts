@@ -16,7 +16,7 @@ export default async function Auth(query) {
   page.className =
     "relative h-full w-full p-4 flex flex-col items-center justify-center space-y-8";
 
-  router.container.appendChild(page);
+  router.container!.appendChild(page);
 
   const pageback = document.createElement("div");
   pageback.className =
@@ -429,7 +429,7 @@ export default async function Auth(query) {
         switchbutton.style.display = "flex";
         switchbutton.innerHTML = `
           <div class="text-neutral-500 w-fit">Already have an account?</div>
-          <div class="text-neutral-200 flex items-center gap-1">
+          <div class="text-neutral-200 flex gap-1 hover:underline">
             Sign In
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-arrow-out-up-right-icon lucide-square-arrow-out-up-right size-4"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/><path d="m21 3-9 9"/><path d="M15 3h6v6"/></svg>
           </div>
@@ -445,7 +445,7 @@ export default async function Auth(query) {
         switchbutton.style.display = "flex";
         switchbutton.innerHTML = `
           <div class="text-neutral-500 w-fit">Don't have an account yet?</div>
-          <span class="text-neutral-200 flex items-center gap-1">
+          <span class="text-neutral-200 flex gap-1 hover:underline">
             Sign Up
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-arrow-out-up-right-icon lucide-square-arrow-out-up-right size-4"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/><path d="m21 3-9 9"/><path d="M15 3h6v6"/></svg>
           </span>
