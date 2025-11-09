@@ -160,7 +160,7 @@ interface KitsuResponse<T> {
   };
 }
 
-type CategoryType = "trending" | "seasonal";
+type CategoryType = "trending" | "seasonal" | "upcoming" | "highest_rated";
 
 interface CategoryRequest {
   type: CategoryType;
@@ -175,7 +175,7 @@ interface CategoryResult {
 }
 
 export class KitsuClient {
-  private baseUrl = "https://kitsu.io/api/edge";
+  private baseUrl = "https://kitsu.app/api/edge";
   private headers: HeadersInit;
 
   constructor() {
@@ -217,12 +217,18 @@ export class KitsuClient {
 
     switch (category) {
       case "trending":
-        url = `${this.baseUrl}/trending/anime?filter[subtype]=TV,ONA,OVA,special,movie&limit=${limit}`;
+        url = `${this.baseUrl}/trending/anime?limit=${limit}`;
         break;
       case "seasonal":
         const season = this.getCurrentSeason();
         const year = new Date().getFullYear();
-        url = `${this.baseUrl}/anime?filter[season]=${season}&filter[seasonYear]=${year}&filter[subtype]=TV,ONA,OVA,special,movie&sort=averageRating&page[limit]=${limit}`;
+        url = `${this.baseUrl}/anime?filter[status]=current&page[limit]=${limit}&sort=-user_count`;
+        break;
+      case "upcoming":
+        url = `${this.baseUrl}/anime?filter[status]=upcoming&page[limit]=${limit}&sort=-user_count`;
+        break;
+      case "highest_rated":
+        url = `${this.baseUrl}/anime?page[limit]=${limit}&sort=-average_rating`;
         break;
       default:
         throw new Error(`Unknown category: ${category}`);
