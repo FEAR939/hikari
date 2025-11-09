@@ -73,9 +73,7 @@ async function episodeHandler(anime: KitsuAnime, page: number) {
 
   router.route("/anime/updateEpisodeProgress", (query: any) => {
     if (query.kitsu_id !== anime.id) return;
-    episodes.find(
-      (episode) => episode.attributes.number === parseInt(query.episode),
-    )!.leftoff = query.leftoff;
+
     const episodeTarget = visibleEpisodes().find(
       (episode) => episode.attributes.number === parseInt(query.episode),
     );
