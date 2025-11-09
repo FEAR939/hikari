@@ -99,7 +99,7 @@ export default async function Anime(query: AnimeQuery) {
           <div class="w-24 md:w-56 h-fit shrink-0 space-y-3 md:space-y-6">
             <img
               src={kitsuAnime.anime.attributes?.posterImage?.original}
-              class="w-full aspect-[5/7] object-cover rounded-md"
+              class="w-full aspect-3/4 object-fill rounded-md"
             />
           </div>
 
@@ -122,7 +122,7 @@ export default async function Anime(query: AnimeQuery) {
             </div>
 
             {/* Description */}
-            <div class="w-full text-sm text-neutral-500 line-clamp-3">
+            <div class="w-full text-base text-neutral-500 line-clamp-5">
               {kitsuAnime.anime.attributes.description}
             </div>
           </div>
