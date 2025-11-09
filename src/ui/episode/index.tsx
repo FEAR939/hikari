@@ -54,7 +54,7 @@ export function Episode({
       </div>
       <div class="relative h-fit w-full space-y-1 md:space-y-2 overflow-hidden py-2">
         <div class="text-sm font-medium truncate lg:text-lg">
-          {`E${episode.attributes.number} | ${episode.attributes.titles.en || episode.attributes.titles.en_us || episode.attributes.titles.en_ja || episode.attributes.titles.en_cn || "No title available"}`}
+          {`E${episode.attributes.number} | ${episode.attributes.titles.en || episode.attributes.titles.en_us || episode.attributes.titles.en_jp || episode.attributes.titles.en_cn || "No title available"}`}
         </div>
         <div class="text-xs font-medium text-neutral-500 line-clamp-2 lg:max-3xl:text-sm 4xl:text-md">
           {episode.attributes.description || "No description available"}
