@@ -46,7 +46,7 @@ let apiBaseUrl =
     ? localStorage.getItem("app_server_adress")!
     : "https://hikari.animenetwork.org";
 
-console.log("API Base URL: ", apiBaseUrl);
+console.debug("API Base URL: ", apiBaseUrl);
 
 let api = new Client(apiBaseUrl);
 
