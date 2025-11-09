@@ -8,7 +8,6 @@ import extensionManager from "./services/extension.manager/index.js";
 import * as ffprobe from "ffprobe-static";
 import childProcess from "child_process";
 import { promisify } from "util";
-import sharp from "sharp";
 
 protocol.registerSchemesAsPrivileged([
   {
