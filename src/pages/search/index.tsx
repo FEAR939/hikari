@@ -10,7 +10,7 @@ export default async function Search(query) {
   let isSearching = false;
 
   const page = (
-    <div class="relative h-full w-full p-4 pt-12 space-y-4 overflow-y-scroll">
+    <div class="relative h-full w-full p-4 pt-12 space-y-4">
       <div class="rounded-lg border border-neutral-700/50 bg-neutral-950 h-10 w-64 px-3 flex items-center overflow-hidden">
         <div class="h-full flex items-center shrink-0 text-neutral-700">
           <svg
@@ -46,12 +46,19 @@ export default async function Search(query) {
         ></input>
       </div>
       {bind([results, setResults, subscribeResults], (value) => (
-        <div class="relative h-fit w-full grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-2">
+        <div class="relative h-full w-full grid grid-cols-[repeat(auto-fill,minmax(12rem,1fr))] gap-2 overflow-y-scroll">
           {(() => {
             if (value.length === 0 && !isSearching) {
               return (
-                <div class="col-span-full mt-12 flex items-center justify-center">
-                  No results found
+                <div class="h-full col-span-full flex items-center justify-center">
+                  <div class="w-full py-8 flex flex-col items-center justify-center space-y-1">
+                    <div class="text-3xl">😕</div>
+                    <div class="text-lg">No results found</div>
+                    <div class="text-neutral-500 text-xs">
+                      Try adjusting your search to find what you are looking
+                      for.
+                    </div>
+                  </div>
                 </div>
               );
             }
