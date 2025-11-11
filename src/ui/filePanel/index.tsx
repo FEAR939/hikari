@@ -151,8 +151,12 @@ export default async function FilePanel(path: string) {
                     </div>
                   ))
                 ) : (
-                  <div class="w-full p-2 flex items-center justify-center">
-                    No Episodes found
+                  <div class="w-full py-8 flex flex-col items-center justify-center space-y-1">
+                    <div class="text-3xl">😕</div>
+                    <div class="text-lg">No Episodes found</div>
+                    <div class="text-neutral-500 text-xs">
+                      Try adding episodes, they will be listed here afterwards.
+                    </div>
                   </div>
                 )}
               </div>

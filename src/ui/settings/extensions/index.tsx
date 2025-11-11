@@ -156,7 +156,13 @@ export default function ExtensionSettings() {
               );
             })
           ) : (
-            <div>No extensions installed</div>
+            <div class="w-full py-8 flex flex-col items-center justify-center space-y-1">
+              <div class="text-3xl">😕</div>
+              <div class="text-lg">No Extensions found</div>
+              <div class="text-neutral-500 text-xs">
+                Try installing extensions, they will be listed here afterwards.
+              </div>
+            </div>
           )}
         </div>
       ))}

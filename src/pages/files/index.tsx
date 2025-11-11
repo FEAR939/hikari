@@ -62,8 +62,13 @@ export default async function Files(query) {
               </div>
             ))
           ) : (
-            <div class="w-full p-2 flex items-center justify-center">
-              No Anime found
+            <div class="w-full py-8 flex flex-col items-center justify-center space-y-1">
+              <div class="text-3xl">😕</div>
+              <div class="text-lg">No Anime found</div>
+              <div class="text-neutral-500 text-xs">
+                Try adding anime using the utility in the Sourcepanel, they will
+                be listed here afterwards.
+              </div>
             </div>
           )}
         </div>
