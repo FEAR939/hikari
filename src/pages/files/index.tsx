@@ -1,6 +1,7 @@
 import { h } from "../../lib/jsx/runtime";
 import { createSignal, bind } from "../../lib/jsx/reactive";
 import { router } from "../../lib/router";
+import FilePanel from "@ui/filePanel";
 
 export default async function Files(query) {
   const basePath = localStorage.getItem("app_local_media_path");
@@ -44,7 +45,17 @@ export default async function Files(query) {
           </div>
           {value.length > 0 ? (
             value.map((dir) => (
-              <div class="text-sm px-6 py-3 grid grid-cols-3 hover:bg-neutral-800 border-b border-neutral-900">
+              <div
+                class="text-sm px-6 py-3 grid grid-cols-3 hover:bg-neutral-800 border-b border-neutral-900 cursor-pointer"
+                onClick={async () => {
+                  const filePanel = await FilePanel(`${basePath}${dir}`);
+                  page.appendChild(filePanel);
+                  filePanel.offsetWidth;
+                  filePanel.classList.remove("opacity-0");
+                  filePanel.getPanel().offsetWidth;
+                  filePanel.getPanel().classList.remove("scale-75");
+                }}
+              >
                 <div>{dir}</div>
                 <EntryEpisodeCount basePath={basePath} dir={dir} />
                 <EntryDirSize basePath={basePath} dir={dir} />

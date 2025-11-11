@@ -65,4 +65,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     const size = await ipcRenderer.invoke("get-dir-size", path);
     return size;
   },
+  openFolder: (path: string) => {
+    ipcRenderer.send("open-dir", path);
+    return true;
+  },
 });

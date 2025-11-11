@@ -1,4 +1,12 @@
-import { app, BrowserWindow, ipcMain, session, protocol, net } from "electron";
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  session,
+  protocol,
+  net,
+  shell,
+} from "electron";
 import electronUpdater from "electron-updater";
 const { autoUpdater } = electronUpdater;
 import { fileURLToPath } from "url";
@@ -244,6 +252,10 @@ function createWindow() {
 
     const size = await dirSize(dirPath);
     return size;
+  });
+
+  ipcMain.on("open-dir", (event, dirPath) => {
+    shell.openPath(dirPath);
   });
 
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {

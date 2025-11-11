@@ -32,6 +32,7 @@ declare global {
       createLocalMediaDir: (path: string) => Promise<void>;
       getDir: (path: string) => Promise<string[]>;
       getDirSize: (path: string) => Promise<number>;
+      openFolder: (path: string) => void;
       getAppVersion: () => Promise<string>;
       loadExtensions: () => Promise<any>;
       installExtension: (url: string) => Promise<any>;
