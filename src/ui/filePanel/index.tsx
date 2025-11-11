@@ -23,7 +23,7 @@ export default async function FilePanel(path: string) {
   const container = (
     <div class="fixed inset-0 p-4 pt-12 flex items-center justify-center backdrop-brightness-50 backdrop-blur-md transition-all duration-150 ease-in-out opacity-0">
       <div
-        class="relative w-full max-w-1/2 3xl:max-w-7xl h-full p-4 pt-8 3xl:pt-32 space-y-4 overflow-y-scroll bg-[#080808] rounded-xl transition-all duration-150 ease-in-out scale-75"
+        class="relative w-full max-w-1/2 3xl:max-w-7xl h-full p-4 3xl:pt-32 space-y-4 overflow-y-scroll bg-[#080808] rounded-xl transition-all duration-150 ease-in-out scale-75"
         ref={(el: HTMLDivElement) => (panel = el)}
       >
         {/* Close button */}
@@ -49,6 +49,38 @@ export default async function FilePanel(path: string) {
             <path d="M18 6 6 18" />
             <path d="m6 6 12 12" />
           </svg>
+        </div>
+        {/* Path */}
+        <div class="w-full h-fit flex gap-1">
+          {path.split("/").map((part, index) => (
+            <div class="flex gap-1 items-center">
+              <span
+                class={`text-sm ${index !== path.split("/").length - 1 ? "text-neutral-400" : ""}`}
+              >
+                {part}
+              </span>
+              {index < path.split("/").length - 1 && (
+                <span className="text-neutral-500">
+                  <svg
+                    width="100%"
+                    height="100%"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="size-4"
+                  >
+                    <path
+                      d="M9 18L15 12L9 6"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              )}
+            </div>
+          ))}
         </div>
         {/* Episode files */}
         <div class="h-fit w-full space-y-2">
