@@ -563,7 +563,10 @@ export function SourcePanel({
 
         {/* Anime Name */}
         <div class="relative text-2xl font-semibold text-white">
-          {anime.attributes.titles.en_jp}
+          {anime.attributes.titles.en ||
+            anime.attributes.titles.en_us ||
+            anime.attributes.titles.en_jp ||
+            anime.attributes.titles.en_cn}
         </div>
 
         {/* Episode Picker */}
