@@ -27,7 +27,7 @@ export function accountMenu() {
       <div
         class="w-full px-3 py-2 rounded-md text-sm text-neutral-500 flex items-center space-x-2 cursor-pointer hover:bg-[#2d2d2d] hover:text-neutral-300 transition-all duration-100"
         onclick={() => {
-          router.navigate("/settings");
+          router.navigate("/settings", { intoContainer: false });
           menu.toggleVisibility();
         }}
       >

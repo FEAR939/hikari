@@ -25,7 +25,7 @@ export default function ExtensionSettings() {
     <div class="h-full w-full space-y-4">
       <div class="text-xl">Extension Settings</div>
       <div class="flex h-fit w-full space-x-2">
-        <div class="flex items-center space-x-2 px-4 h-10 w-full text-neutral-500 border border-[#1a1a1a] bg-[#080808] rounded-md">
+        <div class="flex items-center space-x-2 px-4 h-10 w-full text-neutral-500 border border-neutral-500 bg-neutral-800 rounded-md">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -102,7 +102,7 @@ export default function ExtensionSettings() {
               }
 
               return (
-                <div class="relative p-4 h-fit rounded-md bg-neutral-950 border border-neutral-800/50">
+                <div class="relative p-4 h-fit rounded-md bg-neutral-800">
                   <div class="flex items-center">
                     <img
                       src={`${extension.path}/icon.png`}

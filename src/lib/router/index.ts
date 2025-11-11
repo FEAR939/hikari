@@ -21,7 +21,7 @@ class Router {
     this.subscribers.push(callback);
   }
 
-  navigate(url: string) {
+  navigate(url: string, options?: { intoContainer?: boolean }) {
     if (!this.container) {
       throw new Error("Router container is not initialized");
     }
@@ -53,6 +53,13 @@ class Router {
         path == "/player" ||
         path == "/anime/updateEpisodeProgress" ||
         path == "/anime/episodes/sourcePanel"
+      ) {
+        return handler(query);
+      }
+      if (
+        options !== undefined &&
+        options.intoContainer !== undefined &&
+        !options.intoContainer
       ) {
         return handler(query);
       }
