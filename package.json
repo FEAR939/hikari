@@ -10,22 +10,22 @@
     "electron:build": "tsc -p tsconfig.electron.json && tsc -p tsconfig.preload.json"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.16",
+    "@tailwindcss/vite": "^4.1.17",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "electron-updater": "^6.6.2",
     "ffprobe-static": "^3.1.0",
-    "gql.tada": "^1.8.13",
+    "gql.tada": "^1.9.0",
     "jszip": "^3.10.1",
-    "rolldown-vite": "^7.2.0",
-    "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.16",
+    "rolldown-vite": "^7.2.5",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^4.1.17",
     "tsc": "^2.0.4",
     "urql": "^5.0.1"
   },
   "devDependencies": {
     "@types/bun": "latest",
-    "electron": "^39.1.0",
+    "electron": "^39.1.2",
     "electron-builder": "^26.0.12"
   },
   "peerDependencies": {
