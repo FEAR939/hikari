@@ -56,12 +56,13 @@ export function Card(
         setHovered(false);
       }}
     >
-      <div class="w-full aspect-3/4 transform-gpu">
+      <div class="w-full aspect-3/4">
         <img
           src={item.attributes.posterImage.medium}
           class="block h-full w-full object-cover rounded-lg [image-rendering:-webkit-optimize-contrast]"
           alt="Cover"
           loading="lazy"
+          decoding="async"
         />
       </div>
       {options.label && (
