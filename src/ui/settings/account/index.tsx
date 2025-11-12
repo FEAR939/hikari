@@ -66,8 +66,12 @@ export default function AccountSettings() {
                   </svg>
                 </div>
               </div>
-              <div class="w-20 text-xs text-neutral-500 hidden group-hover:block">
-                Aspect ratio of 1:1 is recommended. 5MB Max
+              <div
+                class="w-20 text-xs text-neutral-500 hidden group-hover:block wrap-break-word"
+                lang="en"
+              >
+                Aspect ratio of 1:1 is recom&shy;mended.
+                <p>Max file size is 5MB.</p>
               </div>
             </div>
             <div class="w-full h-full px-4 space-y-2">
