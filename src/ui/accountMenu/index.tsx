@@ -25,7 +25,7 @@ export function accountMenu() {
         ))}
       </div>
       <div
-        class="w-full px-3 py-2 rounded-md text-sm text-neutral-500 flex items-center space-x-2 cursor-pointer hover:bg-[#2d2d2d] hover:text-neutral-300 transition-all duration-100"
+        class="w-full px-3 py-2 rounded-md text-sm text-neutral-500 flex items-center space-x-2 cursor-pointer hover:bg-neutral-950/75 hover:text-neutral-300 transition-all duration-100"
         onclick={() => {
           router.navigate("/settings", { intoContainer: false });
           menu.toggleVisibility();
@@ -49,7 +49,7 @@ export function accountMenu() {
         <span class="leading-none">Settings</span>
       </div>
       <div
-        class="w-full px-3 py-2 rounded-md text-sm text-neutral-500 flex items-center space-x-2 cursor-pointer hover:bg-[#2d2d2d] hover:text-neutral-300 transition-all duration-100"
+        class="w-full px-3 py-2 rounded-md text-sm text-neutral-500 flex items-center space-x-2 cursor-pointer hover:bg-neutral-950/75 hover:text-neutral-300 transition-all duration-100"
         onclick={() => {
           menu.toggleVisibility();
           if (user() === null) return router.navigate("/auth");
