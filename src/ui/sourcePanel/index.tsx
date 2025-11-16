@@ -534,7 +534,7 @@ export function SourcePanel({
     createSignal(false);
 
   const container = (
-    <div class="fixed inset-0 p-4 pt-12 bg-black/50 flex items-center justify-center transition-all duration-150 ease-in-out opacity-0">
+    <div class="fixed inset-0 bg-black/50 flex items-center justify-center transition-all duration-150 ease-in-out opacity-0">
       <div
         class="relative max-w-full w-[70rem] aspect-video p-6 space-y-4 overflow-y-scroll bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl transition-all duration-150 ease-in-out scale-75"
         ref={(el: HTMLDivElement) => (panel = el)}
