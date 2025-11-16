@@ -123,7 +123,7 @@ export default async function Anime(query: AnimeQuery) {
             </div>
 
             {/* Description */}
-            <div class="w-full text-base text-neutral-500 line-clamp-5">
+            <div class="w-full text-base text-neutral-500 line-clamp-4">
               {kitsuAnime.anime.attributes.description}
             </div>
           </div>
