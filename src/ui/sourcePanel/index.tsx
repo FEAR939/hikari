@@ -117,8 +117,8 @@ export function SourcePanel({
   function getCodecBadge(codec: string, type: "audio" | "video") {
     const classes =
       type === "audio"
-        ? "px-2 py-1 text-xs text-white bg-red-400 rounded"
-        : "px-2 py-1 text-xs text-white bg-blue-400 rounded";
+        ? "px-2 py-1 w-fit text-xs bg-neutral-950/75 border border-white/10 text-red-400 rounded"
+        : "px-2 py-1 w-fit text-xs bg-neutral-950/75 border border-white/10 text-blue-400 rounded";
 
     let text = "";
     if (type === "audio") {
@@ -157,7 +157,9 @@ export function SourcePanel({
   function getBitDepthBadge(bitdepth: string) {
     const text = bitdepth === "8" ? "8 Bit" : bitdepth === "10" ? "10 Bit" : "";
     return text ? (
-      <div class="px-2 py-1 text-xs text-white bg-blue-500 rounded">{text}</div>
+      <div class="px-2 py-1 w-fit text-xs bg-neutral-950/75 border border-white/10 text-blue-400 rounded">
+        {text}
+      </div>
     ) : null;
   }
 
@@ -175,7 +177,9 @@ export function SourcePanel({
         break;
     }
     return text ? (
-      <div class="px-2 py-1 text-xs text-white bg-blue-500 rounded">{text}</div>
+      <div class="px-2 py-1 w-fit text-xs bg-neutral-950/75 border border-white/10 text-lime-400 rounded">
+        {text}
+      </div>
     ) : null;
   }
 
@@ -193,7 +197,7 @@ export function SourcePanel({
         break;
     }
     return text ? (
-      <div class="absolute right-4 bottom-4 px-2 py-1 text-xs text-white bg-lime-300 rounded">
+      <div class="px-2 py-1 w-fit text-xs bg-neutral-950/75 border border-white/10 text-lime-400 rounded">
         {text}
       </div>
     ) : null;
@@ -208,6 +212,8 @@ export function SourcePanel({
       </div>
     );
   }
+
+  let inputTitle: HTMLDivElement;
 
   async function loadSource() {
     const episodePageIndex = Math.floor(currentIndex() / 15);
@@ -225,6 +231,11 @@ export function SourcePanel({
     });
 
     console.log(episodes);
+
+    let relativeEpisodeIndex = episodes[currentIndex() - episodePageIndex * 15];
+    console.log(relativeEpisodeIndex);
+    inputTitle.textContent = `${relativeEpisodeIndex.attributes.titles.en || relativeEpisodeIndex.attributes.titles.en_us || relativeEpisodeIndex.attributes.titles.en_jp || relativeEpisodeIndex.attributes.titles.en_cn || "No Title available"}`;
+
     sourceElementList.innerHTML = "";
 
     const extensions = await window.electronAPI.loadExtensions();
@@ -329,7 +340,7 @@ export function SourcePanel({
       let currEpisode = currentIndex();
       const localElement = (
         <div
-          class="relative w-full h-28 p-4 bg-neutral-950/50 rounded-lg cursor-pointer space-y-2"
+          class="relative w-full h-28 p-4 bg-neutral-950/75 border border-white/10 rounded-lg cursor-pointer space-y-2"
           onClick={() => {
             episodeSelected = true;
             router.navigate(
@@ -362,8 +373,8 @@ export function SourcePanel({
               <img src="./icons/icon.png" class="size-6" />
             </Tooltip>
           </div>
-          <div class="text-[#a2a2a2] text-xs">{local.name}</div>
-          <div class="absolute left-4 bottom-4 text-[#f0f0f0] text-xs py-1 m-0">
+          <div class="text-neutral-500 text-xs">{local.name}</div>
+          <div class="absolute left-4 bottom-4 text-neutral-500 text-xs py-1 m-0">
             {formatBytes(local.size)}
           </div>
           <div class="absolute right-4 bottom-4 flex space-x-2">
@@ -454,7 +465,7 @@ export function SourcePanel({
 
           const hosterElement = (
             <div
-              class="relative w-full h-28 p-4 bg-neutral-950/50 rounded-lg cursor-pointer space-y-2"
+              class="relative w-full h-28 p-4 bg-neutral-950/75 border border-white/10 rounded-lg cursor-pointer space-y-2"
               onClick={() => {
                 episodeSelected = true;
                 router.navigate(
@@ -489,11 +500,13 @@ export function SourcePanel({
                 </Tooltip>
               </div>
 
-              <div class="text-[#a2a2a2] text-xs">{stream.name}</div>
-              <div class="absolute left-4 bottom-4 text-[#f0f0f0] text-xs py-1 m-0">
+              <div class="text-neutral-500 text-xs">{stream.name}</div>
+              <div class="absolute left-4 bottom-4 text-neutral-500 text-xs py-1 m-0">
                 {stream.size}
               </div>
-              {getQualityBadgeFromString(stream.quality)}
+              <div class="absolute right-4 bottom-4 flex space-x-2">
+                {getQualityBadgeFromString(stream.quality)}
+              </div>
             </div>
           ) as HTMLDivElement;
 
@@ -523,12 +536,12 @@ export function SourcePanel({
   const container = (
     <div class="fixed inset-0 p-4 pt-12 bg-black/50 flex items-center justify-center transition-all duration-150 ease-in-out opacity-0">
       <div
-        class="relative w-full max-w-1/2 3xl:max-w-7xl h-full p-4 pt-8 3xl:pt-32 space-y-4 overflow-y-scroll bg-black/30 backdrop-blur-xl border border-white/10 rounded-xl transition-all duration-150 ease-in-out scale-75"
+        class="relative max-w-full w-[70rem] aspect-video p-6 space-y-4 overflow-y-scroll bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl transition-all duration-150 ease-in-out scale-75"
         ref={(el: HTMLDivElement) => (panel = el)}
       >
         {/* Close Button */}
         <div
-          class="absolute z-10 top-2 right-4 size-8 flex items-center justify-center text-neutral-200 cursor-pointer"
+          class="absolute z-10 top-4 right-4 size-8 flex items-center justify-center text-neutral-200 cursor-pointer"
           onClick={() => {
             router.removeRoute("/anime/episodes/sourcePanel");
             (container as HTMLElement).remove();
@@ -553,7 +566,7 @@ export function SourcePanel({
 
         {/* Banner */}
         <img
-          class="absolute top-0 left-0 right-0 w-full h-32 3xl:h-64 object-cover brightness-50 mask-b-from-50% bg-[#080808]"
+          class="absolute top-0 left-0 right-0 w-full h-48 object-cover brightness-50 mask-b-from-50% bg-[#080808]"
           src={
             anime.attributes.coverImage?.original ||
             anime.attributes.posterImage?.original
@@ -568,122 +581,125 @@ export function SourcePanel({
             anime.attributes.titles.en_cn}
         </div>
 
-        {/* Episode Picker */}
-        <div class="relative h-fit w-full space-y-2 mt-8">
-          <div class="text-base text-white">Episode</div>
-          {(() => {
-            episodePickerInput = NumberInput();
-            episodePickerInput.field.min = "1";
-            episodePickerInput.field.max = String(
-              anime.attributes.episodeCount,
-            );
-            episodePickerInput.field.value = String(currentIndex() + 1);
+        {/* Input Row */}
+        <div class="relative flex items-end gap-2 h-fit w-full mt-24">
+          <div class="w-full space-y-1">
+            <div class="text-base text-white">Episode</div>
+            {(() => {
+              episodePickerInput = NumberInput();
+              episodePickerInput.input.min = "1";
+              episodePickerInput.input.max = String(
+                anime.attributes.episodeCount,
+              );
+              episodePickerInput.input.value = String(currentIndex() + 1);
 
-            episodePickerInput.field.addEventListener("input", () => {
-              const value = parseInt(episodePickerInput.field.value);
+              episodePickerInput.input.addEventListener("input", () => {
+                const value = parseInt(episodePickerInput.input.value);
+                if (value > anime.attributes.episodeCount!) {
+                  episodePickerInput.input.value = String(
+                    anime.attributes.episodeCount!,
+                  );
+                }
+                if (value < 1) {
+                  episodePickerInput.input.value = "1";
+                }
+                if (
+                  isNaN(value) ||
+                  value < 1 ||
+                  value > anime.attributes.episodeCount!
+                )
+                  return;
 
-              if (value > anime.attributes.episodeCount!) {
-                episodePickerInput.field.value = String(
-                  anime.attributes.episodeCount!,
-                );
-              }
-              if (value < 1) {
-                episodePickerInput.field.value = "1";
-              }
-              if (
-                isNaN(value) ||
-                value < 1 ||
-                value > anime.attributes.episodeCount!
-              )
-                return;
-
-              setCurrentIndex(value - 1);
-            });
-
-            router.route("/anime/episodes/sourcePanel", (query: any) => {
-              episodePickerInput.field.value = query.episode;
-              episodePickerInput.field.dispatchEvent(new Event("input"));
-            });
-
-            return episodePickerInput;
-          })()}
-        </div>
-
-        {/* Settings */}
-        <div class="relative size-8 ml-auto">
-          <div
-            class="size-8 bg-neutral-950/50 hover:bg-white/10 outline outline-white/10 flex items-center justify-center rounded-lg transition-colors duration-150 cursor-pointer"
-            onClick={() => setSettingsState(!settingsState())}
-          >
-            <svg
-              width="100%"
-              height="100%"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              class="size-5"
-            >
-              <path
-                d="M12.0005 15C13.6573 15 15.0005 13.6569 15.0005 12C15.0005 10.3431 13.6573 9 12.0005 9C10.3436 9 9.00049 10.3431 9.00049 12C9.00049 13.6569 10.3436 15 12.0005 15Z"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M9.28957 19.3711L9.87402 20.6856C10.0478 21.0768 10.3313 21.4093 10.6902 21.6426C11.0492 21.8759 11.4681 22.0001 11.8962 22C12.3244 22.0001 12.7433 21.8759 13.1022 21.6426C13.4612 21.4093 13.7447 21.0768 13.9185 20.6856L14.5029 19.3711C14.711 18.9047 15.0609 18.5159 15.5029 18.26C15.9477 18.0034 16.4622 17.8941 16.9729 17.9478L18.4029 18.1C18.8286 18.145 19.2582 18.0656 19.6396 17.8713C20.021 17.6771 20.3379 17.3763 20.5518 17.0056C20.766 16.635 20.868 16.2103 20.8455 15.7829C20.823 15.3555 20.677 14.9438 20.4251 14.5978L19.5785 13.4344C19.277 13.0171 19.1159 12.5148 19.1185 12C19.1184 11.4866 19.281 10.9864 19.5829 10.5711L20.4296 9.40778C20.6814 9.06175 20.8275 8.65007 20.85 8.22267C20.8725 7.79528 20.7704 7.37054 20.5562 7C20.3423 6.62923 20.0255 6.32849 19.644 6.13423C19.2626 5.93997 18.833 5.86053 18.4074 5.90556L16.9774 6.05778C16.4667 6.11141 15.9521 6.00212 15.5074 5.74556C15.0645 5.48825 14.7144 5.09736 14.5074 4.62889L13.9185 3.31444C13.7447 2.92317 13.4612 2.59072 13.1022 2.3574C12.7433 2.12408 12.3244 1.99993 11.8962 2C11.4681 1.99993 11.0492 2.12408 10.6902 2.3574C10.3313 2.59072 10.0478 2.92317 9.87402 3.31444L9.28957 4.62889C9.0825 5.09736 8.73245 5.48825 8.28957 5.74556C7.84479 6.00212 7.33024 6.11141 6.81957 6.05778L5.38513 5.90556C4.95946 5.86053 4.52987 5.93997 4.14844 6.13423C3.76702 6.32849 3.45014 6.62923 3.23624 7C3.02206 7.37054 2.92002 7.79528 2.94251 8.22267C2.96499 8.65007 3.11103 9.06175 3.36291 9.40778L4.20957 10.5711C4.51151 10.9864 4.67411 11.4866 4.67402 12C4.67411 12.5134 4.51151 13.0137 4.20957 13.4289L3.36291 14.5922C3.11103 14.9382 2.96499 15.3499 2.94251 15.7773C2.92002 16.2047 3.02206 16.6295 3.23624 17C3.45036 17.3706 3.76727 17.6712 4.14864 17.8654C4.53001 18.0596 4.95949 18.1392 5.38513 18.0944L6.81513 17.9422C7.3258 17.8886 7.84034 17.9979 8.28513 18.2544C8.72966 18.511 9.08134 18.902 9.28957 19.3711Z"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          <div
-            class="absolute z-30 top-9 right-0 h-fit w-64 p-4 bg-neutral-900 border border-neutral-800 rounded-lg space-y-2 hidden"
-            ref={(el: HTMLElement) => {
-              subscribeSettingsState(() => {
-                settingsState()
-                  ? el.classList.remove("hidden")
-                  : el.classList.add("hidden");
+                setCurrentIndex(value - 1);
               });
-            }}
-          >
-            <div class="h-fit w-full flex items-center justify-between">
-              <span class="text-sm">Create local directory</span>
-              <div
-                class="py-0.5 px-2 bg-neutral-200 hover:bg-neutral-400 text-sm text-black rounded cursor-pointer transition-colors duration-150"
-                onClick={async () => {
-                  const local_media_path = localStorage.getItem(
-                    "app_local_media_path",
-                  );
-                  if (!local_media_path) {
-                    console.warn("Local media path not found");
-                    return;
-                  }
-                  const animeTitles = [
-                    await sanitizeTitle(anime.attributes.titles.en || ""),
-                    await sanitizeTitle(anime.attributes.titles.en_us || ""),
-                    await sanitizeTitle(anime.attributes.titles.en_jp || ""),
-                    await sanitizeTitle(anime.attributes.titles.en_cn || ""),
-                  ].filter((title) => title !== "");
 
-                  window.electronAPI?.createLocalMediaDir(
-                    `${local_media_path}${animeTitles[0]}`,
-                  );
-                }}
+              inputTitle = episodePickerInput.titlefield;
+
+              router.route("/anime/episodes/sourcePanel", (query: any) => {
+                episodePickerInput.input.value = query.episode;
+                episodePickerInput.input.dispatchEvent(new Event("input"));
+              });
+
+              return episodePickerInput;
+            })()}
+          </div>
+
+          {/* Settings */}
+          <div class="relative size-8 ml-auto">
+            <div
+              class="size-8 bg-neutral-950/50 hover:bg-white/10 outline outline-white/10 flex items-center justify-center rounded-lg transition-colors duration-150 cursor-pointer"
+              onClick={() => setSettingsState(!settingsState())}
+            >
+              <svg
+                width="100%"
+                height="100%"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="size-5"
               >
-                Create
-              </div>
+                <path
+                  d="M12.0005 15C13.6573 15 15.0005 13.6569 15.0005 12C15.0005 10.3431 13.6573 9 12.0005 9C10.3436 9 9.00049 10.3431 9.00049 12C9.00049 13.6569 10.3436 15 12.0005 15Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M9.28957 19.3711L9.87402 20.6856C10.0478 21.0768 10.3313 21.4093 10.6902 21.6426C11.0492 21.8759 11.4681 22.0001 11.8962 22C12.3244 22.0001 12.7433 21.8759 13.1022 21.6426C13.4612 21.4093 13.7447 21.0768 13.9185 20.6856L14.5029 19.3711C14.711 18.9047 15.0609 18.5159 15.5029 18.26C15.9477 18.0034 16.4622 17.8941 16.9729 17.9478L18.4029 18.1C18.8286 18.145 19.2582 18.0656 19.6396 17.8713C20.021 17.6771 20.3379 17.3763 20.5518 17.0056C20.766 16.635 20.868 16.2103 20.8455 15.7829C20.823 15.3555 20.677 14.9438 20.4251 14.5978L19.5785 13.4344C19.277 13.0171 19.1159 12.5148 19.1185 12C19.1184 11.4866 19.281 10.9864 19.5829 10.5711L20.4296 9.40778C20.6814 9.06175 20.8275 8.65007 20.85 8.22267C20.8725 7.79528 20.7704 7.37054 20.5562 7C20.3423 6.62923 20.0255 6.32849 19.644 6.13423C19.2626 5.93997 18.833 5.86053 18.4074 5.90556L16.9774 6.05778C16.4667 6.11141 15.9521 6.00212 15.5074 5.74556C15.0645 5.48825 14.7144 5.09736 14.5074 4.62889L13.9185 3.31444C13.7447 2.92317 13.4612 2.59072 13.1022 2.3574C12.7433 2.12408 12.3244 1.99993 11.8962 2C11.4681 1.99993 11.0492 2.12408 10.6902 2.3574C10.3313 2.59072 10.0478 2.92317 9.87402 3.31444L9.28957 4.62889C9.0825 5.09736 8.73245 5.48825 8.28957 5.74556C7.84479 6.00212 7.33024 6.11141 6.81957 6.05778L5.38513 5.90556C4.95946 5.86053 4.52987 5.93997 4.14844 6.13423C3.76702 6.32849 3.45014 6.62923 3.23624 7C3.02206 7.37054 2.92002 7.79528 2.94251 8.22267C2.96499 8.65007 3.11103 9.06175 3.36291 9.40778L4.20957 10.5711C4.51151 10.9864 4.67411 11.4866 4.67402 12C4.67411 12.5134 4.51151 13.0137 4.20957 13.4289L3.36291 14.5922C3.11103 14.9382 2.96499 15.3499 2.94251 15.7773C2.92002 16.2047 3.02206 16.6295 3.23624 17C3.45036 17.3706 3.76727 17.6712 4.14864 17.8654C4.53001 18.0596 4.95949 18.1392 5.38513 18.0944L6.81513 17.9422C7.3258 17.8886 7.84034 17.9979 8.28513 18.2544C8.72966 18.511 9.08134 18.902 9.28957 19.3711Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
             </div>
-            <div class="h-fit w-full flex items-center justify-between">
-              <span class="text-sm">Auto Source Selection</span>
-              <Toggle
-                initial={autoSelect()}
-                callback={(state: boolean) => {
-                  setAutoSelect(state);
-                }}
-              ></Toggle>
+            <div
+              class="absolute z-30 top-9 right-0 h-fit w-64 p-4 bg-neutral-900 border border-neutral-800 rounded-lg space-y-2 hidden"
+              ref={(el: HTMLElement) => {
+                subscribeSettingsState(() => {
+                  settingsState()
+                    ? el.classList.remove("hidden")
+                    : el.classList.add("hidden");
+                });
+              }}
+            >
+              <div class="h-fit w-full flex items-center justify-between">
+                <span class="text-sm">Create local directory</span>
+                <div
+                  class="py-0.5 px-2 bg-neutral-200 hover:bg-neutral-400 text-sm text-black rounded cursor-pointer transition-colors duration-150"
+                  onClick={async () => {
+                    const local_media_path = localStorage.getItem(
+                      "app_local_media_path",
+                    );
+                    if (!local_media_path) {
+                      console.warn("Local media path not found");
+                      return;
+                    }
+                    const animeTitles = [
+                      await sanitizeTitle(anime.attributes.titles.en || ""),
+                      await sanitizeTitle(anime.attributes.titles.en_us || ""),
+                      await sanitizeTitle(anime.attributes.titles.en_jp || ""),
+                      await sanitizeTitle(anime.attributes.titles.en_cn || ""),
+                    ].filter((title) => title !== "");
+
+                    window.electronAPI?.createLocalMediaDir(
+                      `${local_media_path}${animeTitles[0]}`,
+                    );
+                  }}
+                >
+                  Create
+                </div>
+              </div>
+              <div class="h-fit w-full flex items-center justify-between">
+                <span class="text-sm">Auto Source Selection</span>
+                <Toggle
+                  initial={autoSelect()}
+                  callback={(state: boolean) => {
+                    setAutoSelect(state);
+                  }}
+                ></Toggle>
+              </div>
             </div>
           </div>
         </div>
@@ -696,7 +712,7 @@ export function SourcePanel({
 
         {/* Source List */}
         <div
-          class="w-full h-fit space-y-2"
+          class="w-full h-fit grid grid-cols-2 gap-4"
           ref={(el) => {
             sourceElementList = el as HTMLDivElement;
             loadSource();
