@@ -485,7 +485,6 @@ export function SourcePanel({
                   <img
                     src={`${source_extension.path}\\icon.png`}
                     class="size-6"
-                    title={`Provided by ${source_extension.name}`}
                   />
                 </Tooltip>
               </div>
