@@ -132,7 +132,7 @@ export function Card(
 
         const expandedCard = (
           <div
-            class="fixed z-50 h-88 w-72 bg-neutral-950 rounded-lg shadow-2xl space-y-2 cursor-default transition-all ease-in-out duration-150 opacity-0 scale-75"
+            class="fixed z-50 h-88 w-72 bg-black/50 backdrop-blur-xl border border-white/10 rounded-lg shadow-2xl space-y-2 cursor-default transition-all ease-in-out duration-150 opacity-0 scale-75"
             style={`top: ${finalTop}px; left: ${finalLeft}px;`}
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
@@ -188,7 +188,7 @@ export function Card(
                 <div class="h-2.75 leading-none">Watch Now</div>
               </div>
               <div
-                class="size-7 bg-neutral-800 rounded flex items-center justify-center cursor-pointer"
+                class="size-7 bg-neutral-950/75 rounded flex items-center justify-center cursor-pointer"
                 onClick={async () => {
                   const result = await API.setBookmark(
                     parseInt(item.id),
