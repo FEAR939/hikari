@@ -10,8 +10,8 @@ export function accountMenu() {
     email: string;
   }>(null);
   const menu = (
-    <div class="absolute z-5 top-8 right-0 translate-x-1/2 h-fit w-64 p-1 opacity-0 hidden bg-neutral-900 backdrop-blur-md rounded-lg ring-1 ring-neutral-800 shadow-lg space-y-1 scale-75 transition-all ease-in-out duration-150">
-      <div class="flex space-x-2 p-1 pb-2 mb-2 items-center border-b border-neutral-800">
+    <div class="absolute z-5 top-8 right-0 translate-x-1/2 h-fit w-64 p-1 opacity-0 hidden bg-black/60 backdrop-blur-xl border border-white/10 rounded-lg shadow-2xl space-y-1 scale-75 transition-all ease-in-out duration-150">
+      <div class="flex space-x-2 p-1 pb-2 mb-2 items-center border-b border-white/10">
         <AccountAvatar />
         {bind([user, setUser, subscribeUser], (value) => (
           <div class="h-8 flex flex-col justify-around">

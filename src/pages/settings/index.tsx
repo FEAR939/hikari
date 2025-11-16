@@ -102,8 +102,8 @@ export default async function Settings(query) {
   const [currSettings, setCurrSettings, subscribeCurrSettings] =
     createSignal(0);
   const page = (
-    <div class="fixed z-100 inset-0 bg-black/30 overflow-y-auto overscroll-contain flex items-center justify-center">
-      <div class="absolute m-auto max-w-full w-[70rem] mx-2 shadow-3xl aspect-video bg-black/30 border border-neutral-800 backdrop-blur-xl rounded-3xl flex">
+    <div class="fixed z-100 bg-black/50 inset-0 overflow-y-auto overscroll-contain flex items-center justify-center">
+      <div class="absolute m-auto max-w-full w-[70rem] mx-2 shadow-3xl aspect-video bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl flex">
         <div
           class="absolute right-6 top-6 size-6 flex items-center justify-center cursor-pointer text-neutral-500 hover:text-neutral-200 transition-colors duration-150"
           onClick={() => {
@@ -126,7 +126,7 @@ export default async function Settings(query) {
             <path d="m6 6 12 12" />
           </svg>
         </div>
-        <div class="h-full w-xs p-6 space-y-2">
+        <div class="h-full w-xs p-6 space-y-2 border-r border-white/10">
           <div class="text-xl">Settings</div>
           <div class="space-y-2">
             {settingsTree.map((setting, index: number) =>
