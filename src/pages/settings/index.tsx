@@ -103,9 +103,9 @@ export default async function Settings(query) {
     createSignal(0);
   const page = (
     <div class="fixed z-100 inset-0 bg-black/30 overflow-y-auto overscroll-contain flex items-center justify-center">
-      <div class="absolute m-auto max-w-full w-[70rem] mx-2 shadow-3xl aspect-video bg-[#171717]/95 border border-neutral-700 backdrop-blur-md rounded-4xl flex">
+      <div class="absolute m-auto max-w-full w-[70rem] mx-2 shadow-3xl aspect-video bg-black/30 border border-neutral-800 backdrop-blur-xl rounded-3xl flex">
         <div
-          class="absolute right-6 top-6 size-8 flex items-center justify-center cursor-pointer"
+          class="absolute right-6 top-6 size-6 flex items-center justify-center cursor-pointer text-neutral-500 hover:text-neutral-200 transition-colors duration-150"
           onClick={() => {
             page.remove();
           }}
@@ -120,7 +120,7 @@ export default async function Settings(query) {
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="lucide lucide-x"
+            class="lucide lucide-x size-6"
           >
             <path d="M18 6 6 18" />
             <path d="m6 6 12 12" />

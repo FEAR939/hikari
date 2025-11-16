@@ -102,7 +102,7 @@ export default function ExtensionSettings() {
               }
 
               return (
-                <div class="relative p-4 h-fit rounded-md bg-neutral-800">
+                <div class="relative p-4 h-fit rounded-lg bg-black/50">
                   <div class="flex items-center">
                     <img
                       src={`${extension.path}/icon.png`}
