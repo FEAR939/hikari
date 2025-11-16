@@ -329,7 +329,7 @@ export function SourcePanel({
       let currEpisode = currentIndex();
       const localElement = (
         <div
-          class="relative w-full h-28 p-4 bg-neutral-950 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2"
+          class="relative w-full h-28 p-4 bg-neutral-950/50 rounded-lg cursor-pointer space-y-2"
           onClick={() => {
             episodeSelected = true;
             router.navigate(
@@ -454,7 +454,7 @@ export function SourcePanel({
 
           const hosterElement = (
             <div
-              class="relative w-full h-28 p-4 bg-neutral-950 outline-1 outline-[#1a1a1a] rounded-md cursor-pointer space-y-2"
+              class="relative w-full h-28 p-4 bg-neutral-950/50 rounded-lg cursor-pointer space-y-2"
               onClick={() => {
                 episodeSelected = true;
                 router.navigate(
@@ -521,14 +521,14 @@ export function SourcePanel({
     createSignal(false);
 
   const container = (
-    <div class="fixed inset-0 p-4 pt-12 flex items-center justify-center backdrop-brightness-50 backdrop-blur-md transition-all duration-150 ease-in-out opacity-0">
+    <div class="fixed inset-0 p-4 pt-12 bg-black/50 flex items-center justify-center transition-all duration-150 ease-in-out opacity-0">
       <div
-        class="relative w-full max-w-1/2 3xl:max-w-7xl h-full p-4 pt-8 3xl:pt-32 space-y-4 overflow-y-scroll bg-[#080808] rounded-xl transition-all duration-150 ease-in-out scale-75"
+        class="relative w-full max-w-1/2 3xl:max-w-7xl h-full p-4 pt-8 3xl:pt-32 space-y-4 overflow-y-scroll bg-black/30 backdrop-blur-xl border border-white/10 rounded-xl transition-all duration-150 ease-in-out scale-75"
         ref={(el: HTMLDivElement) => (panel = el)}
       >
         {/* Close Button */}
         <div
-          class="absolute z-10 top-2 right-4 size-8 flex items-center justify-center cursor-pointer"
+          class="absolute z-10 top-2 right-4 size-8 flex items-center justify-center text-neutral-200 cursor-pointer"
           onClick={() => {
             router.removeRoute("/anime/episodes/sourcePanel");
             (container as HTMLElement).remove();
@@ -569,7 +569,7 @@ export function SourcePanel({
         </div>
 
         {/* Episode Picker */}
-        <div class="relative h-fit w-full space-y-2">
+        <div class="relative h-fit w-full space-y-2 mt-8">
           <div class="text-base text-white">Episode</div>
           {(() => {
             episodePickerInput = NumberInput();
@@ -612,7 +612,7 @@ export function SourcePanel({
         {/* Settings */}
         <div class="relative size-8 ml-auto">
           <div
-            class="size-8 bg-neutral-950 hover:bg-neutral-800 border border-neutral-800 flex items-center justify-center rounded transition-colors duration-150 cursor-pointer"
+            class="size-8 bg-neutral-950/50 hover:bg-white/10 outline outline-white/10 flex items-center justify-center rounded-lg transition-colors duration-150 cursor-pointer"
             onClick={() => setSettingsState(!settingsState())}
           >
             <svg

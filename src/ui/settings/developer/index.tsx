@@ -21,7 +21,7 @@ export default function DeveloperSettings() {
     <div class="h-full w-full space-y-4 overflow-y-scroll">
       <div class="text-xl">Developer Settings</div>
       {settings.map((setting) => (
-        <div class="bg-black/50 rounded-lg h-fit w-full p-4 flex gap-2">
+        <div class="bg-neutral-950/50 rounded-lg h-fit w-full p-4 flex gap-2">
           <div class="h-fit w-full space-y-1">
             <div class="text-neutral-200 text-sm">{setting.name}</div>
             <div class="text-neutral-500 text-xs">{setting.description}</div>

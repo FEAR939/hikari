@@ -1,7 +1,7 @@
 export function NumberInput() {
   const wrapper = document.createElement("div");
   wrapper.className =
-    "relative w-full px-4 space-x-2 bg-[#080808] outline-1 outline-[#1a1a1a] rounded-md flex items-center active:bg-[#1a1a1a] active:scale-99 transition-all duration-150";
+    "relative w-full px-4 space-x-2 bg-neutral-950/50 outline-1 outline-white/10 rounded-lg flex items-center active:bg-white/10 active:scale-99 transition-all duration-150 ease-in-out";
 
   const icon = document.createElement("div");
   icon.className = "size-4 text-neutral-500";
