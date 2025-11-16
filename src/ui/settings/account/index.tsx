@@ -19,7 +19,7 @@ export default function AccountSettings() {
       {bind([isAuth, setIsAuth, subscribeIsAuth], (value) =>
         value ? (
           <div class="h-full w-full flex">
-            <div class="group w-20 space-y-2">
+            <div class="group h-fit w-20 space-y-2">
               <div
                 class="relative size-20"
                 onClick={async () => {
