@@ -108,6 +108,7 @@ export default async function Settings(query) {
           class="absolute right-6 top-6 size-6 flex items-center justify-center cursor-pointer text-neutral-500 hover:text-neutral-200 transition-colors duration-150"
           onClick={() => {
             page.remove();
+            router.restorePreviousState();
           }}
         >
           <svg

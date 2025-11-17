@@ -2,11 +2,13 @@ class Router {
   routes: Map<string, (([]: any) => any) | Promise<any>>;
   subscribers: Array<(path: string) => void>;
   container: HTMLElement | undefined;
+  previousPath: string | undefined;
 
   constructor() {
     this.routes = new Map();
     this.subscribers = [];
     this.container = undefined;
+    this.previousPath = undefined;
   }
 
   route(path: string, handler: ([]: any) => any | Promise<any>) {
@@ -19,6 +21,13 @@ class Router {
 
   subscribe(callback: (path: string) => void) {
     this.subscribers.push(callback);
+  }
+
+  restorePreviousState() {
+    console.debug(this.previousPath);
+    this.subscribers.forEach((subscriber) =>
+      subscriber(this.previousPath || ""),
+    );
   }
 
   navigate(url: string, options?: { intoContainer?: boolean }) {
@@ -65,6 +74,7 @@ class Router {
       }
 
       this.container.innerHTML = "";
+      this.previousPath = path;
       handler(query);
     } else {
       console.error(`No route found for path: ${path}`);
