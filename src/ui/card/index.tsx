@@ -56,10 +56,11 @@ export function Card(
         setHovered(false);
       }}
     >
-      <div class="w-full aspect-3/4">
+      {/* The key to keeping the image quality nice even when downscaled is to prevent object-fit: cover from affecting both height and width at once */}
+      <div class="w-full aspect-3/4 overflow-hidden rounded-lg grid place-items-center">
         <img
-          src={item.attributes.posterImage.medium}
-          class="block h-full w-full object-cover rounded-lg [image-rendering:-webkit-optimize-contrast]"
+          src={item.attributes.posterImage.original}
+          class="block min-h-full h-fit min-w-full w-fit object-cover"
           alt="Cover"
           loading="lazy"
           decoding="async"

@@ -98,10 +98,12 @@ export default async function Anime(query: AnimeQuery) {
         <div class="h-fit w-full space-y-4 mt-32 md:mt-64 flex flex-wrap">
           {/* Cover Image */}
           <div class="w-24 md:w-56 h-fit shrink-0 space-y-3 md:space-y-6">
-            <img
-              src={kitsuAnime.anime.attributes?.posterImage?.medium}
-              class="w-full aspect-3/4 object-cover rounded-md"
-            />
+            <div class="w-full aspect-3/4 overflow-hidden rounded-md grid place-items-center">
+              <img
+                src={kitsuAnime.anime.attributes?.posterImage?.original}
+                class="min-w-full w-fit min-h-full h-fit object-cover"
+              />
+            </div>
           </div>
 
           {/* Info */}
