@@ -566,7 +566,7 @@ export function SourcePanel({
 
         {/* Banner */}
         <img
-          class="absolute top-0 left-0 right-0 w-full h-48 object-cover brightness-50 mask-b-from-50% bg-[#080808]"
+          class="absolute top-0 left-0 right-0 min-w-full w-fit h-48 object-cover brightness-50 mask-b-from-50% bg-[#080808]"
           src={
             anime.attributes.coverImage?.original ||
             anime.attributes.posterImage?.original

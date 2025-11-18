@@ -53,19 +53,21 @@ export function Carousel({ items }: { items: any[] }) {
   ) as HTMLDivElement;
 
   const trendingCarousel = (
-    <div class="relative w-full h-48 md:h-96">
+    <div class="relative w-full h-48 md:h-96 overflow-hidden">
       {trendingCarouselIndicator}
 
       {/* Reactively update banner */}
-      {bind([slideIndex, setSlideIndex, subscribeSlideIndex], (index) => (
-        <img
-          class="w-full h-full object-cover brightness-50 mask-b-from-25% bg-[#080808]"
-          src={
-            items[index].attributes?.coverImage?.original ||
-            items[index].attributes?.posterImage?.original
-          }
-        />
-      ))}
+      <div class="relative h-full w-full overflow-hidden grid place-items-center mask-b-from-25% bg-[#080808]">
+        {bind([slideIndex, setSlideIndex, subscribeSlideIndex], (index) => (
+          <img
+            class="min-w-full w-fit min-h-full h-fit object-cover brightness-50 "
+            src={
+              items[index].attributes?.coverImage?.original ||
+              items[index].attributes?.posterImage?.original
+            }
+          />
+        ))}
+      </div>
 
       {/* Reactively update title */}
       {bind([slideIndex, setSlideIndex, subscribeSlideIndex], (index) => (
