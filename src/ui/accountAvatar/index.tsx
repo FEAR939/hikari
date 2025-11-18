@@ -32,7 +32,7 @@ export function AccountAvatar({ className = "" }: { className?: string } = {}) {
   );
 
   return (
-    <div class={cn("relative size-8", className)}>
+    <div class={cn("relative size-8 shrink-0", className)}>
       <div class="absolute inset-0 flex items-center justify-center cursor-pointer">
         {bind([user, setUser, subscribeUser], (value) => {
           if (value && value.avatar !== null) {
