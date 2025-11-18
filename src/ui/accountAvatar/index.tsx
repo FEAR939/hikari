@@ -40,7 +40,7 @@ export function AccountAvatar({ className = "" }: { className?: string } = {}) {
               <img
                 src={`${API.baseurl}${value.avatar}`}
                 alt="Avatar"
-                class="absolute inset-0 w-full h-full object-cover object-center rounded-full"
+                class="absolute inset-0 min-w-full w-fit min-h-full h-fit object-cover object-center rounded-full"
               />
             );
           } else if (value && value.avatar === null) {
