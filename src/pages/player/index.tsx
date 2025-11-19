@@ -431,17 +431,14 @@ export default async function Player(query: PlayerQuery) {
     video.play();
     hideEverything();
 
-    const malId = episodeData.mal_id;
-    const episodeNumber = episodeData.episode;
-    const aniskip = await getSkipTimes(malId, episodeNumber);
+    let parsedChapters = JSON.parse(query.chapters);
 
-    if (!aniskip.found) return;
+    if (!parsedChapters.length) return;
 
-    const chapters = aniskip.results.map((segment: SkipResult) => ({
-      id: segment.skip_id,
-      title: segment.skip_type,
-      start: segment.interval.start_time,
-      end: segment.interval.end_time,
+    const chapters = parsedChapters.map((chapter) => ({
+      title: chapter.title,
+      start: chapter.start_time,
+      end: chapter.end_time,
     }));
 
     seekbar.updateChapters(chapters);
@@ -500,8 +497,6 @@ export default async function Player(query: PlayerQuery) {
   }
 
   const proxiedUrl = create(query.streamurl, query.headers);
-
-  console.log("Proxied URL:", proxiedUrl);
 
   video.src =
     query.streamurl.includes("http") || query.streamurl.includes("https")

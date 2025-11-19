@@ -344,7 +344,7 @@ export function SourcePanel({
           onClick={() => {
             episodeSelected = true;
             router.navigate(
-              `/player?streamurl=${encodeURIComponent(local.path)}&title=${encodeURIComponent(anime.attributes.titles.en_jp)}&episode=${JSON.stringify(episodes.find((episode) => episode.attributes.number === currentIndex() + 1))}&kitsu_id=${anime.id}`,
+              `/player?streamurl=${encodeURIComponent(local.path)}&title=${encodeURIComponent(anime.attributes.titles.en_jp)}&episode=${JSON.stringify(episodes.find((episode) => episode.attributes.number === currentIndex() + 1))}&kitsu_id=${anime.id}&chapters=${JSON.stringify(local.chapters)}`,
             );
           }}
         >

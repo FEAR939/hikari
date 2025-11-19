@@ -34,7 +34,7 @@ const exec = promisify(childProcess.exec);
 
 async function getVideoMetadata(filePath: string) {
   const { stdout } = await exec(
-    `"${ffprobe.path.replace("app.asar", "app.asar.unpacked")}" -v quiet -print_format json -show_format -show_streams "${filePath}"`,
+    `"${ffprobe.path.replace("app.asar", "app.asar.unpacked")}" -v quiet -print_format json -show_format -show_streams -show_chapters "${filePath}"`,
   );
   const metadata = JSON.parse(stdout);
   return metadata;
@@ -193,6 +193,11 @@ function createWindow() {
       audio_codec: audio_metadata.codec_name,
       bitrate: video_metadata.bit_rate,
       bitdepth: video_metadata.bits_per_raw_sample,
+      chapters: file_metadata.chapters.map((chapter: any) => ({
+        title: chapter.tags.title,
+        start_time: chapter.start_time,
+        end_time: chapter.end_time,
+      })),
     };
 
     return metadata;
