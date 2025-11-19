@@ -48,7 +48,10 @@ export function Episode({
           <div
             class={`absolute bottom-0 right-0 left-0 h-0.5 bg-neutral-700 rounded ${value > 0 ? "" : "hidden"}`}
           >
-            <div class="h-full bg-[#DC143C]" style={{ width: `${value}%` }} />
+            <div
+              class="h-full bg-[#DC143C] shadow-[0_0_10px_rgba(220,20,60,0.7)]"
+              style={{ width: `${value}%` }}
+            />
           </div>
         ))}
       </div>
