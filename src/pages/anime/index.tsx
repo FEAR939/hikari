@@ -80,7 +80,7 @@ export default async function Anime(query: AnimeQuery) {
   );
 
   const page = (
-    <div class="relative h-full w-full px-4 pb-8 space-y-4">
+    <div class="relative h-full w-full">
       {/* Banner */}
       <div class="absolute -z-1 top-0 left-0 right-0 w-full aspect-2.5/1 object-cover overflow-hidden">
         <img
@@ -94,7 +94,7 @@ export default async function Anime(query: AnimeQuery) {
       </div>
 
       <div class="h-full w-full md:px-12 overflow-y-scroll">
-        <div class="max-w-[100rem] w-full h-full mx-auto">
+        <div class="max-w-[100rem] w-full h-fit pb-8 mx-auto">
           {/* Hero Section */}
           <div class="h-fit w-full mt-32 md:mt-64 flex">
             {/* Cover Image */}
