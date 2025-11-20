@@ -80,23 +80,22 @@ export default async function Anime(query: AnimeQuery) {
   );
 
   const page = (
-    <div class="relative h-full w-full px-4 md:px-12 pb-8 space-y-4 overflow-y-scroll">
-      {/* Hero Section */}
-      <div class="h-fit w-full">
-        {/* Banner */}
-        <div class="absolute -z-1 top-0 left-0 right-0 w-full h-72 md:h-120 object-cover overflow-hidden">
-          <img
-            class="min-w-full w-fit min-h-full h-fit object-cover overflow-hidden"
-            src={
-              kitsuAnime.anime.attributes?.coverImage?.original ||
-              kitsuAnime.anime.attributes?.posterImage?.original
-            }
-          />
-          <div class="absolute inset-0 bg-linear-to-t from-black to-transparent"></div>
-        </div>
+    <div class="relative h-full w-full px-4 pb-8 space-y-4">
+      {/* Banner */}
+      <div class="absolute -z-1 top-0 left-0 right-0 w-full aspect-2.5/1 object-cover overflow-hidden">
+        <img
+          class="min-w-full w-fit min-h-full h-fit object-cover overflow-hidden"
+          src={
+            kitsuAnime.anime.attributes?.coverImage?.original ||
+            kitsuAnime.anime.attributes?.posterImage?.original
+          }
+        />
+        <div class="absolute inset-0 bg-linear-to-t from-black to-black/75"></div>
+      </div>
 
-        <div class="max-w-[100rem] w-full mx-auto">
-          {/* Content */}
+      <div class="h-full w-full md:px-12 overflow-y-scroll">
+        <div class="max-w-[100rem] w-full h-full mx-auto">
+          {/* Hero Section */}
           <div class="h-fit w-full mt-32 md:mt-64 flex">
             {/* Cover Image */}
             <div class="w-24 md:w-56 h-fit shrink-0 space-y-3 md:space-y-6">
