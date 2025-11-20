@@ -216,12 +216,12 @@ export function SourcePanel({
   let inputTitle: HTMLDivElement;
 
   async function loadSource() {
-    const episodePageIndex = Math.floor(currentIndex() / 15);
+    const episodePageIndex = Math.floor(currentIndex() / 16);
 
     console.log(episodePageIndex);
 
     const episodes = (
-      await kitsu.getEpisodesPagination(anime.id, episodePageIndex, 15)
+      await kitsu.getEpisodesPagination(anime.id, episodePageIndex, 16)
     ).map((episode) => {
       // For compatibility with the extensions
       return {
@@ -232,7 +232,7 @@ export function SourcePanel({
 
     console.log(episodes);
 
-    let relativeEpisodeIndex = episodes[currentIndex() - episodePageIndex * 15];
+    let relativeEpisodeIndex = episodes[currentIndex() - episodePageIndex * 16];
     console.log(relativeEpisodeIndex);
     inputTitle.textContent = `${relativeEpisodeIndex.attributes.titles.en || relativeEpisodeIndex.attributes.titles.en_us || relativeEpisodeIndex.attributes.titles.en_jp || relativeEpisodeIndex.attributes.titles.en_cn || "No Title available"}`;
 

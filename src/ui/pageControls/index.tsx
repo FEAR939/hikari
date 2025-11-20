@@ -30,8 +30,8 @@ export function PageControls({
   }) => (
     <div
       class={cn(
-        "px-2 py-1 cursor-pointer",
-        isCurrent ? "bg-neutral-800 rounded text-white" : "text-neutral-500",
+        "size-6 grid place-items-center text-sm cursor-pointer",
+        isCurrent ? "bg-[#282828] rounded-full text-white" : "text-neutral-500",
       )}
       onClick={() => handlePageChange(page)}
     >

@@ -26,8 +26,7 @@ export function EpisodeView({
         (value) => (
           <div
             class="h-fit w-full grid grid-cols-1
-            lg:max-3xl:grid-cols-3
-            4xl:grid-cols-5
+            lg:grid-cols-4
             gap-4"
           >
             {value.map((episode: KitsuEpisode, index) => (
@@ -41,8 +40,8 @@ export function EpisodeView({
         ),
       )}
       <PageControls
-        className="ml-auto"
-        totalPages={Math.ceil(anime.attributes.episodeCount! / 15)}
+        className="mt-6 ml-auto"
+        totalPages={Math.ceil(anime.attributes.episodeCount! / 16)}
         currentPage={1}
         callback={(page) => episodeHandler(anime, page - 1)}
       />
@@ -51,7 +50,7 @@ export function EpisodeView({
 }
 
 async function episodeHandler(anime: KitsuAnime, page: number) {
-  const episodesPerPage = 15;
+  const episodesPerPage = 16;
 
   const [episodes, episodesProgress] = await Promise.all([
     await kitsu.getEpisodesPagination(anime.id, page, episodesPerPage),

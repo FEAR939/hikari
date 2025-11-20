@@ -31,6 +31,10 @@
     }
 }
 
+* {
+    font-family: Roboto, Arial, sans-serif;
+}
+
 html,
 body {
     scroll-behavior: smooth;
