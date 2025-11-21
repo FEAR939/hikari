@@ -104,7 +104,10 @@ export function Sidebar() {
 
   return (
     <div class="relative z-4 h-full w-16 border-r border-neutral-900 space-y-8 flex flex-col items-center shrink-0">
-      <img src="./icons/icon.png" class="mt-4 size-10 object-cover"></img>
+      <img
+        src="./icons/icon.png"
+        class="mt-4 size-8 object-cover rounded-full"
+      ></img>
       <div class="space-y-6">
         {navs.map((nav) =>
           bind([active, setActive, subscribeActive], (value) => (
