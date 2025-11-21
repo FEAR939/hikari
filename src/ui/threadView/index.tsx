@@ -6,7 +6,7 @@ import { AccountAvatar } from "@ui/accountAvatar";
 export default function ThreadView() {
   return (
     <div className="h-fit w-full">
-      <div class="w-full p-4 h-fit bg-neutral-900 border border-white/10 rounded-2xl">
+      <div class="w-full p-4 h-fit bg-[#1d1d1d] border border-[#222222] rounded-4xl">
         {authService.getUser() ? (
           <div>
             <div class="h-24 w-full p-2">
@@ -19,7 +19,7 @@ export default function ThreadView() {
             <div class="flex items-center space-x-2">
               <AccountAvatar className="size-10" />
               <div class="w-full"></div>
-              <div class="size-10 rounded-full bg-neutral-500 text-black flex items-center justify-center">
+              <div class="size-10 rounded-full bg-white text-black flex items-center justify-center">
                 <svg
                   width="100%"
                   height="100%"

@@ -25,7 +25,7 @@ export default function ExtensionSettings() {
     <div class="h-full w-full space-y-4">
       <div class="text-xl">Extension Settings</div>
       <div class="flex h-fit w-full space-x-2">
-        <div class="flex items-center space-x-2 px-4 h-10 w-full text-neutral-500 border border-neutral-800 bg-black/30 rounded-lg">
+        <div class="flex items-center space-x-2 px-4 h-10 w-full bg-[#1d1d1d] text-white border border-[#222222] rounded-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -50,7 +50,7 @@ export default function ExtensionSettings() {
           />
         </div>
         <div
-          class="w-1/3 px-4 py-2 flex items-center justify-center text-black bg-neutral-200 hover:bg-neutral-400 rounded-lg cursor-pointer space-x-2 transition-colors duration-150"
+          class="w-1/3 px-4 py-2 flex items-center justify-center text-black bg-neutral-200 hover:bg-neutral-400 rounded-full cursor-pointer space-x-2 transition-colors duration-150"
           onClick={async () => {
             const url = installInput.value;
             if (!url || !url.match(/https:\/\/github\.com\/.*\.git/)) return;
@@ -102,7 +102,7 @@ export default function ExtensionSettings() {
               }
 
               return (
-                <div class="relative p-4 h-fit rounded-lg bg-neutral-950/75 border border-white/10">
+                <div class="relative p-4 h-fit rounded-2xl bg-[#1d1d1d] border border-[#222222]">
                   <div class="flex items-center">
                     <img
                       src={`${extension.path}/icon.png`}
@@ -114,10 +114,10 @@ export default function ExtensionSettings() {
                     </div>
                   </div>
                   <div class="min-h-6 flex space-x-2 pt-4">
-                    <div class="h-full flex items-center px-2 py-0.5 rounded bg-neutral-800/75">
+                    <div class="h-full flex items-center px-3 py-0.5 rounded-full bg-[#333333]">
                       {extension.version}
                     </div>
-                    <div class="h-full flex items-center px-2 py-0.5 rounded bg-neutral-800/75">
+                    <div class="h-full flex items-center px-3 py-0.5 rounded-full bg-[#333333]">
                       {extension.type}
                     </div>
                   </div>

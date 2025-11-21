@@ -119,7 +119,7 @@ export default async function Anime(query: AnimeQuery) {
               {/* Chips */}
               <div class="w-full flex items-center space-x-1 md:space-x-2 overflow-hidden">
                 {chips.map((chip) => (
-                  <span class="px-4 py-2 text-sm rounded-full bg-[#282828] text-white uppercase">
+                  <span class="px-4 py-2 text-sm rounded-full bg-[#1d1d1d] text-white uppercase">
                     {chip.text}
                   </span>
                 ))}
@@ -179,7 +179,7 @@ export default async function Anime(query: AnimeQuery) {
 
                 {/* Bookmark */}
                 <div
-                  class="size-9 bg-[#282828] hover:bg-[#323232] rounded-full flex items-center justify-center cursor-pointer"
+                  class="size-9 bg-[#1d1d1d] hover:bg-[#333333] rounded-full flex items-center justify-center cursor-pointer"
                   onClick={async () => {
                     const result = await API.setBookmark(
                       parseInt(kitsuAnime.anime.id),
@@ -212,7 +212,7 @@ export default async function Anime(query: AnimeQuery) {
                 </div>
 
                 {/* Favourite */}
-                <div class="size-9 bg-[#282828] hover:bg-[#323232] rounded-full flex items-center justify-center cursor-pointer">
+                <div class="size-9 bg-[#1d1d1d] hover:bg-[#333333] rounded-full flex items-center justify-center cursor-pointer">
                   <svg
                     width="100%"
                     height="100%"
@@ -239,7 +239,7 @@ export default async function Anime(query: AnimeQuery) {
             {Array.from({ length: minRepeats }).map(() => (
               <div class="flex items-center [&_span]:mx-1 animate-infinite-scroll">
                 {kitsuAnime.genres.map((genre) => (
-                  <span class="px-2 md:px-4 py-1 md:py-2 text-sm rounded-full bg-[#282828] text-white text-nowrap">
+                  <span class="px-2 md:px-4 py-1 md:py-2 text-sm rounded-full bg-[#1d1d1d] text-white text-nowrap">
                     {genre.attributes.title}
                   </span>
                 ))}

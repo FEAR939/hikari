@@ -46,7 +46,7 @@ export function Episode({
       class="group relative flex flex-col gap-3 cursor-pointer select-none"
       onclick={() => sourcepanel_callback(episode.attributes.number)}
     >
-      <div class="absolute inset-0 -z-1 bg-[#1a1a1a] rounded-2xl opacity-0 group-hover:opacity-100 group-hover:-inset-3 transition-all duration-300 ease-out"></div>
+      <div class="absolute inset-0 -z-1 bg-[#1d1d1d] rounded-2xl opacity-0 group-hover:opacity-100 group-hover:-inset-3 transition-all duration-300 ease-out"></div>
       {/* Thumbnail Section */}
       <div class="relative w-full aspect-video bg-[#121212] rounded-xl overflow-hidden transition-all">
         {/* Image with gentle zoom on hover */}

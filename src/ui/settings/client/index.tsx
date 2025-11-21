@@ -50,7 +50,7 @@ export default function ClientSettings() {
     <div class="h-full w-full space-y-4 overflow-y-scroll">
       <div class="text-xl">Client Settings</div>
       {settings.map((setting) => (
-        <div class="bg-neutral-950/75 border border-white/10 rounded-lg h-fit w-full p-4 flex gap-2">
+        <div class="bg-[#1d1d1d] border border-[#222222] rounded-2xl h-fit w-full p-4 flex gap-2">
           <div class="h-fit w-full space-y-1">
             <div class="text-neutral-200 text-sm">{setting.name}</div>
             <div class="text-neutral-500 text-xs">{setting.description}</div>
@@ -66,7 +66,7 @@ export default function ClientSettings() {
 
                   handleSettingChange(setting);
                 }}
-                class="px-4 py-2 h-fit w-64 bg-neutral-900 border border-neutral-700 text-neutral-300 rounded leading-none text-sm placeholder:text-sm outline-none"
+                class="px-4 py-2 h-fit w-64 bg-[#333333] text-neutral-300 rounded-full leading-none text-sm placeholder:text-sm outline-none"
               />
             )}
           </div>
