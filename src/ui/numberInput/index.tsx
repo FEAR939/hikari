@@ -6,7 +6,7 @@ export function NumberInput() {
 
   const wrapper = (
     <div
-      class="relative w-full h-8 px-4 space-x-2 bg-neutral-950/50 outline-1 outline-white/10 rounded-lg flex items-center active:bg-white/10 active:scale-99 transition-all duration-150 ease-in-out cursor-pointer"
+      class="relative w-full h-8 px-4 space-x-2 bg-[#1d1d1d] border border-[#222222] rounded-full flex items-center cursor-pointer"
       onClick={() => inputRef.focus()}
     >
       <div class="size-4 text-neutral-500">

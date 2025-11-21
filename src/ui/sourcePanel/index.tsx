@@ -117,8 +117,8 @@ export function SourcePanel({
   function getCodecBadge(codec: string, type: "audio" | "video") {
     const classes =
       type === "audio"
-        ? "px-2 py-1 w-fit text-xs bg-neutral-950/75 border border-white/10 text-red-400 rounded"
-        : "px-2 py-1 w-fit text-xs bg-neutral-950/75 border border-white/10 text-blue-400 rounded";
+        ? "px-3 py-1 w-fit text-xs bg-[#333333] text-white rounded-full"
+        : "px-3 py-1 w-fit text-xs bg-[#333333] text-white rounded-full";
 
     let text = "";
     if (type === "audio") {
@@ -157,7 +157,7 @@ export function SourcePanel({
   function getBitDepthBadge(bitdepth: string) {
     const text = bitdepth === "8" ? "8 Bit" : bitdepth === "10" ? "10 Bit" : "";
     return text ? (
-      <div class="px-2 py-1 w-fit text-xs bg-neutral-950/75 border border-white/10 text-blue-400 rounded">
+      <div class="px-3 py-1 w-fit text-xs bg-[#333333] text-white rounded-full">
         {text}
       </div>
     ) : null;
@@ -177,7 +177,7 @@ export function SourcePanel({
         break;
     }
     return text ? (
-      <div class="px-2 py-1 w-fit text-xs bg-neutral-950/75 border border-white/10 text-lime-400 rounded">
+      <div class="px-3 py-1 w-fit text-xs bg-[#333333] text-white rounded-full">
         {text}
       </div>
     ) : null;
@@ -197,7 +197,7 @@ export function SourcePanel({
         break;
     }
     return text ? (
-      <div class="px-2 py-1 w-fit text-xs bg-neutral-950/75 border border-white/10 text-lime-400 rounded">
+      <div class="px-3 py-1 w-fit text-xs bg-[#333333] text-white rounded-full">
         {text}
       </div>
     ) : null;
@@ -340,7 +340,7 @@ export function SourcePanel({
       let currEpisode = currentIndex();
       const localElement = (
         <div
-          class="relative w-full h-28 p-4 bg-neutral-950/75 border border-white/10 rounded-lg cursor-pointer space-y-2"
+          class="relative w-full h-28 p-4 bg-[#1d1d1d] border border-[#222222] rounded-2xl cursor-pointer space-y-2"
           onClick={() => {
             episodeSelected = true;
             router.navigate(
@@ -370,7 +370,7 @@ export function SourcePanel({
           </div>
           <div class="absolute right-4 top-4">
             <Tooltip content="Provided by this Device">
-              <img src="./icons/icon.png" class="size-6" />
+              <img src="./icons/icon.png" class="size-6 rounded-full" />
             </Tooltip>
           </div>
           <div class="text-neutral-500 text-xs">{local.name}</div>
@@ -465,7 +465,7 @@ export function SourcePanel({
 
           const hosterElement = (
             <div
-              class="relative w-full h-28 p-4 bg-neutral-950/75 border border-white/10 rounded-lg cursor-pointer space-y-2"
+              class="relative w-full h-28 p-4 bg-[#1d1d1d] border border-[#222222] rounded-2xl cursor-pointer space-y-2"
               onClick={() => {
                 episodeSelected = true;
                 router.navigate(
@@ -495,7 +495,7 @@ export function SourcePanel({
                 <Tooltip content={`Provided by ${source_extension.name}`}>
                   <img
                     src={`${source_extension.path}\\icon.png`}
-                    class="size-6"
+                    class="size-6 rounded-full"
                   />
                 </Tooltip>
               </div>
@@ -627,7 +627,7 @@ export function SourcePanel({
           {/* Settings */}
           <div class="relative size-8 ml-auto">
             <div
-              class="size-8 bg-neutral-950/50 hover:bg-white/10 outline outline-white/10 flex items-center justify-center rounded-lg transition-colors duration-150 cursor-pointer"
+              class="size-8 bg-[#1d1d1d] hover:bg-[#333333] border border-[#222222] flex items-center justify-center rounded-full transition-colors duration-150 cursor-pointer"
               onClick={() => setSettingsState(!settingsState())}
             >
               <svg
@@ -636,7 +636,7 @@ export function SourcePanel({
                 viewBox="0 0 24 24"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                class="size-5"
+                class="size-4"
               >
                 <path
                   d="M12.0005 15C13.6573 15 15.0005 13.6569 15.0005 12C15.0005 10.3431 13.6573 9 12.0005 9C10.3436 9 9.00049 10.3431 9.00049 12C9.00049 13.6569 10.3436 15 12.0005 15Z"
@@ -655,7 +655,7 @@ export function SourcePanel({
               </svg>
             </div>
             <div
-              class="absolute z-30 top-9 right-0 h-fit w-64 p-4 bg-neutral-900 border border-neutral-800 rounded-lg space-y-2 hidden"
+              class="absolute z-30 top-10 right-0 h-fit w-64 p-4 bg-[#1d1d1d] border border-[#222222] rounded-2xl space-y-2 hidden"
               ref={(el: HTMLElement) => {
                 subscribeSettingsState(() => {
                   settingsState()
