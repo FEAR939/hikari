@@ -108,11 +108,11 @@ export function Sidebar() {
         src="./icons/icon.png"
         class="mt-4 size-8 object-cover rounded-full"
       ></img>
-      <div class="space-y-6">
+      <div class="space-y-2">
         {navs.map((nav) =>
           bind([active, setActive, subscribeActive], (value) => (
             <div
-              class={`cursor-pointer ${active() === nav.path ? "text-white" : "text-neutral-700"}`}
+              class={`p-2 rounded-xl cursor-pointer ${active() === nav.path ? "text-white" : "text-neutral-700"} hover:bg-[#171717] transition-colors duration-150`}
               onClick={() => router.navigate(nav.path)}
             >
               {nav.icon()}
