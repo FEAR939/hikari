@@ -103,7 +103,7 @@ export function Sidebar() {
   router.subscribe((path) => setActive(path));
 
   return (
-    <div class="relative z-4 h-full w-16 border-r border-neutral-900 space-y-8 flex flex-col items-center shrink-0">
+    <div class="relative z-4 h-full w-16 bg-[#0d0d0d] space-y-8 flex flex-col items-center shrink-0">
       <img
         src="./icons/icon.png"
         class="mt-4 size-8 object-cover rounded-full"

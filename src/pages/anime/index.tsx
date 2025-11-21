@@ -90,7 +90,7 @@ export default async function Anime(query: AnimeQuery) {
             kitsuAnime.anime.attributes?.posterImage?.original
           }
         />
-        <div class="absolute inset-0 bg-linear-to-t from-black to-black/75"></div>
+        <div class="absolute inset-0 bg-linear-to-t from-[#171717] to-black/75"></div>
       </div>
 
       <div class="h-full w-full md:px-12 overflow-y-scroll">
