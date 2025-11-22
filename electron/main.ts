@@ -106,8 +106,8 @@ function createWindow() {
     autoUpdater.downloadUpdate();
   });
 
-  autoUpdater.on("update-downloaded", () => {
-    win.webContents.send("update-available");
+  autoUpdater.on("update-downloaded", (e) => {
+    win.webContents.send("update-available", e.version);
   });
 
   ipcMain.on("enter-fullscreen", () => {

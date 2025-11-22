@@ -20,8 +20,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   ) => {
     ipcRenderer.on("window-unmaximized", callback);
   },
-  onUpdateAvailable: (callback: () => void) =>
-    ipcRenderer.on("update-available", () => callback()),
+  onUpdateAvailable: (callback: (version: string) => void) =>
+    ipcRenderer.on("update-available", (event, version) => callback(version)),
   restartAndUpdate: () => ipcRenderer.send("restart-and-update"),
   openDevTools: () => ipcRenderer.send("open-devtools"),
   enterFullscreen: () => ipcRenderer.send("enter-fullscreen"),
