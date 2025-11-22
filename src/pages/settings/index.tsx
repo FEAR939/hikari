@@ -1,10 +1,11 @@
-import { router } from "../../lib/router/index";
-import { h } from "../../lib/jsx/runtime";
-import { createSignal, bind } from "../../lib/jsx/reactive";
-import ClientSettings from "../../ui/settings/client/index";
-import AccountSettings from "../../ui/settings/account/index";
-import ExtensionSettings from "../../ui/settings/extensions/index";
-import DeveloperSettings from "../../ui/settings/developer/index";
+import { router } from "@lib/router/index";
+import { h } from "@lib/jsx/runtime";
+import { createSignal, bind } from "@lib/jsx/reactive";
+import ClientSettings from "@ui/settings/client/index";
+import AccountSettings from "@ui/settings/account/index";
+import ExtensionSettings from "@ui/settings/extensions/index";
+import DeveloperSettings from "@ui/settings/developer/index";
+import AboutSettings from "@ui/settings/about/index";
 
 const settingsTree = [
   {
@@ -96,6 +97,28 @@ const settingsTree = [
     label: "Developer",
     handler: DeveloperSettings,
   },
+  {
+    icon: () => (
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="size-5"
+      >
+        <path
+          d="M12 16V12M12 8H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    ),
+    label: "About",
+    handler: AboutSettings,
+  },
 ];
 
 export default async function Settings(query) {
@@ -144,9 +167,6 @@ export default async function Settings(query) {
                 ),
               ),
             )}
-          </div>
-          <div class="absolute bottom-6 text-neutral-500 text-sm leading-none">
-            {`Hikari version: ${await window.electronAPI?.getAppVersion()}`}
           </div>
         </div>
         <div class="h-full w-full p-6">
