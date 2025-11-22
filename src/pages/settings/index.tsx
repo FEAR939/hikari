@@ -103,7 +103,7 @@ export default async function Settings(query) {
     createSignal(0);
   const page = (
     <div class="fixed z-100 bg-black/50 inset-0 overflow-y-auto overscroll-contain flex items-center justify-center">
-      <div class="absolute m-auto max-w-full w-[70rem] mx-2 shadow-3xl aspect-video bg-black/60 backdrop-blur-xl border border-white/10 rounded-3xl flex">
+      <div class="absolute m-auto max-w-full w-[70rem] mx-2 shadow-3xl aspect-video bg-[#171717] backdrop-blur-xl border border-white/10 rounded-3xl flex">
         <div
           class="absolute right-6 top-6 size-6 flex items-center justify-center cursor-pointer text-neutral-500 hover:text-neutral-200 transition-colors duration-150"
           onClick={() => {

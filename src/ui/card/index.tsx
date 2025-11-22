@@ -133,7 +133,7 @@ export function Card(
 
         const expandedCard = (
           <div
-            class="fixed z-50 h-88 w-72 bg-black/50 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl space-y-2 cursor-default transition-all ease-in-out duration-150 opacity-0 scale-75"
+            class="fixed z-50 h-88 w-72 bg-[#1d1d1d] backdrop-blur-xl border border-[#222222] rounded-2xl shadow-2xl space-y-2 cursor-default transition-all ease-in-out duration-150 opacity-0 scale-75"
             style={`top: ${finalTop}px; left: ${finalLeft}px;`}
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
