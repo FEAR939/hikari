@@ -82,9 +82,9 @@ export default async function Anime(query: AnimeQuery) {
   const page = (
     <div class="relative h-full w-full">
       {/* Banner */}
-      <div class="absolute -z-1 top-0 left-0 right-0 w-full aspect-2.5/1 object-cover overflow-hidden">
+      <div class="absolute -z-1 left-0 right-0 top-0 w-full aspect-[2.5/1] overflow-hidden">
         <img
-          class="min-w-full w-fit min-h-full h-fit object-cover overflow-hidden"
+          class="min-w-full w-fit min-h-full h-fit object-cover"
           src={
             kitsuAnime.anime.attributes?.coverImage?.original ||
             kitsuAnime.anime.attributes?.posterImage?.original
