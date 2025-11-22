@@ -57,7 +57,7 @@ export function Card(
       }}
     >
       {/* The key to keeping the image quality nice even when downscaled is to prevent object-fit: cover from affecting both height and width at once */}
-      <div class="w-full aspect-3/4 overflow-hidden rounded-lg grid place-items-center">
+      <div class="w-full aspect-3/4 overflow-hidden rounded-xl grid place-items-center">
         <img
           src={item.attributes.posterImage.original}
           class="block min-h-full h-fit min-w-full w-fit object-cover"
@@ -133,7 +133,7 @@ export function Card(
 
         const expandedCard = (
           <div
-            class="fixed z-50 h-88 w-72 bg-black/50 backdrop-blur-xl border border-white/10 rounded-lg shadow-2xl space-y-2 cursor-default transition-all ease-in-out duration-150 opacity-0 scale-75"
+            class="fixed z-50 h-88 w-72 bg-black/50 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl space-y-2 cursor-default transition-all ease-in-out duration-150 opacity-0 scale-75"
             style={`top: ${finalTop}px; left: ${finalLeft}px;`}
             onClick={(e: MouseEvent) => {
               e.stopPropagation();
@@ -149,7 +149,7 @@ export function Card(
               loading="lazy"
             />*/}
             <div class="w-full aspect-video relative">
-              <div class="w-full h-full overflow-clip rounded-t-lg mask-b-to-95% mask-y-neutral-950 absolute top-0">
+              <div class="w-full h-full overflow-clip rounded-t-2xl mask-b-to-95% mask-y-neutral-950 absolute top-0">
                 <iframe
                   class="w-full border-0 left-0 h-[calc(100%+200px)] pointer-events-none absolute top-1/2 transform-gpu -translate-y-1/2"
                   title="trailer"
