@@ -1,3 +1,4 @@
+import { h } from "@lib/jsx/runtime";
 import { router } from "./lib/router/index";
 import { authService } from "./services/auth";
 import { Client } from "./lib/api";
@@ -14,6 +15,7 @@ import Files from "./pages/files";
 import { TopBar } from "./ui/topbar";
 import { Sidebar } from "./ui/sidebar";
 import WindowControls from "./ui/windowControls";
+import { Toast } from "@ui/toast";
 
 declare global {
   interface Window {
@@ -71,6 +73,10 @@ async function main() {
 
   router.container = content;
 
+  const toastContainer = document.createElement("div");
+  toastContainer.className = "fixed bottom-2 right-2 z-50 w-full max-w-md";
+  root.appendChild(toastContainer);
+
   router.route("/", Home);
   router.route("/anime", Anime);
   router.route("/player", Player);
@@ -84,6 +90,27 @@ async function main() {
   await authService.authenticate();
 
   router.navigate("/");
+
+  let hasUpdate = false;
+
+  // Listen for update availability
+  window.electronAPI?.onUpdateAvailable((version: string) => {
+    hasUpdate = true;
+
+    const updateToast = (
+      <Toast className="bg-[#020c1d] text-[#577fcc] border-[#020e2e]">
+        <div>A new version(v{version || "N/A"}) is now available.</div>
+        <div
+          class="underline cursor-pointer"
+          onClick={() => window.electronAPI?.restartAndUpdate()}
+        >
+          Update for the latest features and improvements.
+        </div>
+      </Toast>
+    );
+
+    toastContainer.appendChild(updateToast);
+  });
 }
 
 window.addEventListener("DOMContentLoaded", () => {
