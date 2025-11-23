@@ -11,7 +11,7 @@ export default async function Search(query) {
 
   const page = (
     <div class="relative h-full w-full p-4 pt-12 space-y-4">
-      <div class="rounded-lg border border-neutral-700/50 bg-neutral-950 h-10 w-64 px-3 flex items-center overflow-hidden">
+      <div class="rounded-2xl border border-neutral-700/50 bg-neutral-950 h-10 w-64 px-3 flex items-center overflow-hidden">
         <div class="h-full flex items-center shrink-0 text-neutral-700">
           <svg
             width="100%"
