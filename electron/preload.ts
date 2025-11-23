@@ -69,4 +69,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.send("open-dir", path);
     return true;
   },
+  openUrl: (url: string) => {
+    ipcRenderer.send("open-url", url);
+    return true;
+  },
 });

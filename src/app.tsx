@@ -35,6 +35,7 @@ declare global {
       getDir: (path: string) => Promise<string[]>;
       getDirSize: (path: string) => Promise<number>;
       openFolder: (path: string) => void;
+      openUrl: (url: string) => void;
       getAppVersion: () => Promise<string>;
       loadExtensions: () => Promise<any>;
       installExtension: (url: string) => Promise<any>;

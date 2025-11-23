@@ -263,6 +263,10 @@ function createWindow() {
     shell.openPath(dirPath);
   });
 
+  ipcMain.on("open-url", (event, url) => {
+    shell.openExternal(url);
+  });
+
   session.defaultSession.webRequest.onBeforeSendHeaders((details, callback) => {
     const url = new URL(details.url);
 
