@@ -19,29 +19,6 @@ const settingsTree = [
         class="size-5"
       >
         <path
-          d="M5.3163 19.4384C5.92462 18.0052 7.34492 17 9 17H15C16.6551 17 18.0754 18.0052 18.6837 19.4384M16 9.5C16 11.7091 14.2091 13.5 12 13.5C9.79086 13.5 8 11.7091 8 9.5C8 7.29086 9.79086 5.5 12 5.5C14.2091 5.5 16 7.29086 16 9.5ZM22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    ),
-    label: "Account",
-    handler: AccountSettings,
-    default: true,
-  },
-  {
-    icon: () => (
-      <svg
-        width="100%"
-        height="100%"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        class="size-5"
-      >
-        <path
           d="M5 21L5 15M5 15C6.10457 15 7 14.1046 7 13C7 11.8954 6.10457 11 5 11C3.89543 11 3 11.8954 3 13C3 14.1046 3.89543 15 5 15ZM5 7V3M12 21V15M12 7V3M12 7C10.8954 7 10 7.89543 10 9C10 10.1046 10.8954 11 12 11C13.1046 11 14 10.1046 14 9C14 7.89543 13.1046 7 12 7ZM19 21V17M19 17C20.1046 17 21 16.1046 21 15C21 13.8954 20.1046 13 19 13C17.8954 13 17 13.8954 17 15C17 16.1046 17.8954 17 19 17ZM19 9V3"
           stroke="currentColor"
           stroke-width="2"
@@ -108,6 +85,29 @@ const settingsTree = [
         class="size-5"
       >
         <path
+          d="M5.3163 19.4384C5.92462 18.0052 7.34492 17 9 17H15C16.6551 17 18.0754 18.0052 18.6837 19.4384M16 9.5C16 11.7091 14.2091 13.5 12 13.5C9.79086 13.5 8 11.7091 8 9.5C8 7.29086 9.79086 5.5 12 5.5C14.2091 5.5 16 7.29086 16 9.5ZM22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    ),
+    label: "Account",
+    handler: AccountSettings,
+    default: true,
+  },
+  {
+    icon: () => (
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        class="size-5"
+      >
+        <path
           d="M12 16V12M12 8H12.01M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
           stroke="currentColor"
           stroke-width="2"
@@ -126,7 +126,7 @@ export default async function Settings(query) {
     createSignal(0);
   const page = (
     <div class="fixed z-100 bg-black/50 inset-0 overflow-y-auto overscroll-contain flex items-center justify-center">
-      <div class="absolute m-auto max-w-full w-[70rem] mx-2 shadow-3xl aspect-video bg-[#171717] backdrop-blur-xl border border-white/10 rounded-3xl flex">
+      <div class="absolute m-auto max-w-full w-[70rem] mx-2 shadow-3xl aspect-video bg-[#171717] backdrop-blur-xl border border-[#222222] rounded-3xl flex">
         <div
           class="absolute right-6 top-6 size-6 flex items-center justify-center cursor-pointer text-neutral-500 hover:text-neutral-200 transition-colors duration-150"
           onClick={() => {
@@ -150,7 +150,7 @@ export default async function Settings(query) {
             <path d="m6 6 12 12" />
           </svg>
         </div>
-        <div class="h-full w-xs p-6 space-y-2 border-r border-white/10">
+        <div class="h-full w-xs p-6 space-y-2">
           <div class="text-xl">Settings</div>
           <div class="space-y-4">
             {settingsTree.map((setting, index: number) =>
