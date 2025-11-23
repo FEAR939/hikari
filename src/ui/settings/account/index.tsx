@@ -15,7 +15,13 @@ export default function AccountSettings() {
 
   const page = (
     <div class="max-h-full h-fit w-full space-y-4 overflow-y-scroll">
-      <div class="text-xl">Account Settings</div>
+      <div>
+        <div class="text-xl">Your Account</div>
+        <div class="text-sm text-neutral-500">
+          Manage your account information.
+        </div>
+      </div>
+
       {bind([isAuth, setIsAuth, subscribeIsAuth], (value) =>
         value ? (
           <div class="h-full w-full flex">

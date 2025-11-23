@@ -23,7 +23,7 @@ export default function ExtensionSettings() {
 
   const page = (
     <div class="h-full w-full space-y-4">
-      <div class="text-xl">Extension Settings</div>
+      <div class="text-xl">Extensions</div>
       <div class="flex h-fit w-full space-x-2">
         <div class="flex items-center space-x-2 px-4 h-10 w-full bg-[#1d1d1d] text-white border border-[#222222] rounded-full">
           <svg
