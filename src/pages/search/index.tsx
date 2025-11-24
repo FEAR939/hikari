@@ -65,7 +65,30 @@ export default async function Search(query) {
               if (e.keyCode == 13) {
                 isSearching = true;
                 setResults([]);
-                const results = await kitsu.searchAnime(e.target.value);
+                let results = null;
+                const hasFilters =
+                  Object.values(filters()).findIndex(
+                    (filter) => filter.value !== "all",
+                  ) !== -1
+                    ? true
+                    : false;
+                if (hasFilters) {
+                  const params = {};
+                  Object.entries(filters()).forEach(([key, value]) => {
+                    if (value.value !== "all") {
+                      params[key] = value.value;
+                    }
+                  });
+
+                  console.debug(params);
+
+                  results = await kitsu.advancedSearch({
+                    text: e.target.value,
+                    ...params,
+                  });
+                } else {
+                  results = await kitsu.searchAnime(e.target.value);
+                }
 
                 isSearching = false;
                 return setResults(results.data);
