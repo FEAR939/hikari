@@ -27,10 +27,11 @@ export default async function Search(query) {
       type: "string",
       possibleValues: [
         "all",
+        "current",
         "finished",
-        "airing",
-        "not yet aired",
-        "cancelled",
+        "tba",
+        "unreleased",
+        "upcoming",
       ],
     },
   });
