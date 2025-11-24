@@ -27,10 +27,10 @@ jobs:
         run: bun install
 
       - name: Compile Electron
-        run: tsc -p tsconfig.electron.json
+        run: bun tsc -p tsconfig.electron.json
 
       - name: Compile Preload
-        run: tsc -p tsconfig.preload.json
+        run: bun tsc -p tsconfig.preload.json
 
       - name: Build Frontend
         run: bun vite build
