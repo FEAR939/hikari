@@ -8,6 +8,33 @@ import { kitsu } from "../../lib/kitsu";
 export default async function Search(query) {
   const [results, setResults, subscribeResults] = createSignal([]);
   let isSearching = false;
+  const [filterOpen, setFilterOpen, subscribeFilterOpen] = createSignal(false);
+  const [filters, setFilters, subscribeFilters] = createSignal({
+    season: {
+      label: "Season",
+      value: "all",
+      type: "string",
+      possibleValues: ["all", "winter", "spring", "summer", "fall"],
+    },
+    seasonYear: {
+      label: "Year",
+      value: "all",
+      type: "number",
+    },
+    status: {
+      label: "Status",
+      value: "all",
+      type: "string",
+      possibleValues: [
+        "all",
+        "finished",
+        "airing",
+        "not yet aired",
+        "cancelled",
+      ],
+    },
+  });
+  let filterOpenTimeout: NodeJS.Timeout | null = null;
 
   const page = (
     <div class="relative h-full w-full p-4 pt-12 space-y-4">
@@ -46,23 +73,81 @@ export default async function Search(query) {
             }}
           ></input>
         </div>
-        <div class="size-10 rounded-2xl bg-[#1d1d1d] border border-[#222222] grid place-items-center cursor-pointer">
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            class="size-4"
+        <div class="position relative">
+          <div
+            class="size-10 rounded-2xl bg-[#1d1d1d] border border-[#222222] grid place-items-center cursor-pointer"
+            onClick={() => {
+              setFilterOpen(!filterOpen());
+            }}
           >
-            <path
-              d="M2 4.6C2 4.03995 2 3.75992 2.10899 3.54601C2.20487 3.35785 2.35785 3.20487 2.54601 3.10899C2.75992 3 3.03995 3 3.6 3H20.4C20.9601 3 21.2401 3 21.454 3.10899C21.6422 3.20487 21.7951 3.35785 21.891 3.54601C22 3.75992 22 4.03995 22 4.6V5.26939C22 5.53819 22 5.67259 21.9672 5.79756C21.938 5.90831 21.8901 6.01323 21.8255 6.10776C21.7526 6.21443 21.651 6.30245 21.4479 6.4785L15.0521 12.0215C14.849 12.1975 14.7474 12.2856 14.6745 12.3922C14.6099 12.4868 14.562 12.5917 14.5328 12.7024C14.5 12.8274 14.5 12.9618 14.5 13.2306V18.4584C14.5 18.6539 14.5 18.7517 14.4685 18.8363C14.4406 18.911 14.3953 18.9779 14.3363 19.0315C14.2695 19.0922 14.1787 19.1285 13.9971 19.2012L10.5971 20.5612C10.2296 20.7082 10.0458 20.7817 9.89827 20.751C9.76927 20.7242 9.65605 20.6476 9.58325 20.5377C9.5 20.4122 9.5 20.2142 9.5 19.8184V13.2306C9.5 12.9618 9.5 12.8274 9.46715 12.7024C9.43805 12.5917 9.39014 12.4868 9.32551 12.3922C9.25258 12.2856 9.15102 12.1975 8.94789 12.0215L2.55211 6.4785C2.34898 6.30245 2.24742 6.21443 2.17449 6.10776C2.10986 6.01323 2.06195 5.90831 2.03285 5.79756C2 5.67259 2 5.53819 2 5.26939V4.6Z"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+            <svg
+              width="100%"
+              height="100%"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              class="size-4"
+            >
+              <path
+                d="M2 4.6C2 4.03995 2 3.75992 2.10899 3.54601C2.20487 3.35785 2.35785 3.20487 2.54601 3.10899C2.75992 3 3.03995 3 3.6 3H20.4C20.9601 3 21.2401 3 21.454 3.10899C21.6422 3.20487 21.7951 3.35785 21.891 3.54601C22 3.75992 22 4.03995 22 4.6V5.26939C22 5.53819 22 5.67259 21.9672 5.79756C21.938 5.90831 21.8901 6.01323 21.8255 6.10776C21.7526 6.21443 21.651 6.30245 21.4479 6.4785L15.0521 12.0215C14.849 12.1975 14.7474 12.2856 14.6745 12.3922C14.6099 12.4868 14.562 12.5917 14.5328 12.7024C14.5 12.8274 14.5 12.9618 14.5 13.2306V18.4584C14.5 18.6539 14.5 18.7517 14.4685 18.8363C14.4406 18.911 14.3953 18.9779 14.3363 19.0315C14.2695 19.0922 14.1787 19.1285 13.9971 19.2012L10.5971 20.5612C10.2296 20.7082 10.0458 20.7817 9.89827 20.751C9.76927 20.7242 9.65605 20.6476 9.58325 20.5377C9.5 20.4122 9.5 20.2142 9.5 19.8184V13.2306C9.5 12.9618 9.5 12.8274 9.46715 12.7024C9.43805 12.5917 9.39014 12.4868 9.32551 12.3922C9.25258 12.2856 9.15102 12.1975 8.94789 12.0215L2.55211 6.4785C2.34898 6.30245 2.24742 6.21443 2.17449 6.10776C2.10986 6.01323 2.06195 5.90831 2.03285 5.79756C2 5.67259 2 5.53819 2 5.26939V4.6Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <div
+            class="absolute z-10 left-0 top-12 w-64 h-fit max-h-sm rounded-2xl bg-[#1d1d1d] border border-[#222222] p-4 space-y-2 overflow-y-scroll hidden opacity-0 transition-all duration-150 scale-75"
+            ref={(el: HTMLElement) => {
+              subscribeFilterOpen(() => {
+                const state = filterOpen();
+
+                if (!state) {
+                  el.classList.add("opacity-0", "scale-75");
+                  el.clientWidth;
+                  filterOpenTimeout = setTimeout(() => {
+                    el.classList.add("hidden");
+                  }, 150);
+                  return;
+                }
+
+                if (filterOpenTimeout) {
+                  clearTimeout(filterOpenTimeout);
+                }
+
+                el.classList.remove("hidden");
+                el.clientWidth;
+                el.classList.remove("opacity-0", "scale-75");
+              });
+            }}
+          >
+            {Object.values(filters()).map((filter) => {
+              console.log(filter);
+              return (
+                <div class="h-8 w-full flex justify-between">
+                  <div class="text-sm">{filter.label}</div>
+                  {filter.type == "string" &&
+                    filter.possibleValues !== undefined && (
+                      <select class="w-12">
+                        {filter.possibleValues.map((value) => (
+                          <option value={value}>{value}</option>
+                        ))}
+                      </select>
+                    )}
+                  {filter.type == "number" &&
+                    filter.possibleValues == undefined && (
+                      <input
+                        type="string"
+                        pattern="[0-9]*"
+                        placeholder="All"
+                        class="w-12 text-sm"
+                      />
+                    )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
       {bind([results, setResults, subscribeResults], (value) => (
