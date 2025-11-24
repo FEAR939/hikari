@@ -1,5 +1,48 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: "Roboto";
+    src: url("/src/fonts/Roboto-VariableFont_wdth,wght.ttf") format("truetype");
+}
+
+@theme {
+    --animate-infinite-scroll: infinite-scroll 25s linear infinite;
+    --breakpoint-3xl: 120rem;
+    --breakpoint-4xl: 140rem;
+
+    @keyframes infinite-scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-4px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+* {
+    font-family: Roboto, Arial, sans-serif;
+}
+
+html,
+body {
+    scroll-behavior: smooth;
+    overscroll-behavior: none;
+    user-select: none;
+    font-family: "Roboto";
+}
+
 ::-webkit-scrollbar {
     display: none;
 }

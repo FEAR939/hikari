@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "outDir": "./electron-dist",
+    "rootDir": "./electron",
+    "moduleResolution": "bundler",
+    "module": "esnext"
+  },
+  "include": ["./electron/**/*"],
+  "exclude": ["./electron/preload.ts"]
+}

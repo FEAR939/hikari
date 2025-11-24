@@ -1,19 +1,63 @@
 {
-  "name": "anime-app",
+  "name": "hikari",
+  "author": "F E A R",
   "private": true,
-  "description": "",
-  "main": "./electron/main.cjs",
+  "description": "Hikari is an app for watching anime from your favorite sources",
+  "version": "2.6.3",
+  "main": "./electron-dist/main.js",
   "type": "module",
+  "scripts": {
+    "electron:build": "tsc -p tsconfig.electron.json && tsc -p tsconfig.preload.json"
+  },
   "dependencies": {
-    "@tailwindcss/vite": "^4.1.11",
-    "electron": "^37.2.6",
-    "rolldown-vite": "^7.0.12",
-    "tailwindcss": "^4.1.11"
+    "@tailwindcss/vite": "^4.1.17",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "electron-updater": "^6.6.2",
+    "ffprobe-static": "^3.1.0",
+    "gql.tada": "^1.9.0",
+    "jszip": "^3.10.1",
+    "rolldown-vite": "^7.2.7",
+    "tailwind-merge": "^3.4.0",
+    "tailwindcss": "^4.1.17",
+    "urql": "^5.0.1"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "electron": "^39.2.3",
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.9.3"
   },
-  "peerDependencies": {
-    "typescript": "^5"
+  "build": {
+    "appId": "com.hikari.app",
+    "productName": "Hikari",
+    "directories": {
+      "output": "build"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "FEAR939",
+        "repo": "hikari",
+        "releaseType": "release"
+      }
+    ],
+    "asarUnpack": [
+      "node_modules/ffprobe-static/binaries/**/*"
+    ],
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*",
+      "electron-dist/**/*"
+    ],
+    "win": {
+      "icon": "public/icons/icon.png"
+    },
+    "asar": true,
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }
