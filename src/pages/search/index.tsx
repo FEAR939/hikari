@@ -96,7 +96,7 @@ export default async function Search(query) {
             }}
           ></input>
         </div>
-        <div class="position relative">
+        <div class="relative">
           <div
             class="size-10 rounded-2xl bg-[#1d1d1d] border border-[#222222] grid place-items-center cursor-pointer"
             onClick={() => {
