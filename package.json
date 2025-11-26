@@ -7,7 +7,7 @@
   "main": "./electron-dist/main.js",
   "type": "module",
   "scripts": {
-    "electron:build": "tsc -p tsconfig.electron.json && tsc -p tsconfig.preload.json"
+    "electron:build": "bun tsc -p tsconfig.electron.json && bun tsc -p tsconfig.preload.json"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
