@@ -4,6 +4,7 @@ import { fetchSections } from "../../lib/anilist";
 import { h } from "../../lib/jsx/runtime";
 import { createSignal, bind } from "../../lib/jsx/reactive";
 import { kitsu } from "../../lib/kitsu";
+import DropdownMenu, { DropdownItem } from "@ui/dropdownMenu";
 
 export default async function Search(query) {
   const [results, setResults, subscribeResults] = createSignal([]);
@@ -76,12 +77,10 @@ export default async function Search(query) {
                 if (hasFilters) {
                   const params = {};
                   Object.entries(filters()).forEach(([key, value]) => {
-                    if (value.value !== "all") {
+                    if (value.value !== "all" && value.value !== "") {
                       params[key] = value.value;
                     }
                   });
-
-                  console.debug(params);
 
                   results = await kitsu.advancedSearch({
                     text: e.target.value,
@@ -122,7 +121,7 @@ export default async function Search(query) {
             </svg>
           </div>
           <div
-            class="absolute z-10 left-0 top-12 w-64 h-fit max-h-sm rounded-2xl bg-[#1d1d1d] border border-[#222222] p-4 space-y-2 overflow-y-scroll hidden opacity-0 transition-all duration-150 scale-75"
+            class="absolute z-10 left-0 top-12 w-64 h-fit max-h-sm rounded-2xl bg-[#1d1d1d] border border-[#222222] p-4 space-y-2 hidden opacity-0 transition-all duration-150 scale-75"
             ref={(el: HTMLElement) => {
               subscribeFilterOpen(() => {
                 const state = filterOpen();
@@ -146,26 +145,38 @@ export default async function Search(query) {
               });
             }}
           >
-            {Object.values(filters()).map((filter) => {
-              console.log(filter);
+            {Object.entries(filters()).map(([filterName, filter]) => {
               return (
-                <div class="h-8 w-full flex justify-between">
-                  <div class="text-sm">{filter.label}</div>
+                <div class="h-8 w-full flex items-center justify-between">
+                  <div class="text-xs">{filter.label}</div>
                   {filter.type == "string" &&
                     filter.possibleValues !== undefined && (
-                      <select class="w-12">
+                      <DropdownMenu
+                        className="w-12"
+                        onChange={(value) => {
+                          const tempFilters = filters();
+                          tempFilters[filterName].value = value;
+                          setFilters(tempFilters);
+                        }}
+                      >
                         {filter.possibleValues.map((value) => (
-                          <option value={value}>{value}</option>
+                          <DropdownItem
+                            value={value}
+                          >{`${value.substring(0, 1).toUpperCase()}${value.substring(1)}`}</DropdownItem>
                         ))}
-                      </select>
+                      </DropdownMenu>
                     )}
                   {filter.type == "number" &&
                     filter.possibleValues == undefined && (
                       <input
-                        type="string"
-                        pattern="[0-9]*"
+                        type="number"
                         placeholder="All"
-                        class="w-12 text-sm"
+                        class="w-12 text-xs outline-hidden text-right pr-4 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        onChange={(e: any) => {
+                          const tempFilters = filters();
+                          tempFilters[filterName].value = e.target.value;
+                          setFilters(tempFilters);
+                        }}
                       />
                     )}
                 </div>
