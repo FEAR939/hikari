@@ -20,6 +20,9 @@ export default class RSSClient {
     const feed = Array.from(items).map((item) => ({
       title: item.getElementsByTagName("title")[0].textContent,
       link: item.getElementsByTagName("link")[0].textContent,
+      thumbnail: item
+        .getElementsByTagName("media:thumbnail")[0]
+        .getAttribute("url"),
       description: item.getElementsByTagName("description")[0].textContent,
       pubDate: item.getElementsByTagName("pubDate")[0].textContent,
     }));
