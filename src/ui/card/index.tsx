@@ -149,7 +149,7 @@ export function Card(
               loading="lazy"
             />*/}
             <div class="w-full aspect-video relative">
-              <div class="w-full h-full overflow-clip rounded-t-2xl mask-b-to-95% mask-y-neutral-950 absolute top-0">
+              <div class="w-full h-full overflow-clip rounded-t-2xl mask-b-to-99% mask-y-[#1d1d1d] absolute top-0">
                 <iframe
                   class="w-full border-0 left-0 h-[calc(100%+200px)] pointer-events-none absolute top-1/2 transform-gpu -translate-y-1/2"
                   title="trailer"
@@ -169,7 +169,7 @@ export function Card(
             </div>
             <div class="flex h-7 space-x-2 px-4">
               <div
-                class="w-full h-full bg-neutral-200 hover:bg-neutral-400 rounded text-black text-xs flex items-center justify-center space-x-1 cursor-pointer transition-colors duration-150"
+                class="w-full h-full bg-neutral-200 hover:bg-neutral-400 rounded-full text-black text-xs flex items-center justify-center space-x-1 cursor-pointer transition-colors duration-150"
                 onclick={() => router.navigate(`/anime?id=${item.id}`)}
               >
                 <svg
@@ -189,7 +189,7 @@ export function Card(
                 <div class="h-2.75 leading-none">Watch Now</div>
               </div>
               <div
-                class="size-7 bg-neutral-950/75 rounded flex items-center justify-center cursor-pointer"
+                class="min-w-7 min-h-7 size-7 bg-[#222222] hover:bg-[#333333] rounded-full flex items-center justify-center cursor-pointer"
                 onClick={async () => {
                   const result = await API.setBookmark(
                     parseInt(item.id),

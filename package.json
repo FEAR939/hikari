@@ -2,12 +2,12 @@
   "name": "hikari",
   "author": "F E A R",
   "private": true,
-  "description": "Hikari is an app for watching anime from your favorite sources",
-  "version": "2.6.3",
+  "description": "Hikari is an extensible app for watching anime",
+  "version": "2.6.4",
   "main": "./electron-dist/main.js",
   "type": "module",
   "scripts": {
-    "electron:build": "tsc -p tsconfig.electron.json && tsc -p tsconfig.preload.json"
+    "electron:build": "bun tsc -p tsconfig.electron.json && bun tsc -p tsconfig.preload.json"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
