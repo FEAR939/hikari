@@ -21,14 +21,14 @@ export default async function FilePanel(path: string) {
   );
 
   const container = (
-    <div class="fixed inset-0 p-4 pt-12 flex items-center justify-center backdrop-brightness-50 backdrop-blur-md transition-all duration-150 ease-in-out opacity-0">
+    <div class="fixed inset-0 p-4 pt-12 flex items-center justify-center backdrop-brightness-50 transition-all duration-150 ease-in-out opacity-0">
       <div
-        class="relative w-full max-w-1/2 3xl:max-w-7xl h-full p-4 3xl:pt-32 space-y-4 overflow-y-scroll bg-[#080808] rounded-xl transition-all duration-150 ease-in-out scale-75"
+        class="absolute m-auto max-w-full w-[70rem] mx-2 shadow-3xl aspect-video bg-[#171717] backdrop-blur-xl border border-[#222222] rounded-3xl p-6 space-y-4"
         ref={(el: HTMLDivElement) => (panel = el)}
       >
         {/* Close button */}
         <div
-          class="absolute z-10 top-2 right-4 size-8 flex items-center justify-center cursor-pointer"
+          class="absolute z-10 top-6 right-6 size-8 text-neutral-500 hover:text-neutral-200 flex items-center justify-center cursor-pointer"
           onClick={() => {
             router.removeRoute("/anime/episodes/sourcePanel");
             (container as HTMLElement).remove();
@@ -87,7 +87,7 @@ export default async function FilePanel(path: string) {
           <div>Episodes</div>
           <div class="flex gap-1 h-8 w-full">
             <div
-              class="h-full px-4 flex gap-1 items-center bg-neutral-950 border border-neutral-900 rounded-lg hover:bg-neutral-900 cursor-pointer"
+              class="h-full px-4 flex gap-1 items-center bg-[#222222] rounded-full hover:bg-[#333333] cursor-pointer"
               onClick={() => window.electronAPI?.openFolder(path)}
             >
               <svg
@@ -112,14 +112,14 @@ export default async function FilePanel(path: string) {
           {bind(
             [episodeFiles, setEpisodeFiles, subscribeEpisodeFiles],
             (episodes) => (
-              <div class="border border-neutral-900 rounded-lg [&>*:last-of-type]:rounded-b-lg">
-                <div class="px-6 py-3 grid grid-cols-2 text-sm text-neutral-500 border-b border-neutral-900">
+              <div class="border border-[#222222] rounded-lg [&>*:last-of-type]:rounded-b-lg">
+                <div class="px-6 py-3 grid grid-cols-2 text-sm text-neutral-500 border-b border-[#222222]">
                   <div>Filename</div>
                   <div>Mapped</div>
                 </div>
                 {episodes.length > 0 ? (
                   episodes.map((dir) => (
-                    <div class="text-sm px-6 py-3 grid grid-cols-2 hover:bg-neutral-800 border-b border-neutral-900">
+                    <div class="text-sm px-6 py-3 grid grid-cols-2 hover:bg-[#333333] border-b border-[#222222]">
                       <div class="truncate">{dir}</div>
                       {(() => {
                         const mapped = reverseMap(dir);
