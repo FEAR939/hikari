@@ -3,7 +3,7 @@
   "author": "F E A R",
   "private": true,
   "description": "Hikari is an extensible app for watching anime",
-  "version": "2.6.3",
+  "version": "2.6.4",
   "main": "./electron-dist/main.js",
   "type": "module",
   "scripts": {
