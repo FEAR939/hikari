@@ -46,27 +46,25 @@ export default async function Home(query) {
             })}
           </div>
         ) : (
-          <div>
-            <div class="relative w-full h-48 md:h-96">
-              <div class="absolute inset-0 bg-neutral-900">
-                <div class="absolute inset-0 brightness-50 mask-t-from-25% bg-[#080808]"></div>
-              </div>
-              <div class="absolute z-1 top-20 md:top-48 left-4 w-1/3 h-8 rounded bg-neutral-800 animate-pulse"></div>
-              <div class="absolute z-1 top-24 md:top-58 left-4 w-1/2 h-12 rounded bg-neutral-800 animate-pulse"></div>
-              <div class="absolute z-1 top-34 md:top-72 left-4 w-48 h-6 rounded bg-neutral-800 animate-pulse"></div>
+          <div class="w-full h-full grid place-items-center">
+            <div class="flex justify-center text-center">
+              <svg
+                aria-hidden="true"
+                class="size-4"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm0,19a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z"
+                  opacity=".25"
+                />
+                <path
+                  d="M10.14,1.16a11,11,0,0,0-9,8.92A1.59,1.59,0,0,0,2.46,12,1.52,1.52,0,0,0,4.11,10.7a8,8,0,0,1,6.66-6.61A1.42,1.42,0,0,0,12,2.69h0A1.57,1.57,0,0,0,10.14,1.16Z"
+                  class="spinner_ajPY"
+                />
+              </svg>
             </div>
-            {Array.from({ length: 2 }).map((_, index) => (
-              <div class="h-fit w-full p-4 pt-0 animate-pulse">
-                <div class="h-6 w-64 rounded bg-neutral-900"></div>
-                <div class="space-x-2 md:space-x-4 flex mt-8">
-                  {Array.from({ length: window.innerWidth / (48 * 4) }).map(
-                    (_, index) => (
-                      <div class="w-48 aspect-5/7 rounded bg-neutral-900"></div>
-                    ),
-                  )}
-                </div>
-              </div>
-            ))}
           </div>
         ),
       )}
