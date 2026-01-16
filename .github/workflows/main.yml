@@ -4,25 +4,25 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Release version (e.g., 1.0.0)'
+        description: "Release version (e.g., 1.0.0)"
         required: true
         type: string
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    
+
     strategy:
       matrix:
         os: [windows-latest]
-    
+
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v6
-      
+
       - name: Install Bun
         uses: oven-sh/setup-bun@v2
-      
+
       - name: Install dependencies
         run: bun install
 
@@ -34,43 +34,43 @@ jobs:
 
       - name: Build Frontend
         run: bun vite build
-      
+
       - name: Build Electron app
         run: bunx electron-builder
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v5
         with:
           name: ${{ matrix.os }}
           path: |
-            build/*.exe
-            build/*.dmg
-            build/*.AppImage
-            build/*.deb
-            build/*.rpm
-            build/*.snap
-            build/*-mac.zip
-            build/*-win.zip
-            build/*.blockmap
-            build/latest.yml
+            binary/*.exe
+            binary/*.dmg
+            binary/*.AppImage
+            binary/*.deb
+            binary/*.rpm
+            binary/*.snap
+            binary/*-mac.zip
+            binary/*-win.zip
+            binary/*.blockmap
+            binary/latest.yml
 
   draft-release:
     needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    
+
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v6
         with:
           path: artifacts
-      
+
       - name: Display structure of downloaded files
         run: ls -R artifacts
-      
+
       - name: Create Draft Release
         uses: softprops/action-gh-release@v2
         with:
