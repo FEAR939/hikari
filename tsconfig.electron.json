@@ -3,7 +3,8 @@
     "outDir": "./electron-dist",
     "rootDir": "./electron",
     "moduleResolution": "bundler",
-    "module": "esnext"
+    "module": "esnext",
+    "target": "ESNext"
   },
   "include": ["./electron/**/*"],
   "exclude": ["./electron/preload.ts"]

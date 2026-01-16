@@ -1,4 +1,4 @@
-import { cache } from "../../services/cache";
+import { cache } from "$lib/cache/cache";
 
 interface KitsuAnime {
   id: string;
@@ -12,7 +12,9 @@ interface KitsuAnime {
       en?: string;
       en_us?: string;
       en_jp?: string;
+      en_cn?: string;
       ja_jp?: string;
+      ch_cn?: string;
     };
     averageRating: string | null;
     userCount: number;
@@ -215,17 +217,18 @@ export class KitsuClient {
   ): Promise<KitsuAnime[]> {
     let url: string;
 
+    const season = this.getCurrentSeason();
+    const year = new Date().getFullYear();
+
     switch (category) {
       case "trending":
-        url = `${this.baseUrl}/trending/anime?limit=${limit}`;
+        url = `${this.baseUrl}/anime?filter[status]=current&filter[seasonYear]=${year}&filter[season]=${season}&limit=${limit}&sort=-userCount,-averageRating`;
         break;
       case "seasonal":
-        const season = this.getCurrentSeason();
-        const year = new Date().getFullYear();
-        url = `${this.baseUrl}/anime?filter[status]=current&page[limit]=${limit}&sort=-user_count`;
+        url = `${this.baseUrl}/anime?filter[seasonYear]=${year}&filter[season]=${season}&page[limit]=${limit}&sort=-favoritesCount`;
         break;
       case "upcoming":
-        url = `${this.baseUrl}/anime?filter[status]=upcoming&page[limit]=${limit}&sort=-user_count`;
+        url = `${this.baseUrl}/anime?filter[status]=upcoming&page[limit]=${limit}&sort=-favoritesCount`;
         break;
       case "highest_rated":
         url = `${this.baseUrl}/anime?page[limit]=${limit}&sort=-average_rating`;
@@ -628,3 +631,48 @@ export type {
   CategoryResult,
   CategoryRequest,
 };
+
+export function getSeriesTitle(series: KitsuAnime) {
+  const titles = series.attributes?.titles;
+
+  if (!titles) return null;
+
+  return (
+    titles.en ||
+    titles.en_us ||
+    titles.en_jp ||
+    titles.en_cn ||
+    titles.ja_jp ||
+    titles.ch_cn ||
+    null
+  );
+}
+
+export function getEpisodeTitle(episode: KitsuEpisode) {
+  const titles = episode.attributes?.titles;
+
+  if (!titles) return null;
+
+  return (
+    titles.en ||
+    titles.en_us ||
+    titles.en_jp ||
+    titles.en_cn ||
+    titles.ja_jp ||
+    titles.ch_cn ||
+    null
+  );
+}
+
+export type PosterQuality = "tiny" | "small" | "medium" | "large" | "original";
+
+export function getSeriesPoster(
+  series: KitsuAnime,
+  quality: PosterQuality = "small",
+) {
+  return series.attributes.posterImage?.[quality] ?? null;
+}
+
+export function getSeriesBackdrop(series: KitsuAnime) {
+  return series.attributes.coverImage?.original || null;
+}

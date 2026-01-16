@@ -1,5 +1,3 @@
-import { authService } from "../../services/auth";
-
 type AniListID = number;
 
 type SET_Episode = {
@@ -51,15 +49,10 @@ export class Client implements APIClient {
   }
 
   async getContinueAnime(): Promise<AniListID[]> {
-    const user = authService.getUser();
-    if (!user) return [];
-
     try {
       const response = await fetch(`${this.baseurl}/get-last-watched`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+        credentials: "include",
       });
 
       if (!response.ok || response.status !== 200) {
@@ -88,9 +81,7 @@ export class Client implements APIClient {
 
     const response = await fetch(`${this.baseurl}/set-leftoff-at`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+      credentials: "include",
       body: formData,
     });
 
@@ -107,9 +98,7 @@ export class Client implements APIClient {
 
       const response = await fetch(`${this.baseurl}/get-leftoff-at`, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-        },
+        credentials: "include",
         body: formData,
       });
 
@@ -142,9 +131,7 @@ export class Client implements APIClient {
 
     const response = await fetch(`${this.baseurl}/get-leftoff-at`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+      credentials: "include",
       body: formData,
     });
 
@@ -162,7 +149,7 @@ export class Client implements APIClient {
     subscribe: boolean,
     notify: boolean,
     remove: boolean,
-  ) {
+  ): boolean {
     const formData = new FormData();
     formData.append("kitsu_id", kitsu_id.toString());
     formData.append("subscribed", subscribe.toString());
@@ -171,9 +158,7 @@ export class Client implements APIClient {
 
     const response = await fetch(`${this.baseurl}/set-bookmark`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+      credentials: "include",
       body: formData,
     });
 
@@ -188,9 +173,7 @@ export class Client implements APIClient {
   async getBookmarks(kitsu_id?: number): Promise<BookmarkResponse> {
     const response = await fetch(`${this.baseurl}/get-bookmarks`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+      credentials: "include",
       body: (() => {
         if (!kitsu_id) return null;
         const formData = new FormData();
@@ -215,9 +198,7 @@ export class Client implements APIClient {
 
     const response = await fetch(`${this.baseurl}/upload-photo`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
+      credentials: "include",
       body: formData,
     });
 
@@ -230,4 +211,18 @@ export class Client implements APIClient {
 
     return data.path;
   }
+}
+
+let client: Client;
+
+export function initAPIClient(baseUrl: string, authService: AuthService) {
+  client = new Client(baseUrl, authService);
+  return client;
+}
+
+export function getAPIClient() {
+  if (!client) {
+    console.error("Client not initialized");
+  }
+  return client;
 }

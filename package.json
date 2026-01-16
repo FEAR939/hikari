@@ -1,38 +1,49 @@
 {
   "name": "hikari",
-  "author": "F E A R",
-  "private": true,
-  "description": "Hikari is an extensible app for watching anime",
-  "version": "2.6.4",
-  "main": "./electron-dist/main.js",
-  "type": "module",
-  "scripts": {
-    "electron:build": "bun tsc -p tsconfig.electron.json && bun tsc -p tsconfig.preload.json"
+  "author": {
+    "name": "F E A R",
+    "email": "rogronin8877@gmail.com"
   },
-  "dependencies": {
-    "@tailwindcss/vite": "^4.1.17",
-    "clsx": "^2.1.1",
-    "date-fns": "^4.1.0",
-    "electron-updater": "^6.6.2",
-    "ffprobe-static": "^3.1.0",
-    "gql.tada": "^1.9.0",
-    "jszip": "^3.10.1",
-    "rolldown-vite": "^7.2.7",
-    "tailwind-merge": "^3.4.0",
-    "tailwindcss": "^4.1.17",
-    "urql": "^5.0.1"
+  "homepage": "https://hikari.app",
+  "private": true,
+  "version": "2.7.0",
+  "type": "module",
+  "main": "./electron-dist/main.js",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync || echo ''",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "electron": "^39.2.3",
-    "electron-builder": "^26.0.12",
+    "@sveltejs/adapter-auto": "^7.0.0",
+    "@sveltejs/adapter-static": "^3.0.10",
+    "@sveltejs/kit": "^2.49.4",
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@tailwindcss/vite": "^4.1.18",
+    "electron-builder": "^26.4.0",
+    "electron": "^39.2.7",
+    "rolldown-vite": "^7.3.1",
+    "svelte": "^5.46.3",
+    "svelte-check": "^4.3.5",
+    "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
   },
   "build": {
     "appId": "com.hikari.app",
     "productName": "Hikari",
+    "linux": {
+      "target": [
+        "pacman"
+      ]
+    },
+    "pacman": {
+      "category": "Utility"
+    },
     "directories": {
-      "output": "build"
+      "output": "binary"
     },
     "publish": [
       {
@@ -42,22 +53,41 @@
         "releaseType": "release"
       }
     ],
-    "asarUnpack": [
-      "node_modules/ffprobe-static/binaries/**/*"
-    ],
     "files": [
-      "dist/**/*",
+      "build/**/*",
       "node_modules/**/*",
       "electron-dist/**/*"
     ],
     "win": {
-      "icon": "public/icons/icon.png"
+      "icon": "static/icon.png"
     },
     "asar": true,
     "nsis": {
       "oneClick": false,
       "perMachine": true,
       "allowToChangeInstallationDirectory": true
-    }
+    },
+    "protocols": [
+      {
+        "name": "Hikari_svelte",
+        "schemes": [
+          "hikari"
+        ]
+      }
+    ]
+  },
+  "dependencies": {
+    "@types/mime-types": "^3.0.1",
+    "better-auth": "^1.4.12",
+    "bits-ui": "^2.15.4",
+    "clsx": "^2.1.1",
+    "colorthief": "^2.6.0",
+    "electron-store": "^11.0.2",
+    "electron-updater": "^6.7.3",
+    "ffprobe-static": "^3.1.0",
+    "jszip": "^3.10.1",
+    "mime-types": "^3.0.2",
+    "svelte-sonner": "^1.0.7",
+    "tailwind-merge": "^3.4.0"
   }
 }
