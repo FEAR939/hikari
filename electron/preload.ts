@@ -22,7 +22,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   },
   onUpdateAvailable: (callback: (version: string) => void) =>
     ipcRenderer.on("update-available", (event, version) => callback(version)),
-  restartAndUpdate: () => ipcRenderer.send("restart-and-update"),
+  onUpdateDownloaded: (callback: (version: string) => void) =>
+    ipcRenderer.on("update-downloaded", (event, version) => callback(version)),
   openDevTools: () => ipcRenderer.send("open-devtools"),
   enterFullscreen: () => ipcRenderer.send("enter-fullscreen"),
   exitFullscreen: () => ipcRenderer.send("exit-fullscreen"),
@@ -73,4 +74,26 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.send("open-url", url);
     return true;
   },
+  readFile: async (filePath: string) => {
+    const content = await ipcRenderer.invoke("read-file", filePath);
+    return content;
+  },
+  readFileBinary: async (filePath: string) => {
+    const content = await ipcRenderer.invoke("read-file-binary", filePath);
+    return content;
+  },
+  navigate: (callback: (path: string) => void) => {
+    ipcRenderer.on("navigate-to", (event, path) => {
+      callback(path);
+    });
+  },
+  clipboardWriteText: (text: string) => {
+    ipcRenderer.send("clipboard-write-text", text);
+  },
+});
+
+contextBridge.exposeInMainWorld("electronStore", {
+  get: (key: string) => ipcRenderer.invoke("store:get", key),
+  set: (key: string, value: any) => ipcRenderer.invoke("store:set", key, value),
+  getAll: () => ipcRenderer.invoke("store:getAll"),
 });
