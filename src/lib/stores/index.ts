@@ -20,6 +20,7 @@ export const currentAnime = writable<null | {}>(null);
 export const currentAnimeAccentColor = writable<null | []>(null);
 
 export const playerAnime = writable<null | {}>(null);
+export const playerAnizip = writable<null | {}>(null);
 
 export const playerEpisode = writable<null | {}>(null);
 

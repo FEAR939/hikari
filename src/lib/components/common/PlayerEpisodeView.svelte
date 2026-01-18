@@ -4,6 +4,7 @@
     import { fade, fly, scale, slide } from "svelte/transition";
     import {
         playerAnime,
+        playerAnizip,
         playerEpisode,
         sourceInitialIndex,
         user,
@@ -51,12 +52,17 @@
                 : [],
         ]);
 
-        // episodesObj.map((episode) => {
-        //     const progress = episodesProgress.find(
-        //         (progress) => progress.episode === episode.attributes.number,
-        //     );
-        //     episode.leftoff = progress ? progress.leftoff : 0;
-        // });
+        episodesObj.map((episode) => {
+            // const progress = episodesProgress.find(
+            //     (progress) => progress.episode === episode.attributes.number,
+            // );
+            // episode.leftoff = progress ? progress.leftoff : 0;
+
+            const anizipEpisode =
+                $playerAnizip?.episodes[episode.attributes.number];
+
+            episode.anizipImage = anizipEpisode?.image;
+        });
 
         episodes = episodesObj;
         isLoading = false;
@@ -152,8 +158,10 @@
                         >
                             <img
                                 class="h-full w-full object-cover"
-                                src={(episode.attributes?.thumbnail &&
-                                    episode.attributes?.thumbnail?.original) ||
+                                src={episode.anizipImage ||
+                                    (episode.attributes?.thumbnail &&
+                                        episode.attributes?.thumbnail
+                                            ?.original) ||
                                     getSeriesBackdrop($playerAnime) ||
                                     getSeriesPoster($playerAnime)}
                                 alt=""

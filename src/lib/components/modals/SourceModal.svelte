@@ -14,6 +14,7 @@
         sourceInitialIndex,
         showPlayer,
         playerAnime,
+        playerAnizip,
         playerEpisode,
         playerSources,
         playerSourceIndex,
@@ -492,6 +493,7 @@
                             if (!currentEpisode) return;
 
                             playerAnime.set(anime);
+                            playerAnizip.set(anizip);
                             playerEpisode.set({
                                 number: currentIndex + 1,
                                 title:
