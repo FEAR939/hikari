@@ -63,8 +63,9 @@
     >
         <!-- Image -->
         <img
-            src={(episode.attributes?.thumbnail &&
-                episode.attributes?.thumbnail?.original) ||
+            src={episode.anizipImage ||
+                (episode.attributes?.thumbnail &&
+                    episode.attributes?.thumbnail?.original) ||
                 getSeriesPoster(anime)}
             class="w-full h-full object-cover transition-transform duration-300 group-hover/episode:scale-105 group-focus-within/episode:scale-105"
             loading="lazy"

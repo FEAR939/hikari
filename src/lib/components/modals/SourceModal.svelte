@@ -32,7 +32,7 @@
 
     let showSourceMenu = $state(false);
 
-    let { show = $bindable(false), anime } = $props();
+    let { show = $bindable(false), anime, anizip } = $props();
 
     async function prepareLoad() {
         const episodesPerPage = 15;
@@ -55,6 +55,8 @@
         });
 
         currentEpisode = episodes[relativeEpisodeIndex];
+        currentEpisode.anizipImage =
+            anizip.episodes[currentEpisode.attributes.number]?.image;
 
         const extensionSettings = JSON.parse(
             localStorage.getItem("extensions") || "[]",
@@ -365,18 +367,20 @@
                         >
                             <img
                                 class="h-full w-full object-cover"
-                                src={(currentEpisode?.attributes?.thumbnail &&
-                                    currentEpisode?.attributes?.thumbnail
-                                        .original) ||
+                                src={currentEpisode?.anizipImage ||
+                                    (currentEpisode?.attributes?.thumbnail &&
+                                        currentEpisode?.attributes?.thumbnail
+                                            .original) ||
                                     getSeriesPoster(anime)}
                                 alt=""
                             />
                         </div>
                         <div class="absolute top-0 blur-xl h-full w-full">
                             <img
-                                src={(currentEpisode?.attributes?.thumbnail &&
-                                    currentEpisode?.attributes?.thumbnail
-                                        .original) ||
+                                src={currentEpisode?.anizipImage ||
+                                    (currentEpisode?.attributes?.thumbnail &&
+                                        currentEpisode?.attributes?.thumbnail
+                                            .original) ||
                                     getSeriesPoster(anime)}
                                 class="h-full w-full object-cover"
                                 alt=""
