@@ -111,7 +111,7 @@
             </div>
             <a
                 href={`/anime/${currentSlide.id}`}
-                class="h-12 w-fit my-8 flex items-center justify-center space-x-2 text-black text-base pl-5 pr-5.5 rounded-full cursor-pointer transition-colors duration-150"
+                class="h-12 w-fit my-8 flex items-center justify-center space-x-2 text-black text-base pl-5 pr-5.5 rounded-full cursor-pointer transition-colors duration-150 outline-white outline-offset-2 focus-within:outline-2"
                 style:background="rgb({accentColor?.join(',')})"
             >
                 <svg
@@ -150,6 +150,7 @@
                         currentIndex = (currentIndex + 1) % slides.length;
                     }, 10000);
                 }}
+                tabindex="-1"
             >
                 {#if index === currentIndex}
                     <div

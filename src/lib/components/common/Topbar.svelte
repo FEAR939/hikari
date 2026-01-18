@@ -22,12 +22,12 @@
         transition:fade={{ duration: 100 }}
     >
         <a
-            class="rounded-xl overflow-hidden cursor-pointer transition"
+            class="group/topbar_search rounded-full cursor-pointer transition-transform duration-150 outline-hidden"
             aria-label="Search"
             href="/search"
         >
             <div
-                class="relative p-2 bg-black/30 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 rounded-full flex items-center justify-center"
+                class="relative p-2 bg-gray-900 rounded-full flex items-center justify-center group-focus-within/topbar_search:outline-1 outline-white outline-offset-2"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -42,9 +42,9 @@
                 >
             </div>
         </a>
-        <UserMenu>
+        <UserMenu class="group/usermenu outline-hidden">
             <div
-                class="mx-1 rounded-xl overflow-hidden cursor-pointer transition"
+                class="mx-1 rounded-full overflow-hidden cursor-pointer transition-transform duration-150 outline-white outline-offset-2 group-focus-within/usermenu:outline-1"
             >
                 {#if $user}
                     <img
@@ -78,6 +78,7 @@
                 class="h-full w-12 flex items-center justify-center hover:bg-black/50"
                 style="font-family: 'Segoe Fluent Icons'"
                 onclick={() => window.electronAPI.windowMinimize()}
+                tabIndex="-1"
             >
                 &#xE921;
             </button>
@@ -85,6 +86,7 @@
                 class="h-full w-12 flex items-center justify-center hover:bg-black/50"
                 style="font-family: 'Segoe Fluent Icons'"
                 onclick={() => window.electronAPI.windowMaximized(!isMaximized)}
+                tabIndex="-1"
             >
                 {#if isMaximized}
                     &#xE923;
@@ -96,6 +98,7 @@
                 class="h-full w-12 flex items-center justify-center hover:bg-red-500"
                 style="font-family: 'Segoe Fluent Icons'"
                 onclick={() => window.electronAPI.quit()}
+                tabIndex="-1"
             >
                 &#xE8BB;
             </button>

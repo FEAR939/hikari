@@ -11,16 +11,11 @@
 
     const API = getAPIClient();
 
-    let { show = $bindable(false), children, onChange } = $props();
+    let { show = $bindable(false), children, class: className = "" } = $props();
 </script>
 
-<DropdownMenu.Root
-    bind:open={show}
-    onOpenChange={(state) => {
-        onChange?.(state);
-    }}
->
-    <DropdownMenu.Trigger>
+<DropdownMenu.Root bind:open={show}>
+    <DropdownMenu.Trigger class={className}>
         {@render children()}
     </DropdownMenu.Trigger>
 

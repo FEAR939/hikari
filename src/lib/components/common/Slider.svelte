@@ -93,7 +93,7 @@
             <!-- Navigation Buttons -->
             <div class="flex gap-2 max-md:hidden">
                 <button
-                    class="relative p-2 rounded-full bg-black/30 text-white flex items-center justify-center disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                    class="relative p-2 rounded-full bg-black/30 text-white flex items-center justify-center disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 focus-within:before:bg-white/10 outline-hidden"
                     onclick={() => scroll("left")}
                     disabled={!canScrollLeft}
                     aria-label="Scroll left"
@@ -105,7 +105,7 @@
                     </svg>
                 </button>
                 <button
-                    class="relative p-2 rounded-full bg-black/30 text-white flex items-center justify-center disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                    class="relative p-2 rounded-full bg-black/30 text-white flex items-center justify-center disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full focus-within:before:bg-white/10 outline-hidden"
                     onclick={() => scroll("right")}
                     disabled={!canScrollRight}
                     aria-label="Scroll right"
