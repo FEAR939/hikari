@@ -26,6 +26,7 @@
     import ColorThief from "colorthief";
     import Trailer from "$lib/components/common/Trailer.svelte";
     import TrailerModal from "$lib/components/modals/TrailerModal.svelte";
+    import { anizip } from "$lib/anizip";
 
     let API = getAPIClient();
 
@@ -76,7 +77,10 @@
         currentTab = 0;
 
         try {
-            const kitsuAnime = await kitsu.getAnimeById(id);
+            const [kitsuAnime, anizipAnime] = await Promise.all([
+                kitsu.getAnimeById(id),
+                anizip.getAnimeById(Number(id)),
+            ]);
 
             kitsuAnime.relations = kitsuAnime.relations
                 .filter(
@@ -104,6 +108,7 @@
 
             data = {
                 animeObj: kitsuAnime,
+                anizip: anizipAnime,
                 progress: progress || false,
                 bookmarked: bookmarked?.[0]?.subscribed || false,
             };
@@ -141,7 +146,10 @@
 
 <div class="relative h-full w-full">
     {#if loaded && data}
-        <SourceModal bind:show={$showSource} anime={data.animeObj.anime}
+        <SourceModal
+            bind:show={$showSource}
+            anime={data.animeObj.anime}
+            anizip={data.anizip}
         ></SourceModal>
 
         <TrailerModal bind:show={$showTrailer} anime={data.animeObj.anime}
@@ -462,7 +470,10 @@
                         <div class="w-full h-fit">
                             {#if currentTab === 0}
                                 {#key animeId}
-                                    <EpisodeView anime={data.animeObj.anime} />
+                                    <EpisodeView
+                                        anime={data.animeObj.anime}
+                                        anizip={data.anizip}
+                                    />
                                 {/key}
                             {/if}
                         </div>

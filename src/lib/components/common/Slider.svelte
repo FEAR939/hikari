@@ -93,7 +93,7 @@
             <!-- Navigation Buttons -->
             <div class="flex gap-2 max-md:hidden">
                 <button
-                    class="relative p-2 rounded-full bg-black/30 text-white flex items-center justify-center disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                    class="relative p-2 rounded-full bg-black/30 text-white flex items-center justify-center disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 focus-within:before:bg-white/10 outline-hidden"
                     onclick={() => scroll("left")}
                     disabled={!canScrollLeft}
                     aria-label="Scroll left"
@@ -105,7 +105,7 @@
                     </svg>
                 </button>
                 <button
-                    class="relative p-2 rounded-full bg-black/30 text-white flex items-center justify-center disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                    class="relative p-2 rounded-full bg-black/30 text-white flex items-center justify-center disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full focus-within:before:bg-white/10 outline-hidden"
                     onclick={() => scroll("right")}
                     disabled={!canScrollRight}
                     aria-label="Scroll right"
@@ -146,7 +146,7 @@
 
         <!-- Hover Navigation Button - Left -->
         <button
-            class="absolute left-2 top-1/2 -translate-y-full rounded-full bg-white text-black flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:hidden opacity-0 group-hover:opacity-100 hover:scale-125 transition-transform duration-150"
+            class="absolute left-2 top-1/2 -translate-y-full rounded-full bg-white text-black flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:opacity-0 opacity-0 group-hover:opacity-100 hover:scale-125 transition-all duration-150"
             onclick={() => scroll("left")}
             disabled={!canScrollLeft}
             aria-label="Scroll left"
@@ -158,7 +158,7 @@
 
         <!-- Hover Navigation Button - Right -->
         <button
-            class="absolute right-2 top-1/2 -translate-y-full rounded-full bg-white text-black flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:hidden opacity-0 group-hover:opacity-100 hover:scale-125 transition-transform duration-150"
+            class="absolute right-2 top-1/2 -translate-y-full rounded-full bg-white text-black flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:opacity-0 opacity-0 group-hover:opacity-100 hover:scale-125 transition-all duration-150"
             onclick={() => scroll("right")}
             disabled={!canScrollRight}
             aria-label="Scroll right"

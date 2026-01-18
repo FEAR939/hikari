@@ -9,7 +9,7 @@
 
     const API = getAPIClient();
 
-    let { anime } = $props();
+    let { anime, anizip } = $props();
 
     let isLoading = $state(true);
 
@@ -37,6 +37,10 @@
                 (progress) => progress.episode === episode.attributes.number,
             );
             episode.leftoff = progress ? progress.leftoff : 0;
+
+            const anizipEpisode = anizip.episodes[episode.attributes.number];
+
+            episode.anizipImage = anizipEpisode?.image;
         });
 
         visibleEpisodes.set(episodesObj);

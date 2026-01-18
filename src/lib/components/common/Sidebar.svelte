@@ -8,7 +8,7 @@
     <img src="/icon.png" class="mt-6 size-8 object-cover rounded-full" alt="" />
     <div class="space-y-2">
         <a
-            class={`block p-2 rounded-xl cursor-pointer ${page.url.pathname === "/home/" ? "text-white" : "text-neutral-700"} hover:bg-white/10 transition-colors duration-150`}
+            class={`block p-2 rounded-xl cursor-pointer ${page.url.pathname === "/home/" ? "text-white" : "text-neutral-700"} hover:bg-white/10 focus-within:bg-white/10 transition-colors duration-150 outline-hidden`}
             href="/home/"
             aria-label="home"
         >
@@ -31,7 +31,7 @@
         </a>
 
         <a
-            class={`block p-2 rounded-xl cursor-pointer ${page.url.pathname === "/files/" ? "text-white" : "text-neutral-700"} hover:bg-white/10 transition-colors duration-150`}
+            class={`block p-2 rounded-xl cursor-pointer ${page.url.pathname === "/files/" ? "text-white" : "text-neutral-700"} hover:bg-white/10 focus-within:bg-white/10 transition-colors duration-150 outline-hidden`}
             href="/files"
             aria-label="files"
         >
@@ -54,7 +54,7 @@
         </a>
 
         <a
-            class={`block p-2 rounded-xl cursor-pointer ${page.url.pathname === "/news/" ? "text-white" : "text-neutral-700"} hover:bg-white/10 transition-colors duration-150`}
+            class={`block p-2 rounded-xl cursor-pointer ${page.url.pathname === "/news/" ? "text-white" : "text-neutral-700"} hover:bg-white/10 focus-within:bg-white/10 transition-colors duration-150 outline-hidden`}
             href="/news"
             aria-label="news"
         >

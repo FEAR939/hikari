@@ -2,6 +2,7 @@
     import { getSeriesBackdrop, getSeriesPoster, kitsu } from "$lib/kitsu";
     import {
         playerAnime,
+        playerAnizip,
         playerEpisode,
         playerShowEpisodes,
         settings,
@@ -132,7 +133,19 @@
     async function handleNextPreview() {
         nextPreviewLoading = true;
 
-        const episodeObj = await await kitsu.getEpisodesPagination(
+        const anizipEpisode =
+            $playerAnizip?.episodes[$playerEpisode?.number + 1];
+
+        if (anizipEpisode) {
+            nextPreviewImage =
+                anizipEpisode.image ||
+                getSeriesBackdrop($playerAnime) ||
+                getSeriesPoster($playerAnime);
+            nextPreviewLoading = false;
+            return;
+        }
+
+        const episodeObj = await kitsu.getEpisodesPagination(
             $playerAnime.id,
             $playerEpisode.number,
             1,

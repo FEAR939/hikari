@@ -5,13 +5,16 @@
         getEpisodeTitle,
         getSeriesBackdrop,
         getSeriesPoster,
+        type KitsuEpisode,
     } from "$lib/kitsu";
+    import type { Extension, MediaHoster, MediaSource } from "$lib/types";
     import { cache } from "$lib/cache/cache";
 
     import {
         sourceInitialIndex,
         showPlayer,
         playerAnime,
+        playerAnizip,
         playerEpisode,
         playerSources,
         playerSourceIndex,
@@ -23,14 +26,14 @@
     import { toast } from "svelte-sonner";
 
     let currentIndex = $derived<number>($sourceInitialIndex);
-    let currentEpisode = $state<null | {}>(null);
-    let sources = $state([]);
-    let extensions;
-    let episodes;
+    let currentEpisode = $state<null | KitsuEpisode>(null);
+    let sources: MediaSource[] = $state([]);
+    let extensions: Extension[];
+    let episodes: KitsuEpisode[];
 
     let showSourceMenu = $state(false);
 
-    let { show = $bindable(false), anime } = $props();
+    let { show = $bindable(false), anime, anizip } = $props();
 
     async function prepareLoad() {
         const episodesPerPage = 15;
@@ -53,6 +56,8 @@
         });
 
         currentEpisode = episodes[relativeEpisodeIndex];
+        currentEpisode.anizipImage =
+            anizip.episodes[currentEpisode.attributes.number]?.image;
 
         const extensionSettings = JSON.parse(
             localStorage.getItem("extensions") || "[]",
@@ -60,8 +65,9 @@
         extensions = (await window.electronAPI.loadExtensions()).filter(
             (extension) => {
                 return (
-                    extensionSettings.find((ext) => ext.id === extension.github)
-                        ?.enabled ?? true
+                    extensionSettings.find(
+                        (ext: Extension) => ext.id === extension.github,
+                    )?.enabled ?? true
                 );
             },
         );
@@ -80,8 +86,11 @@
         console.log(extensions);
     }
 
-    async function loadExtension(filePath) {
+    async function loadExtension(filePath: string) {
         const code = await window.electronAPI.readFile(filePath);
+
+        if (!code) return null;
+
         const extension = await import(
             `data:text/javascript,${encodeURIComponent(code)}`
         );
@@ -184,7 +193,7 @@
 
                 if (!source) return;
 
-                source.hosters.forEach(async (source_hoster) => {
+                source.hosters.forEach(async (source_hoster: MediaHoster) => {
                     const extensionIndex = extensions.findIndex(
                         (extension_hoster: any) =>
                             extension_hoster.type === "stream" &&
@@ -249,7 +258,9 @@
         toast.success("Source folder created");
     }
 
-    function updatePlayerSourceLive(sourceIndex) {
+    function updatePlayerSourceLive(sourceIndex: number) {
+        if (!currentEpisode) return;
+
         playerAnime.set(anime);
         playerEpisode.set({
             number: currentIndex + 1,
@@ -357,20 +368,20 @@
                         >
                             <img
                                 class="h-full w-full object-cover"
-                                src={(currentEpisode?.attributes?.thumbnail &&
-                                    currentEpisode?.attributes?.thumbnail
-                                        .original) ||
-                                    getSeriesBackdrop(anime) ||
+                                src={currentEpisode?.anizipImage ||
+                                    (currentEpisode?.attributes?.thumbnail &&
+                                        currentEpisode?.attributes?.thumbnail
+                                            .original) ||
                                     getSeriesPoster(anime)}
                                 alt=""
                             />
                         </div>
                         <div class="absolute top-0 blur-xl h-full w-full">
                             <img
-                                src={(currentEpisode?.attributes?.thumbnail &&
-                                    currentEpisode?.attributes?.thumbnail
-                                        .original) ||
-                                    getSeriesBackdrop(anime) ||
+                                src={currentEpisode?.anizipImage ||
+                                    (currentEpisode?.attributes?.thumbnail &&
+                                        currentEpisode?.attributes?.thumbnail
+                                            .original) ||
                                     getSeriesPoster(anime)}
                                 class="h-full w-full object-cover"
                                 alt=""
@@ -380,12 +391,12 @@
                     <div
                         class="relative z-1 h-full w-full space-y-1 px-4 py-2 flex flex-col justify-center"
                     >
-                        <div class="font-semibold!">
+                        <div class="md:text-2xl font-bold!">
                             {(currentEpisode?.attributes?.titles &&
                                 getEpisodeTitle(currentEpisode)) ||
                                 `Episode ${currentEpisode?.attributes.number}`}
                         </div>
-                        <div class="w-full text-sm text-gray-400">
+                        <div class="w-full text-sm text-gray-300">
                             {currentEpisode?.attributes?.description
                                 ? currentEpisode.attributes.description
                                 : "No Description"}
@@ -479,7 +490,10 @@
                     <Source
                         {source}
                         onclick={() => {
+                            if (!currentEpisode) return;
+
                             playerAnime.set(anime);
+                            playerAnizip.set(anizip);
                             playerEpisode.set({
                                 number: currentIndex + 1,
                                 title:
