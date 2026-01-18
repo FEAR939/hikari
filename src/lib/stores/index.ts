@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import type { MediaSource } from "../types";
 
 export const user = writable<null | {}>(null);
 
@@ -22,7 +23,7 @@ export const playerAnime = writable<null | {}>(null);
 
 export const playerEpisode = writable<null | {}>(null);
 
-export const playerSources = writable<[] | null>(null);
+export const playerSources = writable<MediaSource[] | null>(null);
 
 export const playerSourceIndex = writable<number | null>(null);
 
@@ -33,6 +34,7 @@ export const fileSelectedPath = writable<string | null>(null);
 export const defaultSettings = {
   api_server: "https://hikari.animenetwork.org",
   extensions: [],
+  media_storage_path: undefined,
 };
 
 function createSettingsStore() {

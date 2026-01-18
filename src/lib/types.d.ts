@@ -1,6 +1,7 @@
 export interface LocalMediaFile {
   name: string;
   path: string;
+  size: number;
 }
 
 export interface LocalMediaMetadata {
@@ -10,8 +11,29 @@ export interface LocalMediaMetadata {
 }
 
 export interface Extension {
+  id: string;
   name: string;
   version: string;
+  type: string;
+  github: string;
+  path: string;
+  icon: string;
+  main: string;
+}
+
+export interface MediaHoster {
+  label: string;
+}
+
+export interface MediaSource {
+  type: "local" | "external";
+  from: "This Device" | string;
+  icon: "/icon.png" | string;
+  file_name: string;
+  file_url: string;
+  file_size: string;
+  file_quality: string;
+  headers?: Record<string, string>;
 }
 
 export interface DirEntry {
