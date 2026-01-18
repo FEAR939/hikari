@@ -13,7 +13,7 @@
 
     let accentColor = $state(null);
 
-    setInterval(() => {
+    let slideInterval = setInterval(() => {
         currentIndex = (currentIndex + 1) % slides.length;
     }, 10000);
 </script>
@@ -143,7 +143,13 @@
                 class="{currentIndex === index
                     ? 'w-16'
                     : 'w-8'} h-1 rounded-full bg-gray-800 outline-none cursor-pointer transition-all duration-300"
-                onclick={() => (currentIndex = index)}
+                onclick={() => {
+                    currentIndex = index;
+                    clearInterval(slideInterval);
+                    slideInterval = setInterval(() => {
+                        currentIndex = (currentIndex + 1) % slides.length;
+                    }, 10000);
+                }}
             >
                 {#if index === currentIndex}
                     <div
