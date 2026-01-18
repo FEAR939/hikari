@@ -15,7 +15,7 @@
 
 ## About the Project
 
-Hikari is an open-source Anime Library which allows for offline playback. It is built with electron and uses the [Kitsu API](https://kitsu.app) to fetch anime data. It also supports third party extensions, which allow for additional media sources. 
+Hikari is an open-source Anime Library which allows for offline playback. It is built with electron and uses the [Kitsu API](https://kitsu.docs.apiary.io) to fetch anime data. It also supports third party extensions, which allow for additional media sources. 
 
 ## Contributing
 
