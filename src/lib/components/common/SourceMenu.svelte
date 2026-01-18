@@ -2,20 +2,10 @@
     import { DropdownMenu } from "bits-ui";
     import { fade } from "svelte/transition";
 
-    let {
-        show = $bindable(false),
-        children,
-        onChange,
-        onCreateSourceFolder,
-    } = $props();
+    let { show = $bindable(false), children, onCreateSourceFolder } = $props();
 </script>
 
-<DropdownMenu.Root
-    bind:open={show}
-    onOpenChange={(state) => {
-        onChange?.(state);
-    }}
->
+<DropdownMenu.Root bind:open={show}>
     <DropdownMenu.Trigger>
         {@render children()}
     </DropdownMenu.Trigger>
