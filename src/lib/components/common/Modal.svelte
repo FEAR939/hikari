@@ -6,11 +6,11 @@
     let {
         children,
         show = $bindable(true),
-        class: className,
-        classModal,
+        class: className = "",
+        classModal = "",
     } = $props();
 
-    let modalElement = null;
+    let modalElement: HTMLDivElement | null = null;
 
     $effect(() => {
         if (show && modalElement) {
