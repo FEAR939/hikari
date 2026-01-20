@@ -42,9 +42,9 @@
                 >
             </div>
         </a>
-        <UserMenu class="group/usermenu outline-hidden">
+        <UserMenu>
             <div
-                class="mx-1 rounded-full overflow-hidden cursor-pointer transition-transform duration-150 outline-white outline-offset-2 group-focus-within/usermenu:outline-1"
+                class="mx-1 rounded-full overflow-hidden cursor-pointer transition-transform duration-150 outline-white outline-offset-2 group-focus-visible/usermenu:outline-1"
             >
                 {#if $user}
                     <img

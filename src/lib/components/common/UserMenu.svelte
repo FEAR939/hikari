@@ -11,15 +11,20 @@
 
     const API = getAPIClient();
 
-    let { show = $bindable(false), children, class: className = "" } = $props();
+    let { show = $bindable(false), children } = $props();
 </script>
 
 <DropdownMenu.Root bind:open={show}>
-    <DropdownMenu.Trigger class={className}>
+    <DropdownMenu.Trigger class="group/usermenu outline-hidden">
         {@render children()}
     </DropdownMenu.Trigger>
 
-    <DropdownMenu.Content sideOffset={4} align="center" forceMount>
+    <DropdownMenu.Content
+        sideOffset={4}
+        align="center"
+        forceMount
+        class="outline-hidden"
+    >
         {#if show}
             <div
                 class="w-[260px] px-1 py-1 rounded-2xl border border-gray-100 dark:border-gray-900 z-50 bg-white dark:bg-black/70 dark:text-white shadow-lg text-sm backdrop-blur-2xl"
@@ -44,7 +49,7 @@
                 {/if}
 
                 <DropdownMenu.Item
-                    class="flex rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer"
+                    class="flex rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-white/10 focus:bg-white/10 transition cursor-pointer outline-hidden"
                     onclick={async () => {
                         show = false;
 
@@ -68,7 +73,7 @@
                 </DropdownMenu.Item>
 
                 <DropdownMenu.Item
-                    class="flex rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-white/10 transition"
+                    class="flex rounded-xl py-1.5 px-3 w-full text-red-400 hover:bg-gray-50 dark:hover:bg-white/10 focus:bg-white/10 transition cursor-pointer outline-hidden"
                     onclick={async () => {
                         if ($user) {
                             await authClient.signOut();
