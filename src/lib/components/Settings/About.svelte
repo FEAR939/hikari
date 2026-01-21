@@ -11,7 +11,7 @@
 <div class="flex flex-col h-full justify-between space-y-3 text-sm mb-6">
     <div class=" space-y-3 overflow-y-scroll max-h-[28rem] md:max-h-full">
         <div class=" mb-2.5 text-sm font-medium flex space-x-2 items-center">
-            Hikari Version
+            Rune Version
         </div>
         <div class="flex w-full justify-between items-center">
             <div class="flex flex-col text-xs text-gray-700 dark:text-gray-200">

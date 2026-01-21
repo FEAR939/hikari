@@ -1,5 +1,5 @@
 {
-  "name": "hikari",
+  "name": "rune",
   "author": {
     "name": "F E A R",
     "email": "rogronin8877@gmail.com"
@@ -32,8 +32,8 @@
     "typescript": "^5.9.3"
   },
   "build": {
-    "appId": "com.hikari.app",
-    "productName": "Hikari",
+    "appId": "com.rune.app",
+    "productName": "Rune",
     "linux": {
       "target": [
         "pacman"
@@ -69,9 +69,9 @@
     },
     "protocols": [
       {
-        "name": "Hikari_svelte",
+        "name": "rune",
         "schemes": [
-          "hikari"
+          "rune"
         ]
       }
     ]
