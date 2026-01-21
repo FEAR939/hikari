@@ -274,7 +274,7 @@
 
                         <!-- Info -->
                         <div
-                            class="relative flex-1 p-4 pt-8 space-y-2 md:space-y-4 overflow-hidden"
+                            class="relative flex-1 p-4 pt-20 space-y-2 md:space-y-4 overflow-hidden"
                         >
                             <h1
                                 class="w-full text-white text-shadow-2xl text-xl md:text-4xl font-bold! flex items-center space-x-4 leading-none truncate"
@@ -398,13 +398,14 @@
                                     >
                                 </button>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Description -->
-                            <div
-                                class="max-w-240 w-full text-base text-gray-300 line-clamp-3"
-                            >
-                                {data.animeObj.anime.attributes.description}
-                            </div>
+                    <!-- Description -->
+                    <div class="relative z-1 h-fit w-full space-y-1 py-12">
+                        <h3 class="text-xl font-bold!">Overview</h3>
+                        <div class="text-base text-gray-200">
+                            {data.animeObj.anime.attributes.description}
                         </div>
                     </div>
 
