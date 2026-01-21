@@ -176,6 +176,12 @@ interface CategoryResult {
   data: KitsuAnime[];
 }
 
+interface APIEpisode {
+  kitsu_id: number;
+  episode: number;
+  created_at: string;
+}
+
 export class KitsuClient {
   private baseUrl = "https://kitsu.app/api/edge";
   private headers: HeadersInit;
@@ -614,6 +620,44 @@ export class KitsuClient {
 
     const results = await Promise.all(promises);
     return results.filter(Boolean) as KitsuAnime[];
+  }
+
+  async getAnimeAndEpisodesByNumber(
+    episodes: APIEpisode[],
+  ): Promise<KitsuEpisode[]> {
+    const results = await Promise.all(
+      episodes.map(async (episode) => {
+        const url = `${this.baseUrl}/anime/${episode.kitsu_id}/episodes?filter[number]=${episode.episode}`;
+
+        const anime = await this.getAnimeById(episode.kitsu_id);
+
+        if (cache.get(url)) {
+          return cache.get(url);
+        }
+
+        const response = await fetch(url, { headers: this.headers });
+
+        if (!response.ok) {
+          console.warn(
+            `Failed to fetch episodes for anime ${episode.kitsu_id}: ${response.status}`,
+          );
+          return [];
+        }
+
+        const json: KitsuResponse<KitsuEpisode[]> = await response.json();
+        cache.set(
+          url,
+          { anime: anime, episode: json.data[0] },
+          1000 * 60 * 60 * 3,
+        ); // Cache for 3 hour
+
+        return { anime: anime, episode: json.data[0] };
+      }),
+    );
+
+    console.log(results.flat());
+
+    return results.flat();
   }
 }
 

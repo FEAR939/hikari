@@ -9,6 +9,7 @@
     import { user } from "$lib/stores";
     import { onMount } from "svelte";
     import { goto } from "$app/navigation";
+    import ContinueCard from "$lib/components/common/ContinueCard.svelte";
 
     let API = getAPIClient();
 
@@ -40,9 +41,13 @@
                 const continueAnime = await API.getContinueAnime();
                 const continueIds = continueAnime
                     .filter((item) => item.kitsu_id != null)
-                    .map((item) => String(item.kitsu_id));
+                    .slice(0, 8);
+                // .map((item) => String(item.kitsu_id));
                 if (continueIds.length === 0) return [];
-                return (await kitsu.getAnimeByIds(continueIds)) as KitsuAnime[];
+                // return (await kitsu.getAnimeByIds(continueIds)) as KitsuAnime[];
+                return (await kitsu.getAnimeAndEpisodesByNumber(
+                    continueIds,
+                )) as KitsuEpisode[];
             }
             case "bookmark": {
                 if (!$user) return [];
@@ -182,12 +187,23 @@
                         </div>
                     </Slider>
                 {:else if category.loaded && category.data && category.data.length > 0}
-                    <Slider title={category.title}>
-                        {#each category.data as item (item.id)}
-                            <Card
-                                {item}
-                                onclick={() => goto(`/anime/${item.id}`)}
-                            />
+                    <Slider
+                        title={category.title}
+                        scrollAmount={category.type === "continue" ? 1200 : 624}
+                    >
+                        {#each category.data as item}
+                            {#if category.type === "continue"}
+                                <ContinueCard
+                                    episode={item}
+                                    onclick={() =>
+                                        goto(`/anime/${item.anime.anime.id}`)}
+                                />
+                            {:else}
+                                <Card
+                                    {item}
+                                    onclick={() => goto(`/anime/${item.id}`)}
+                                />
+                            {/if}
                         {/each}
                     </Slider>
                 {:else if !category.loaded}
