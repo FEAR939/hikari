@@ -13,11 +13,11 @@
     onclick={() => onclick?.()}
     in:slide={{ duration: 250 }}
 >
-    <div class="flex items-center px-2">
+    <div class="flex items-center px-3">
         <img
             src={source.icon}
             alt={source.from}
-            class="size-12 overflow-hidden object-cover"
+            class="size-12 overflow-hidden object-cover rounded-lg"
         />
     </div>
     <div class="text-left space-y-1">
