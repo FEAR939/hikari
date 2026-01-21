@@ -7,7 +7,7 @@
 >
     <img
         src="/icon.png"
-        class="mt-6 size-10 object-cover rounded-full"
+        class="mt-2 size-10 object-cover rounded-full"
         alt=""
     />
     <div class="space-y-2">
