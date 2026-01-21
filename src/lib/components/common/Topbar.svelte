@@ -27,7 +27,7 @@
             href="/search"
         >
             <div
-                class="relative p-2 bg-gray-900 rounded-full flex items-center justify-center group-focus-within/topbar_search:outline-1 outline-white outline-offset-2"
+                class="relative p-2 bg-gray-900 rounded-full flex items-center justify-center group-focus-within/topbar_search:outline-1 outline-white outline-offset-2 hover:bg-white hover:text-black transition-colors duration-150"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
