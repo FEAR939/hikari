@@ -132,20 +132,25 @@
 <FileModal bind:show={$showFile} />
 
 <div class="h-full w-full space-y-4 overflow-y-scroll p-4 pt-16">
-    <div
-        class="flex h-48 w-full rounded-2xl border border-gray-900 bg-gray-950"
-    >
-        <div class="flex h-full w-full flex-col items-center justify-center">
-            <div>{baseDir.length}</div>
+    <h1 class="text-2xl font-bold!">Library Statistics</h1>
+    <div class="flex h-48 w-full space-x-2">
+        <div
+            class="flex h-full w-full flex-col items-center justify-center rounded-2xl border border-gray-900"
+        >
+            <div class="text-2xl font-bold!">{baseDir.length}</div>
             <div class="text-neutral-700">Anime</div>
         </div>
-        <div class="flex h-full w-full flex-col items-center justify-center">
-            <div>{episodeCount}</div>
+        <div
+            class="flex h-full w-full flex-col items-center justify-center rounded-2xl border border-gray-900"
+        >
+            <div class="text-2xl font-bold!">{episodeCount}</div>
             <div class="text-neutral-700">Episodes</div>
         </div>
-        <div class="flex h-full w-full flex-col items-center justify-center">
-            <div>{formatBytes(dirSize)}</div>
-            <div class="text-neutral-700">Size</div>
+        <div
+            class="flex h-full w-full flex-col items-center justify-center rounded-2xl border border-gray-900"
+        >
+            <div class="text-2xl font-bold!">{formatBytes(dirSize)}</div>
+            <div class="text-neutral-700">Storage occupied</div>
         </div>
     </div>
 
