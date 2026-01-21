@@ -29,7 +29,7 @@
         item,
         class: className = "",
         options = { showTitle: true, showRelationType: false },
-        onclick = undefined,
+        onclick = () => {},
     }: Props = $props();
 
     let cardElement: HTMLDivElement | null = $state(null);
