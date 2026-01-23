@@ -20,7 +20,7 @@
 
             {#if $user}
                 <div class="flex space-x-5 my-4">
-                    <div class="w-20 space-y-2 group">
+                    <div class="w-20 group">
                         <label
                             class="relative size-20 outline-hidden cursor-pointer"
                             aria-label="Change Avatar"
@@ -51,7 +51,7 @@
                                 alt="User Avatar"
                             />
                             <div
-                                class="absolute right-0 bottom-0 bg-white text-black rounded-full size-6 grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                class="absolute right-0 bottom-0 bg-gray-200 text-black rounded-full size-5 grid place-items-center opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +59,7 @@
                                     viewBox="0 -960 960 960"
                                     width="24px"
                                     fill="currentColor"
-                                    class="size-4"
+                                    class="size-3.5"
                                 >
                                     <path
                                         d="M160-120q-17 0-28.5-11.5T120-160v-97q0-16 6-30.5t17-25.5l505-504q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L313-143q-11 11-25.5 17t-30.5 6h-97Zm544-528 56-56-56-56-56 56 56 56Z"
@@ -68,7 +68,7 @@
                             </div>
                         </label>
                         <div
-                            class="w-20 text-xs text-neutral-500 hidden group-hover:block wrap-break-word"
+                            class="w-20 pt-4 text-xs text-neutral-500 wrap-break-word opacity-0 group-hover:opacity-100 transition-opacity duration-150"
                             lang="en"
                         >
                             Aspect ratio of 1:1 is recom&shy;mended.
@@ -79,17 +79,19 @@
                     <div class="flex flex-1 flex-col">
                         <div class=" flex-1">
                             <div class="flex flex-col w-full">
-                                <div class=" mb-1 text-xs font-medium">
-                                    {"Name"}
+                                <div
+                                    class="mb-1 text-xs text-gray-400 font-medium"
+                                >
+                                    Name
                                 </div>
 
                                 <div class="flex-1">
                                     <input
-                                        class="w-full text-sm dark:text-gray-300 bg-transparent outline-hidden"
+                                        class="w-full text-sm bg-transparent outline-hidden"
                                         type="text"
                                         value={username}
                                         required
-                                        placeholder={"Enter your name"}
+                                        placeholder="Enter your name"
                                     />
                                 </div>
                             </div>

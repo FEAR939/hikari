@@ -19,13 +19,13 @@
 </script>
 
 <div class="h-full w-full space-y-4 overflow-y-scroll">
-    <div class="text-xl">Developer Settings</div>
+    <div class="text-xl font-bold!">Developer Settings</div>
     {#each developerSettings as setting}
         <div
-            class="bg-gray-950 border border-gray-900 rounded-2xl h-fit w-full p-4 flex gap-2"
+            class="h-fit w-full gap-y-2 p-4 border border-white/10 rounded-2xl flex"
         >
             <div class="h-fit w-full space-y-1">
-                <div class="text-neutral-200 text-sm">{setting.name}</div>
+                <div class="text-white font-bold! text-sm">{setting.name}</div>
                 <div class="text-neutral-500 text-xs">
                     {setting.description}
                 </div>

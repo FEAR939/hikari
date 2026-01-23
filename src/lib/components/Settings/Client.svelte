@@ -17,14 +17,14 @@
 </script>
 
 <div class="h-full w-full space-y-4 overflow-y-scroll">
-    <div class="text-xl">Client Settings</div>
+    <div class="text-xl font-bold!">Client Settings</div>
     {#each clientsettings as setting}
         <div
-            class="bg-gray-950 border border-gray-900 rounded-2xl h-fit w-full p-4 flex gap-2"
+            class="h-fit w-full p-4 space-y-2 border border-white/10 rounded-2xl"
         >
             <div class="h-fit w-full space-y-1">
-                <div class="text-neutral-200 text-sm">{setting.name}</div>
-                <div class="text-neutral-500 text-xs">
+                <div class="text-white text-sm font-bold!">{setting.name}</div>
+                <div class="text-neutral-400 text-xs">
                     {setting.description}
                 </div>
             </div>
@@ -40,7 +40,7 @@
                                 e.target.value || "",
                             );
                         }}
-                        class="px-4 py-2 h-fit w-64 bg-gray-850 text-neutral-300 rounded-full leading-none text-sm placeholder:text-sm outline-none"
+                        class="px-4 py-2 h-fit w-96 bg-gray-900 text-neutral-300 rounded-xl leading-none text-sm placeholder:text-sm outline-none"
                     />
                 {/if}
             </div>
