@@ -15,6 +15,10 @@
     let Anizip = $state({});
     let accentColor = $state([]);
 
+    function getTimePercentage(time1: number, time2: number) {
+        return (time2 / time1) * 100;
+    }
+
     onMount(async () => {
         if (cache.get(`anizip-${episode.anime.anime.id}`)) {
             return (Anizip = cache.get(`anizip-${episode.anime.anime.id}`));
@@ -120,11 +124,10 @@
                     <div
                         class="h-full bg-gray-200 rounded-full"
                         style:background="rgb({accentColor?.join(',')})"
-                        style:width={`${
-                            ((episode.episode.attributes.length * 60) /
-                                episode.leftoff) *
-                            100
-                        }%`}
+                        style:width={`${getTimePercentage(
+                            episode.episode.attributes.length * 60,
+                            episode.leftoff,
+                        )}%`}
                     ></div>
                 </div>
             </div>

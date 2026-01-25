@@ -51,8 +51,10 @@
 
                 eps.map((episode) => {
                     episode.leftoff =
-                        continueAnime.find(
-                            (anime) => anime.id === episode.anime_id,
+                        continueIds.find(
+                            (anime) =>
+                                String(anime.kitsu_id) ===
+                                String(episode.anime.anime.id),
                         )?.leftoff || 0;
                 });
 
