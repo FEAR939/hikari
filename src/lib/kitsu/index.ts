@@ -655,8 +655,6 @@ export class KitsuClient {
       }),
     );
 
-    console.log(results.flat());
-
     return results.flat();
   }
 }
