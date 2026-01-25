@@ -8,10 +8,12 @@
     import { anizip } from "$lib/anizip";
     import { onMount } from "svelte";
     import { cache } from "$lib/cache/cache";
+    import ColorThief from "colorthief";
 
     let { episode, onclick = () => {}, class: className = "" } = $props();
 
     let Anizip = $state({});
+    let accentColor = $state([]);
 
     onMount(async () => {
         if (cache.get(`anizip-${episode.anime.anime.id}`)) {
@@ -40,7 +42,7 @@
 >
     <div class="h-full w-full slideIn">
         <div
-            class="w-full aspect-video overflow-hidden rounded-lg flex items-stretch justify-stretch bg-gray-800 outline-white outline-offset-2 group-hover/card:outline-2 group-focus-within/card:outline-2"
+            class="relative w-full aspect-video overflow-hidden rounded-lg flex items-stretch justify-stretch bg-gray-800 outline-white outline-offset-2 group-hover/card:outline-2 group-focus-within/card:outline-2"
         >
             <img
                 src={Anizip?.episodes?.[episode.episode.attributes.number]
@@ -51,7 +53,81 @@
                 class="block min-h-full h-full min-w-full w-full object-cover group-hover/card:scale-105 group-focus-within/card:scale-105 transition-transform duration-300"
                 alt="Poster"
                 loading="lazy"
+                crossorigin="anonymous"
+                onload={(e) => {
+                    const img = e.target;
+
+                    if (!img) return;
+
+                    const colorThief = new ColorThief();
+
+                    const palette = colorThief.getPalette(img, 8);
+
+                    let bestColor = palette[0];
+                    let bestScore = -1;
+
+                    for (const [r, g, b] of palette) {
+                        const { s, l } = rgbToHsl(r, g, b);
+                        const score = s * (1 - Math.abs(l - 0.5) * 2);
+
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestColor = [r, g, b];
+                        }
+                    }
+
+                    function rgbToHsl(r, g, b) {
+                        r /= 255;
+                        g /= 255;
+                        b /= 255;
+
+                        const max = Math.max(r, g, b);
+                        const min = Math.min(r, g, b);
+                        const l = (max + min) / 2;
+
+                        let h = 0;
+                        let s = 0;
+
+                        if (max !== min) {
+                            const d = max - min;
+                            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+                            switch (max) {
+                                case r:
+                                    h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+                                    break;
+                                case g:
+                                    h = ((b - r) / d + 2) / 6;
+                                    break;
+                                case b:
+                                    h = ((r - g) / d + 4) / 6;
+                                    break;
+                            }
+                        }
+
+                        return { h, s, l };
+                    }
+
+                    accentColor = bestColor;
+                }}
             />
+            <div
+                class="absolute bottom-0 left-0 right-0 h-6 bg-linear-to-t from-black/50 to-transparent"
+            >
+                <div
+                    class="absolute left-0 right-0 bottom-0 h-0.75 w-full bg-white-30"
+                >
+                    <div
+                        class="h-full bg-gray-200 rounded-full"
+                        style:background="rgb({accentColor?.join(',')})"
+                        style:width={`${
+                            ((episode.episode.attributes.length * 60) /
+                                episode.leftoff) *
+                            100
+                        }%`}
+                    ></div>
+                </div>
+            </div>
         </div>
 
         <div class="mt-2 font-medium space-y-1">

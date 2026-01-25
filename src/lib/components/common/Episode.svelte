@@ -91,7 +91,7 @@
         <!-- /* Progress Bar */ -->
         {#if episode.leftoff}
             <div
-                class="absolute bottom-0 left-0 right-0 h-3 bg-linear-to-t from-black/50 to-transparent rounded-full"
+                class="absolute bottom-0 left-0 right-0 h-3 bg-linear-to-t from-black/50 to-transparent"
             >
                 <div
                     class="absolute bottom-0 h-0.75 shadow-xl rounded-full"

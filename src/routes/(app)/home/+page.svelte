@@ -45,9 +45,18 @@
                 // .map((item) => String(item.kitsu_id));
                 if (continueIds.length === 0) return [];
                 // return (await kitsu.getAnimeByIds(continueIds)) as KitsuAnime[];
-                return (await kitsu.getAnimeAndEpisodesByNumber(
+                const eps = (await kitsu.getAnimeAndEpisodesByNumber(
                     continueIds,
                 )) as KitsuEpisode[];
+
+                eps.map((episode) => {
+                    episode.leftoff =
+                        continueAnime.find(
+                            (anime) => anime.id === episode.anime_id,
+                        )?.leftoff || 0;
+                });
+
+                return eps;
             }
             case "bookmark": {
                 if (!$user) return [];
