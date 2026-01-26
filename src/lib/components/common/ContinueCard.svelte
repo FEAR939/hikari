@@ -149,3 +149,21 @@
         </div>
     </div>
 </button>
+
+<style>
+    .slideIn {
+        animation: slideIn 250ms ease-out var(--delay) forwards;
+        opacity: 0;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(25px);
+            opacity: 0;
+        }
+        to {
+            transform: "none";
+            opacity: 1;
+        }
+    }
+</style>
