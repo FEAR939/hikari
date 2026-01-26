@@ -15,6 +15,19 @@
             newValue: null,
             default: "Open Devtools",
         },
+        {
+            name: "Clear Application Cache",
+            description: "Clear the application cache.",
+            type: "button",
+            category: "Debug",
+            storageKey: null,
+            onchange: null,
+            onclick: () => {
+                localStorage.clear();
+            },
+            newValue: null,
+            default: "Clear Cache",
+        },
     ];
 </script>
 
