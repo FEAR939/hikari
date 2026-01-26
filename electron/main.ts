@@ -70,7 +70,7 @@ function createWindow() {
     titleBarStyle: "hidden",
     autoHideMenuBar: true,
     fullscreenable: true,
-    title: "Hikari",
+    title: "Rune",
     icon: path.join(dirname, "../static/icon.png"),
     backgroundColor: "#000",
     transparent: true,
