@@ -124,7 +124,7 @@
     <div class="relative group">
         <!-- Left Gradient Fade -->
         <div
-            class="absolute left-0 top-0 bottom-0 w-20 bg-linear-to-r from-black to-transparent pointer-events-none z-10 transition-opacity duration-300 max-md:w-10"
+            class="absolute left-0 top-2 bottom-0 w-20 bg-linear-to-r from-black to-transparent pointer-events-none z-10 transition-opacity duration-300 max-md:w-10"
             class:opacity-0={!canScrollLeft}
         ></div>
 
@@ -140,7 +140,7 @@
 
         <!-- Right Gradient Fade -->
         <div
-            class="absolute right-0 top-0 bottom-0 w-20 bg-linear-to-l from-black to-transparent pointer-events-none z-10 transition-opacity duration-300 max-md:w-10"
+            class="absolute right-0 top-2 bottom-0 w-20 bg-linear-to-l from-black to-transparent pointer-events-none z-10 transition-opacity duration-300 max-md:w-10"
             class:opacity-0={!canScrollRight}
         ></div>
 
