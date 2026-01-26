@@ -18,9 +18,9 @@
     }, 10000);
 </script>
 
-<div class="relative w-full max-w-full aspect-[2.5/1] flex items-center">
+<div class="relative w-full max-w-full aspect-[3.5/1] flex items-center">
     <div
-        class="absolute w-full aspect-[2.5/1] mask-b-from-60% bg-black overflow-hidden"
+        class="absolute top-0 w-full aspect-[2.5/1] mask-b-from-60% bg-black overflow-hidden"
     >
         <img
             src={getSeriesBackdrop(currentSlide) ||
@@ -86,7 +86,7 @@
             }}
         />
     </div>
-    <div class="absolute bottom-24 z-1 px-12 w-full h-fit flex gap-8">
+    <div class="absolute z-1 px-12 w-full h-fit flex items-center gap-8">
         <div
             class="shrink-0 w-56 aspect-[0.7/1] overflow-hidden rounded-2xl flex items-stretch justify-stretch bg-gray-800"
         >
