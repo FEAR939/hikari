@@ -183,7 +183,7 @@
     );
 </script>
 
-<div class="w-full max-w-full h-fit space-y-4">
+<div class="w-full max-w-full h-fit space-y-10">
     {#if initialLoaded}
         <Carousel slides={forUpcomingCarousel} />
 

@@ -68,8 +68,8 @@
 
 <section class="relative">
     <!-- Header -->
-    <div class="flex items-center justify-between mb-4 px-12">
-        <h2 class="text-2xl font-bold text-white max-md:text-xl">{title}</h2>
+    <div class="flex items-center justify-between px-12">
+        <h2 class="text-xl font-bold! text-white">{title}</h2>
 
         <div class="flex items-center gap-4">
             <!-- {#if showViewAll}
@@ -91,7 +91,7 @@
             {/if} -->
 
             <!-- Navigation Buttons -->
-            <div class="flex gap-2 max-md:hidden">
+            <!-- <div class="flex gap-2 max-md:hidden">
                 <button
                     class="relative p-2 rounded-full bg-black/30 text-white flex items-center justify-center disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 focus-within:before:bg-white/10 outline-hidden"
                     onclick={() => scroll("left")}
@@ -116,7 +116,7 @@
                         />
                     </svg>
                 </button>
-            </div>
+            </div> -->
         </div>
     </div>
 
@@ -146,7 +146,7 @@
 
         <!-- Hover Navigation Button - Left -->
         <button
-            class="absolute left-2 top-1/2 -translate-y-full rounded-full bg-white text-black flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:opacity-0 opacity-0 group-hover:opacity-100 hover:scale-125 transition-all duration-150"
+            class="absolute left-4 top-1/2 -translate-y-full rounded-full bg-white text-black flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:opacity-0 opacity-0 group-hover:opacity-100 hover:scale-125 transition-all duration-150"
             onclick={() => scroll("left")}
             disabled={!canScrollLeft}
             aria-label="Scroll left"
@@ -158,7 +158,7 @@
 
         <!-- Hover Navigation Button - Right -->
         <button
-            class="absolute right-2 top-1/2 -translate-y-full rounded-full bg-white text-black flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:opacity-0 opacity-0 group-hover:opacity-100 hover:scale-125 transition-all duration-150"
+            class="absolute right-4 top-1/2 -translate-y-full rounded-full bg-white text-black flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:opacity-0 opacity-0 group-hover:opacity-100 hover:scale-125 transition-all duration-150"
             onclick={() => scroll("right")}
             disabled={!canScrollRight}
             aria-label="Scroll right"
