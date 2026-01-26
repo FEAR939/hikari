@@ -111,7 +111,7 @@
             </div>
             <a
                 href={`/anime/${currentSlide.id}`}
-                class="h-12 w-fit my-8 flex items-center justify-center space-x-2 text-black text-base pl-5 pr-5.5 rounded-full cursor-pointer transition-colors duration-150 outline-white outline-offset-2 focus-within:outline-2"
+                class="h-10 w-fit my-8 flex items-center justify-center space-x-2 text-black text-base pl-3.5 pr-4.5 rounded-full cursor-pointer transition-colors duration-150 outline-white outline-offset-2 focus-within:outline-2"
                 style:background="rgb({accentColor?.join(',')})"
             >
                 <svg

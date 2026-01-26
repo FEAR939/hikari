@@ -305,11 +305,11 @@
 
                             <!-- Button Row -->
                             <div
-                                class="w-full h-12 my-8 flex items-center space-x-1 md:space-x-2 shrink-0 grow-0"
+                                class="w-full h-10 my-8 flex items-center space-x-1 md:space-x-2 shrink-0 grow-0"
                             >
                                 <!-- Bookmark -->
                                 <button
-                                    class="relative h-full w-fit px-4.5 space-x-2 bg-white text-black rounded-full flex items-center justify-center cursor-pointer"
+                                    class="relative h-full w-fit pl-3.5 pr-4 space-x-2 bg-white text-black rounded-full flex items-center justify-center cursor-pointer"
                                     style:background="rgb({$currentAnimeAccentColor?.join(
                                         ',',
                                     )})"
@@ -352,7 +352,7 @@
 
                                 <!-- Favourite -->
                                 <div
-                                    class="relative size-12 bg-white/5 rounded-full flex items-center justify-center cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                                    class="relative size-10 bg-white/5 rounded-full flex items-center justify-center cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
                                 >
                                     <svg
                                         width="100%"
@@ -374,7 +374,7 @@
 
                                 <!-- Share -->
                                 <button
-                                    class="relative size-12 bg-white/5 rounded-full flex items-center justify-center cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                                    class="relative size-10 bg-white/5 rounded-full flex items-center justify-center cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
                                     onclick={async () => {
                                         window.electronAPI.clipboardWriteText(
                                             `hikari://hikari.app/anime/${animeId}`,
