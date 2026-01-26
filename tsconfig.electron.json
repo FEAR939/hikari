@@ -2,10 +2,11 @@
   "compilerOptions": {
     "outDir": "./electron-dist",
     "rootDir": "./electron",
+    "skipLibCheck": true,
     "moduleResolution": "bundler",
     "module": "esnext",
-    "target": "ESNext"
+    "target": "ESNext",
   },
   "include": ["./electron/**/*"],
-  "exclude": ["./electron/preload.ts"]
+  "exclude": ["./electron/preload.ts"],
 }
