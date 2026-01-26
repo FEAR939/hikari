@@ -3,7 +3,7 @@
     import Card from "$lib/components/common/Card.svelte";
     import { kitsu } from "$lib/kitsu";
     import { Select } from "bits-ui";
-    import { fade } from "svelte/transition";
+    import { fade, slide } from "svelte/transition";
     import { goto } from "$app/navigation";
 
     let isSearching = $state(false);
@@ -75,7 +75,7 @@
 <div class="relative h-full w-full py-4 pt-16 space-y-4 overflow-y-hidden">
     <div class="flex gap-2 mx-4">
         <div
-            class="rounded-2xl border border-gray-900 bg-gray-950 h-10 w-64 px-3 flex items-center overflow-hidden"
+            class="rounded-2xl border border-white/10 h-10 w-64 px-3 flex items-center overflow-hidden"
         >
             <div class="h-full flex items-center shrink-0 text-neutral-700">
                 <svg
@@ -104,13 +104,35 @@
                     search();
                 }}
             />
+            {#if searchQuery.length > 0}
+                <button
+                    class="h-full flex items-center shrink-0 text-neutral-700 cursor-pointer"
+                    transition:slide
+                    aria-label="Clear Search"
+                    onclick={() => {
+                        searchQuery = "";
+                    }}
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        width="24px"
+                        fill="currentColor"
+                        class="size-5"
+                        ><path
+                            d="M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480-424Z"
+                        /></svg
+                    >
+                </button>
+            {/if}
         </div>
 
         <!-- Filter Toggle Button -->
         <div class="relative">
             <button
                 aria-label="Filters"
-                class="size-10 rounded-2xl bg-gray-950 border border-gray-900 grid place-items-center cursor-pointer hover:bg-[#252525] outline-hidden transition-colors"
+                class="size-10 rounded-2xl border border-white/10 grid place-items-center cursor-pointer hover:bg-[#252525] outline-hidden transition-colors"
                 class:border-neutral-500={hasActiveFilters()}
                 onclick={() => (filterOpen = !filterOpen)}
             >
@@ -136,7 +158,7 @@
             <!-- Filter Panel -->
             {#if filterOpen}
                 <div
-                    class="absolute z-10 left-0 top-12 w-64 h-fit max-h-sm rounded-2xl bg-gray-950 border border-gray-900 p-4 space-y-3"
+                    class="absolute z-10 left-0 top-12 w-64 h-fit max-h-sm rounded-2xl bg-black/70 border border-white/10 backdrop-blur-2xl p-4 space-y-3"
                     transition:fade={{ duration: 100 }}
                 >
                     {#each Object.entries(filters) as [filterName, filter]}
