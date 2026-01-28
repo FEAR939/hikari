@@ -176,7 +176,7 @@
                 <Tooltip.Root delayDuration={0}>
                     <Tooltip.Trigger>
                         <button
-                            class="relative flex items-center bg-black/30 rounded-full p-2 outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                            class="relative flex items-center bg-black/30 backdrop-blur-lg rounded-full p-2 outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
                             onclick={() =>
                                 video.paused ? video.play() : video.pause()}
                             aria-label="Play/Pause"
@@ -210,7 +210,7 @@
                     </Tooltip.Trigger>
                     <Tooltip.Content class="ml-3" sideOffset={20}>
                         <div
-                            class="flex items-center gap-1 px-2 py-1 bg-black/30 rounded-md text-sm"
+                            class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
                         >
                             <span>{isPaused ? "Play" : "Pause"}</span>
                             <div
@@ -224,7 +224,7 @@
             </Tooltip.Provider>
             {#if !isMiniPlayer}
                 <div
-                    class="flex items-center gap-2.5 bg-black/30 rounded-full px-2.5"
+                    class="flex items-center gap-2.5 bg-black/30 backdrop-blur-lg rounded-full px-2.5"
                 >
                     <Tooltip.Provider>
                         <Tooltip.Root delayDuration={0}>
@@ -255,7 +255,7 @@
                             </Tooltip.Trigger>
                             <Tooltip.Content sideOffset={20}>
                                 <div
-                                    class="flex items-center gap-1 px-2 py-1 bg-black/30 rounded-md text-sm"
+                                    class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
                                 >
                                     <span>Previous</span>
                                     <div
@@ -313,7 +313,7 @@
                             </Tooltip.Trigger>
                             <Tooltip.Content sideOffset={20}>
                                 <div
-                                    class="flex flex-col items-center gap-y-4 p-2 bg-black/30 rounded-md text-sm"
+                                    class="flex flex-col items-center gap-y-4 p-2 bg-black/30 backdrop-blur-lg rounded-md text-sm"
                                 >
                                     <div class="flex items-center gap-1">
                                         <span>Next</span>
@@ -346,7 +346,7 @@
                 <Tooltip.Root delayDuration={0}>
                     <Tooltip.Trigger>
                         <div
-                            class="relative flex items-center bg-black/30 rounded-full px-2 py-2 group hover:pr-3.5 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                            class="relative flex items-center bg-black/30 backdrop-blur-lg rounded-full px-2 py-2 group hover:pr-3.5 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
                         >
                             <button
                                 class="relative z-1 outline-hidden cursor-pointer size-7"
@@ -408,7 +408,7 @@
                         class="-translate-x-1/4"
                     >
                         <div
-                            class="flex items-center gap-1 px-2 py-1 bg-black/30 rounded-md text-sm"
+                            class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
                         >
                             <span>Mute</span>
                             <div
@@ -421,7 +421,7 @@
                 </Tooltip.Root>
             </Tooltip.Provider>
             <button
-                class="relative flex items-center bg-black/30 rounded-full px-2.5 py-2 text-sm font-semibold before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 cursor-pointer outline-hidden"
+                class="relative flex items-center bg-black/30 backdrop-blur-lg rounded-full px-2.5 py-2 text-sm font-semibold before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 cursor-pointer outline-hidden"
                 onclick={() => (toggleRemainingTime = !toggleRemainingTime)}
             >
                 <span class="relative z-1 px-2">
@@ -450,7 +450,9 @@
             <!-- Spacer -->
             <div class="h-0 flex-1"></div>
 
-            <div class="flex gap-2 bg-black/30 rounded-full px-2">
+            <div
+                class="flex gap-2 bg-black/30 backdrop-blur-lg rounded-full px-2"
+            >
                 <Tooltip.Provider>
                     <Tooltip.Root delayDuration={0}>
                         <Tooltip.Trigger class="flex items-center">
@@ -472,11 +474,11 @@
                                         d="M160-320q-17 0-28.5-11.5T120-360q0-17 11.5-28.5T160-400h240q17 0 28.5 11.5T440-360q0 17-11.5 28.5T400-320H160Zm0-160q-17 0-28.5-11.5T120-520q0-17 11.5-28.5T160-560h400q17 0 28.5 11.5T600-520q0 17-11.5 28.5T560-480H160Zm0-160q-17 0-28.5-11.5T120-680q0-17 11.5-28.5T160-720h400q17 0 28.5 11.5T600-680q0 17-11.5 28.5T560-640H160Zm511 499q-5 3-10 3t-10-2q-5-2-8-6.5t-3-10.5v-246q0-6 3-10.5t8-6.5q5-2 10-2t10 3l184 122q5 3 7 7.5t2 9.5q0 5-2 9.5t-7 7.5L671-141Z"
                                     /></svg
                                 >
-                            </button></Tooltip.Trigger
-                        >
+                            </button>
+                        </Tooltip.Trigger>
                         <Tooltip.Content sideOffset={20}>
                             <div
-                                class="flex items-center gap-1 px-2 py-1 bg-black/30 rounded-md text-sm"
+                                class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
                             >
                                 <span>Playlist</span>
                             </div>
@@ -519,7 +521,7 @@
                         </Tooltip.Trigger>
                         <Tooltip.Content sideOffset={20}>
                             <div
-                                class="flex items-center gap-1 px-2 py-1 bg-black/30 rounded-md text-sm"
+                                class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
                             >
                                 <span>MiniPlayer</span>
                                 <div
@@ -567,7 +569,7 @@
                         </Tooltip.Trigger>
                         <Tooltip.Content sideOffset={20} class="mr-3">
                             <div
-                                class="flex items-center gap-1 px-2 py-1 bg-black/30 rounded-md text-sm"
+                                class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
                             >
                                 <span>Fullscreen</span>
                                 <div

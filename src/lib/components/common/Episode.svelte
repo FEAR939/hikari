@@ -74,7 +74,7 @@
 
         <!-- Episode Number -->
         <div
-            class="absolute top-0 right-0 h-8 w-fit px-2 rounded-bl-md bg-black/70 flex items-center justify-center text-sm"
+            class="absolute top-0 right-0 h-8 w-fit px-2 rounded-bl-md bg-black/30 backdrop-blur-lg flex items-center justify-center text-sm"
         >
             {`E${episode.attributes.number}`}
         </div>

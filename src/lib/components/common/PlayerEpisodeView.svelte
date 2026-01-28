@@ -82,12 +82,14 @@
         aria-modal="true"
         role="dialog"
         class={twMerge(
-            "modal fixed top-12 right-3 bottom-18 bg-black/70 aspect-1/2 flex flex-col h-auto z-3332 overflow-hidden rounded-2xl text-white backdrop-blur-2xl border border-gray-900",
+            "modal fixed top-12 right-3 bottom-18 bg-black/30 backdrop-blur-lg aspect-1/2 flex flex-col h-auto z-3332 overflow-hidden rounded-2xl text-white border border-white/10",
             className,
         )}
         in:slide={{ duration: 250 }}
     >
-        <div class="h-18 w-full bg-gray-950 p-4 line-clamp-2 flex items-center">
+        <div
+            class="h-18 w-full bg-black/50 backdrop-blur-lg p-4 line-clamp-2 flex items-center"
+        >
             <span>{getSeriesTitle($playerAnime)}</span>
             <button
                 aria-label="Close settings modal"
