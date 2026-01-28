@@ -26,7 +26,7 @@
             src={getSeriesBackdrop(currentSlide) ||
                 getSeriesPoster(currentSlide, "original")}
             alt=""
-            class="min-w-full w-fit min-h-full h-fit object-cover brightness-25"
+            class="min-w-full w-fit min-h-full h-fit object-cover brightness-50"
             crossorigin="anonymous"
             onload={(e) => {
                 const img = e.target;

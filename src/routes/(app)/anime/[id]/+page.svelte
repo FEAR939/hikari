@@ -163,7 +163,7 @@
                 class="w-screen aspect-[2.5/1] mask-b-from-70% bg-black overflow-hidden"
             >
                 <img
-                    class="min-w-full w-fit min-h-full h-fit object-cover brightness-75"
+                    class="min-w-full w-fit min-h-full h-fit object-cover brightness-50"
                     src={getSeriesBackdrop(data.animeObj.anime) ||
                         getSeriesPoster(data.animeObj.anime, "original")}
                     alt=""
