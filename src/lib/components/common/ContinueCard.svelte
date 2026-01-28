@@ -26,6 +26,8 @@
 
         Anizip = await anizip.getAnimeById(episode.anime.anime.id);
 
+        console.log(Anizip);
+
         cache.set(
             `anizip-${episode.anime.anime.id}`,
             Anizip,
@@ -49,8 +51,9 @@
             class="relative w-full aspect-video overflow-hidden rounded-lg flex items-stretch justify-stretch bg-gray-800 outline-white outline-offset-2 group-hover/card:outline-2 group-focus-within/card:outline-2"
         >
             <img
-                src={Anizip?.episodes?.[episode.episode.attributes.number]
-                    .image ||
+                src={(Anizip?.episodes?.[episode?.episode?.attributes.number] &&
+                    Anizip?.episodes?.[episode?.episode?.attributes.number]
+                        .image) ||
                     (episode.episode.attributes.thumbnail &&
                         episode.episode.attributes.thumbnail.original) ||
                     getSeriesPoster(episode.anime.anime)}
