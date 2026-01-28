@@ -176,7 +176,7 @@
                 <Tooltip.Root delayDuration={0}>
                     <Tooltip.Trigger>
                         <button
-                            class="relative flex items-center bg-black/30 backdrop-blur-lg rounded-full p-2 outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                            class="relative flex items-center bg-black/30 backdrop-blur-lg text-white rounded-full p-2 outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
                             onclick={() =>
                                 video.paused ? video.play() : video.pause()}
                             aria-label="Play/Pause"
@@ -208,23 +208,25 @@
                             {/if}
                         </button>
                     </Tooltip.Trigger>
-                    <Tooltip.Content class="ml-3" sideOffset={20}>
-                        <div
-                            class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
-                        >
-                            <span>{isPaused ? "Play" : "Pause"}</span>
+                    <Tooltip.Portal to="body">
+                        <Tooltip.Content class="ml-3 z-9999!" sideOffset={20}>
                             <div
-                                class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg text-white rounded-md text-sm"
                             >
-                                Space
+                                <span>{isPaused ? "Play" : "Pause"}</span>
+                                <div
+                                    class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                >
+                                    Space
+                                </div>
                             </div>
-                        </div>
-                    </Tooltip.Content>
+                        </Tooltip.Content>
+                    </Tooltip.Portal>
                 </Tooltip.Root>
             </Tooltip.Provider>
             {#if !isMiniPlayer}
                 <div
-                    class="flex items-center gap-2.5 bg-black/30 backdrop-blur-lg rounded-full px-2.5"
+                    class="flex items-center gap-2.5 bg-black/30 backdrop-blur-lg text-white rounded-full px-2.5"
                 >
                     <Tooltip.Provider>
                         <Tooltip.Root delayDuration={0}>
@@ -253,18 +255,23 @@
                                     >
                                 </button>
                             </Tooltip.Trigger>
-                            <Tooltip.Content sideOffset={20}>
-                                <div
-                                    class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
+                            <Tooltip.Portal to="body">
+                                <Tooltip.Content
+                                    class="z-9999!"
+                                    sideOffset={20}
                                 >
-                                    <span>Previous</span>
                                     <div
-                                        class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                        class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg text-white rounded-md text-sm"
                                     >
-                                        Shift + P
+                                        <span>Previous</span>
+                                        <div
+                                            class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                        >
+                                            Shift + P
+                                        </div>
                                     </div>
-                                </div>
-                            </Tooltip.Content>
+                                </Tooltip.Content>
+                            </Tooltip.Portal>
                         </Tooltip.Root>
                     </Tooltip.Provider>
                     <Tooltip.Provider>
@@ -283,6 +290,7 @@
                         >
                             <Tooltip.Trigger>
                                 <button
+                                    id="next"
                                     class="relative pl-0.5 py-2 outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-y-1 before:-inset-x-1.5 before:rounded-full hover:before:bg-white/10"
                                     onclick={() => {
                                         if (
@@ -311,33 +319,38 @@
                                     >
                                 </button>
                             </Tooltip.Trigger>
-                            <Tooltip.Content sideOffset={20}>
-                                <div
-                                    class="flex flex-col items-center gap-y-4 p-2 bg-black/30 backdrop-blur-lg rounded-md text-sm"
+                            <Tooltip.Portal to="body">
+                                <Tooltip.Content
+                                    sideOffset={20}
+                                    class="z-9999!"
                                 >
-                                    <div class="flex items-center gap-1">
-                                        <span>Next</span>
+                                    <div
+                                        class="flex flex-col items-center gap-y-4 p-2 bg-black/30 backdrop-blur-lg text-white rounded-md text-sm"
+                                    >
+                                        <div class="flex items-center gap-1">
+                                            <span>Next</span>
+                                            <div
+                                                class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                            >
+                                                Shift + N
+                                            </div>
+                                        </div>
                                         <div
-                                            class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                            class="h-32 aspect-video flex items-center justify-center"
                                         >
-                                            Shift + N
+                                            {#if !nextPreviewLoading}
+                                                <img
+                                                    class="h-32 aspect-video rounded shrink-0"
+                                                    src={nextPreviewImage}
+                                                    alt=""
+                                                />
+                                            {:else}
+                                                <Spinner />
+                                            {/if}
                                         </div>
                                     </div>
-                                    <div
-                                        class="h-32 aspect-video flex items-center justify-center"
-                                    >
-                                        {#if !nextPreviewLoading}
-                                            <img
-                                                class="h-32 aspect-video rounded shrink-0"
-                                                src={nextPreviewImage}
-                                                alt=""
-                                            />
-                                        {:else}
-                                            <Spinner />
-                                        {/if}
-                                    </div>
-                                </div>
-                            </Tooltip.Content>
+                                </Tooltip.Content>
+                            </Tooltip.Portal>
                         </Tooltip.Root>
                     </Tooltip.Provider>
                 </div>
@@ -346,7 +359,7 @@
                 <Tooltip.Root delayDuration={0}>
                     <Tooltip.Trigger>
                         <div
-                            class="relative flex items-center bg-black/30 backdrop-blur-lg rounded-full px-2 py-2 group hover:pr-3.5 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                            class="relative flex items-center bg-black/30 backdrop-blur-lg text-white rounded-full px-2 py-2 group hover:pr-3.5 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
                         >
                             <button
                                 class="relative z-1 outline-hidden cursor-pointer size-7"
@@ -402,26 +415,28 @@
                             />
                         </div>
                     </Tooltip.Trigger>
-                    <Tooltip.Content
-                        align="start"
-                        sideOffset={20}
-                        class="-translate-x-1/4"
-                    >
-                        <div
-                            class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
+                    <Tooltip.Portal to="body">
+                        <Tooltip.Content
+                            align="start"
+                            sideOffset={20}
+                            class="z-9999! -translate-x-1/4"
                         >
-                            <span>Mute</span>
                             <div
-                                class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg text-white rounded-md text-sm"
                             >
-                                M
+                                <span>Mute</span>
+                                <div
+                                    class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                >
+                                    M
+                                </div>
                             </div>
-                        </div>
-                    </Tooltip.Content>
+                        </Tooltip.Content>
+                    </Tooltip.Portal>
                 </Tooltip.Root>
             </Tooltip.Provider>
             <button
-                class="relative flex items-center bg-black/30 backdrop-blur-lg rounded-full px-2.5 py-2 text-sm font-semibold before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 cursor-pointer outline-hidden"
+                class="relative flex items-center bg-black/30 backdrop-blur-lg text-white rounded-full px-2.5 py-2 text-sm font-semibold before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 cursor-pointer outline-hidden"
                 onclick={() => (toggleRemainingTime = !toggleRemainingTime)}
             >
                 <span class="relative z-1 px-2">
@@ -451,7 +466,7 @@
             <div class="h-0 flex-1"></div>
 
             <div
-                class="flex gap-2 bg-black/30 backdrop-blur-lg rounded-full px-2"
+                class="flex gap-2 bg-black/30 backdrop-blur-lg text-white rounded-full px-2"
             >
                 <Tooltip.Provider>
                     <Tooltip.Root delayDuration={0}>
@@ -476,13 +491,15 @@
                                 >
                             </button>
                         </Tooltip.Trigger>
-                        <Tooltip.Content sideOffset={20}>
-                            <div
-                                class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
-                            >
-                                <span>Playlist</span>
-                            </div>
-                        </Tooltip.Content>
+                        <Tooltip.Portal to="body">
+                            <Tooltip.Content sideOffset={20} class="z-9999!">
+                                <div
+                                    class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg text-white rounded-md text-sm"
+                                >
+                                    <span>Playlist</span>
+                                </div>
+                            </Tooltip.Content>
+                        </Tooltip.Portal>
                     </Tooltip.Root>
                 </Tooltip.Provider>
                 <Tooltip.Provider>
@@ -519,18 +536,20 @@
                                 {/if}
                             </button>
                         </Tooltip.Trigger>
-                        <Tooltip.Content sideOffset={20}>
-                            <div
-                                class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
-                            >
-                                <span>MiniPlayer</span>
+                        <Tooltip.Portal to="body">
+                            <Tooltip.Content sideOffset={20} class="z-9999!">
                                 <div
-                                    class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                    class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg text-white rounded-md text-sm"
                                 >
-                                    T
+                                    <span>MiniPlayer</span>
+                                    <div
+                                        class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                    >
+                                        T
+                                    </div>
                                 </div>
-                            </div>
-                        </Tooltip.Content>
+                            </Tooltip.Content>
+                        </Tooltip.Portal>
                     </Tooltip.Root>
                 </Tooltip.Provider>
                 <Tooltip.Provider>
@@ -567,18 +586,23 @@
                                 {/if}
                             </button>
                         </Tooltip.Trigger>
-                        <Tooltip.Content sideOffset={20} class="mr-3">
-                            <div
-                                class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg rounded-md text-sm"
+                        <Tooltip.Portal to="body">
+                            <Tooltip.Content
+                                sideOffset={20}
+                                class="mr-3 z-9999!"
                             >
-                                <span>Fullscreen</span>
                                 <div
-                                    class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                    class="flex items-center gap-1 px-2 py-1 bg-black/30 backdrop-blur-lg text-white rounded-md text-sm"
                                 >
-                                    F
+                                    <span>Fullscreen</span>
+                                    <div
+                                        class="flex items-center justify-center px-0.75 py-0.5 border border-white/30 rounded leading-none"
+                                    >
+                                        F
+                                    </div>
                                 </div>
-                            </div>
-                        </Tooltip.Content>
+                            </Tooltip.Content>
+                        </Tooltip.Portal>
                     </Tooltip.Root>
                 </Tooltip.Provider>
             </div>

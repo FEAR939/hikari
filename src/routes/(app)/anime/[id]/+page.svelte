@@ -155,13 +155,15 @@
         <TrailerModal bind:show={$showTrailer} anime={data.animeObj.anime}
         ></TrailerModal>
 
-        <div class="h-full">
+        <!--  -->
+
+        <div class="h-full w-full">
             <!-- Banner -->
             <div
-                class="relative w-screen aspect-[2.5/1] mask-b-from-70% bg-black overflow-hidden"
+                class="w-screen aspect-[2.5/1] mask-b-from-70% bg-black overflow-hidden"
             >
                 <img
-                    class="min-w-full w-fit min-h-full h-fit object-cover brightness-25"
+                    class="min-w-full w-fit min-h-full h-fit object-cover brightness-75"
                     src={getSeriesBackdrop(data.animeObj.anime) ||
                         getSeriesPoster(data.animeObj.anime, "original")}
                     alt=""
@@ -305,7 +307,7 @@
 
                             <!-- Button Row -->
                             <div
-                                class="w-full h-10 my-8 flex items-center space-x-1 md:space-x-2 shrink-0 grow-0"
+                                class="relative z-1 w-full h-10 my-8 flex items-center space-x-1 md:space-x-2 shrink-0 grow-0"
                             >
                                 <!-- Bookmark -->
                                 <button
@@ -352,7 +354,7 @@
 
                                 <!-- Favourite -->
                                 <div
-                                    class="relative size-10 bg-black/30 backdrop-blur-lg rounded-full flex items-center justify-center cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                                    class="size-10 bg-black/30 backdrop-blur-lg rounded-full flex items-center justify-center cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
                                 >
                                     <svg
                                         width="100%"
