@@ -279,8 +279,8 @@
                             delayDuration={0}
                             onOpenChange={(state) => {
                                 if (
-                                    !state &&
-                                    $playerEpisode.number !==
+                                    !state ||
+                                    $playerEpisode.number ===
                                         $playerAnime.attributes.episodeCount
                                 )
                                     return;
@@ -344,6 +344,8 @@
                                                     src={nextPreviewImage}
                                                     alt=""
                                                 />
+                                            {:else if $playerEpisode.number === $playerAnime.attributes.episodeCount}
+                                                This was the last episode.
                                             {:else}
                                                 <Spinner />
                                             {/if}
