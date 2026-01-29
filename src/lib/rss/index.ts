@@ -24,6 +24,7 @@ export default class RSSClient {
         .getElementsByTagName("media:thumbnail")[0]
         .getAttribute("url"),
       description: item.getElementsByTagName("description")[0].textContent,
+      content: item.getElementsByTagName("content:encoded")[0].textContent,
       pubDate: item.getElementsByTagName("pubDate")[0].textContent,
     }));
 
