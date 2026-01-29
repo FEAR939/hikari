@@ -9,7 +9,7 @@
 
     onMount(async () => {
         const rss = new RSSClient(
-            "https://cr-news-api-service.prd.crunchyrollsvc.com/v1/en-US/rss",
+            "https://cr-news-api-service.prd.crunchyrollsvc.com/v1/de-DE/rss",
         );
 
         news = (await rss.getRSSFeed()) || [];
@@ -19,9 +19,7 @@
 </script>
 
 <div class="relative h-full w-full px-4 pt-16 pb-4 space-y-4 overflow-y-scroll">
-    <div
-        class="h-fit w-full grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4"
-    >
+    <div class="mx-auto w-full max-w-5xl h-fit space-y-4">
         {#if isLoading}
             <div
                 class="col-span-full h-[calc(100vh-12rem)] grid place-items-center"
