@@ -58,10 +58,7 @@
             // );
             // episode.leftoff = progress ? progress.leftoff : 0;
 
-            const anizipEpisode =
-                $playerAnizip?.episodes[episode.attributes.number];
-
-            episode.anizipImage = anizipEpisode?.image;
+            episode.anizip = $playerAnizip?.episodes[episode.attributes.number];
         });
 
         episodes = episodesObj;
@@ -160,7 +157,7 @@
                         >
                             <img
                                 class="h-full w-full object-cover"
-                                src={episode.anizipImage ||
+                                src={episode.anizip?.image ||
                                     (episode.attributes?.thumbnail &&
                                         episode.attributes?.thumbnail
                                             ?.original) ||
@@ -178,7 +175,8 @@
                             class="h-full w-full p-2 flex flex-col justify-center truncate"
                         >
                             <div class="truncate">
-                                {getEpisodeTitle(episode) ||
+                                {episode.anizip?.title?.en ||
+                                    getEpisodeTitle(episode) ||
                                     `Episode ${episode.attributes.number}`}
                             </div>
                             <div class="text-sm text-gray-400">

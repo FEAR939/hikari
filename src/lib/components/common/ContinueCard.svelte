@@ -136,7 +136,10 @@
 
         <div class="mt-2 font-medium space-y-1">
             <div class="text-white truncate">
-                {getEpisodeTitle(episode.episode) ||
+                {(Anizip?.episodes?.[episode?.episode?.attributes.number] &&
+                    Anizip?.episodes?.[episode?.episode?.attributes.number]
+                        .title?.en) ||
+                    getEpisodeTitle(episode.episode) ||
                     `Episode ${episode.episode.attributes.number}`}
             </div>
             <div class="flex divide-x divide-gray-700">
