@@ -56,8 +56,8 @@
         });
 
         currentEpisode = episodes[relativeEpisodeIndex];
-        currentEpisode.anizipImage =
-            anizip.episodes[currentEpisode.attributes.number]?.image;
+        currentEpisode.anizip =
+            anizip.episodes[currentEpisode.attributes.number];
 
         const extensionSettings = JSON.parse(
             localStorage.getItem("extensions") || "[]",
@@ -364,7 +364,7 @@
                         >
                             <img
                                 class="h-full w-full object-cover"
-                                src={currentEpisode?.anizipImage ||
+                                src={currentEpisode?.anizip?.image ||
                                     (currentEpisode?.attributes?.thumbnail &&
                                         currentEpisode?.attributes?.thumbnail
                                             .original) ||
@@ -374,7 +374,7 @@
                         </div>
                         <div class="absolute top-0 blur-xl h-full w-full">
                             <img
-                                src={currentEpisode?.anizipImage ||
+                                src={currentEpisode?.anizip?.image ||
                                     (currentEpisode?.attributes?.thumbnail &&
                                         currentEpisode?.attributes?.thumbnail
                                             .original) ||
@@ -388,14 +388,15 @@
                         class="relative z-1 h-full w-full space-y-1 px-4 py-2 flex flex-col justify-center"
                     >
                         <div class="md:text-2xl font-bold!">
-                            {(currentEpisode?.attributes?.titles &&
-                                getEpisodeTitle(currentEpisode)) ||
+                            {currentEpisode?.anizip?.title?.en ||
+                                (currentEpisode?.attributes?.titles &&
+                                    getEpisodeTitle(currentEpisode)) ||
                                 `Episode ${currentEpisode?.attributes.number}`}
                         </div>
                         <div class="w-full text-sm text-gray-300">
-                            {currentEpisode?.attributes?.description
-                                ? currentEpisode.attributes.description
-                                : "No Description"}
+                            {currentEpisode?.anizip?.overview ||
+                                currentEpisode?.attributes?.description ||
+                                ""}
                         </div>
                         <div class="mt-2">
                             <SourceMenu

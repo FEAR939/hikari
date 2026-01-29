@@ -63,7 +63,7 @@
     >
         <!-- Image -->
         <img
-            src={episode.anizipImage ||
+            src={episode.anizip?.image ||
                 (episode.attributes?.thumbnail &&
                     episode.attributes?.thumbnail?.original) ||
                 getSeriesPoster(anime)}
@@ -114,7 +114,8 @@
     <div class="relative w-full min-w-0 pb-1">
         <div class="flex items-center gap-2">
             <div class="font-semibold! text-white truncate">
-                {getEpisodeTitle(episode) ||
+                {episode.anizip?.title?.en ||
+                    getEpisodeTitle(episode) ||
                     `Episode ${episode.attributes.number}`}
             </div>
         </div>
@@ -122,7 +123,7 @@
         <p
             class="text-sm font-medium text-gray-400 line-clamp-2 leading-relaxed"
         >
-            {episode.attributes.description || ""}
+            {episode.anizip?.overview || episode.attributes.description || ""}
         </p>
 
         <!-- <div class="text-sm font-medium text-gray-400 tracking-wide">

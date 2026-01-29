@@ -38,9 +38,7 @@
             );
             episode.leftoff = progress ? progress.leftoff : 0;
 
-            const anizipEpisode = anizip.episodes[episode.attributes.number];
-
-            episode.anizipImage = anizipEpisode?.image;
+            episode.anizip = anizip.episodes[episode.attributes.number];
         });
 
         visibleEpisodes.set(episodesObj);
