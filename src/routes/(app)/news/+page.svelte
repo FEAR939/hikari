@@ -9,7 +9,7 @@
 
     onMount(async () => {
         const rss = new RSSClient(
-            "https://cr-news-api-service.prd.crunchyrollsvc.com/v1/de-DE/rss",
+            "https://cr-news-api-service.prd.crunchyrollsvc.com/v1/en-US/rss",
         );
 
         news = (await rss.getRSSFeed()) || [];
