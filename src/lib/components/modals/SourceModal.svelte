@@ -82,8 +82,6 @@
                 extension.icon = imageUrl;
             }
         }
-
-        console.log(extensions);
     }
 
     async function loadExtension(filePath: string) {
@@ -220,8 +218,6 @@
                         await StreamExtensionClass.getMetadata(source_episode);
 
                     if (!stream) return;
-
-                    console.log(stream);
 
                     sources.push({
                         type: "external",

@@ -26,8 +26,6 @@
 
         Anizip = await anizip.getAnimeById(episode.anime.anime.id);
 
-        console.log(Anizip);
-
         cache.set(
             `anizip-${episode.anime.anime.id}`,
             Anizip,

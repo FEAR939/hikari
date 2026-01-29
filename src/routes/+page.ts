@@ -3,7 +3,6 @@ import { redirect } from "@sveltejs/kit";
 
 export function load({ route }) {
   window.electronAPI.navigate((path: string) => {
-    console.log("Navigate to:", path);
     goto(`/${path}`);
   });
 

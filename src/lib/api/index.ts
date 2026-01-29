@@ -62,7 +62,6 @@ export class Client implements APIClient {
       const data = await response.json();
 
       if (data.length === 0) {
-        console.log("No continue anime found");
         return [];
       }
 

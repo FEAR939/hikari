@@ -66,7 +66,7 @@
                         JSON.stringify([]),
                     );
                 }
-                console.log("Installing extension:", url);
+
                 const extension =
                     await window.electronAPI?.installExtension(url);
                 const extensionsConfig = JSON.parse(

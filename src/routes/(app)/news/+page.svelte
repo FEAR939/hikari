@@ -13,7 +13,7 @@
         );
 
         news = (await rss.getRSSFeed()) || [];
-        console.log(news);
+
         isLoading = false;
     });
 </script>

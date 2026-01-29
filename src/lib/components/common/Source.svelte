@@ -3,8 +3,6 @@
 
     let { source, onclick } = $props();
 
-    console.log(source);
-
     let hasQuality = ["2160p", "1080p", "720p"].includes(source.file_quality);
 </script>
 

@@ -17,7 +17,6 @@
             resolveUpdate = resolve;
             rejectUpdate = reject;
         });
-        console.log(`New version available: ${version}`);
 
         toast.promise(updatePromise, {
             loading: `New version available: ${version}. Downloading...`,
