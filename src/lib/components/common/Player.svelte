@@ -29,14 +29,6 @@
         if (show && playerElement!) {
             document.body.appendChild(playerElement);
 
-            console.log({
-                currentAnime: $currentAnime,
-                playerAnime: $playerAnime,
-                playerEpisode: $playerEpisode,
-                playerSources: $playerSources,
-                playerSourceIndex: $playerSourceIndex,
-            });
-
             const source = $playerSources?.[$playerSourceIndex!];
 
             function create(url: string, headers = {}) {
