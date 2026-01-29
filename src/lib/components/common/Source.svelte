@@ -7,7 +7,7 @@
 </script>
 
 <button
-    class="h-18 w-full flex items-center rounded-2xl bg-gray-950 cursor-pointer"
+    class="h-18 w-full flex items-center rounded-2xl border border-white/10 cursor-pointer"
     onclick={() => onclick?.()}
     in:slide={{ duration: 250 }}
 >
