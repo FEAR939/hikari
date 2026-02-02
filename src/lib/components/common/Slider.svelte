@@ -124,13 +124,13 @@
     <div class="relative group">
         <!-- Left Gradient Fade -->
         <div
-            class="absolute left-0 top-2 bottom-0 w-20 bg-linear-to-r from-black to-transparent pointer-events-none z-10 transition-opacity duration-300 max-md:w-10"
+            class="absolute left-0 top-2 bottom-0 w-8 bg-linear-to-r from-black/75 via-black/50 to-transparent pointer-events-none z-10 transition-opacity duration-300 max-md:w-10"
             class:opacity-0={!canScrollLeft}
         ></div>
 
         <!-- Scrollable Container -->
         <div
-            class="flex overflow-x-auto scroll-smooth px-12 py-2 max-md:px-4 scrollbar-hide"
+            class="flex overflow-x-auto scroll-smooth px-12 py-2 max-md:px-4 scrollbar-hide snap-x snap-mandatory scroll-px-12"
             style="gap: {gap}px;"
             bind:this={containerRef}
             onscroll={updateScrollState}
@@ -140,7 +140,7 @@
 
         <!-- Right Gradient Fade -->
         <div
-            class="absolute right-0 top-2 bottom-0 w-20 bg-linear-to-l from-black to-transparent pointer-events-none z-10 transition-opacity duration-300 max-md:w-10"
+            class="absolute right-0 top-2 bottom-0 w-8 bg-linear-to-l from-black/75 via-black/50 to-transparent pointer-events-none z-10 transition-opacity duration-300 max-md:w-10"
             class:opacity-0={!canScrollRight}
         ></div>
 

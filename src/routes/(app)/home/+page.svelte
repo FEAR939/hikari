@@ -183,7 +183,7 @@
     );
 </script>
 
-<div class="w-full max-w-full h-fit space-y-10">
+<div class="w-full max-w-full h-fit space-y-10 overflow-x-hidden">
     {#if initialLoaded}
         <Carousel slides={forUpcomingCarousel} />
 
@@ -208,11 +208,13 @@
                                     episode={item}
                                     onclick={() =>
                                         goto(`/anime/${item.anime.anime.id}`)}
+                                    class="snap-start"
                                 />
                             {:else}
                                 <Card
                                     {item}
                                     onclick={() => goto(`/anime/${item.id}`)}
+                                    class="snap-start"
                                 />
                             {/if}
                         {/each}
