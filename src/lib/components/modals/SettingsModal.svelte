@@ -5,10 +5,12 @@
     import Developer from "../Settings/Developer.svelte";
     import Account from "../Settings/Account.svelte";
     import About from "../Settings/About.svelte";
+    import General from "../Settings/General.svelte";
 
     let { show = $bindable(false) } = $props();
 
     const settingsCategories = [
+        { id: "general", label: "General" },
         { id: "client", label: "Client" },
         { id: "extensions", label: "Extensions" },
         { id: "developer", label: "Developer" },
@@ -55,6 +57,34 @@
                 role="tablist"
                 class="tabs flex flex-row overflow-x-auto gap-2.5 mx-3 md:pr-4 md:gap-1 md:flex-col flex-1 md:flex-none md:w-50 md:min-h-[42rem] md:max-h-[42rem] dark:text-gray-200 text-sm text-left mb-1 md:mb-0 -translate-y-1"
             >
+                <div
+                    class="hidden md:flex w-full rounded-full px-2.5 gap-2 border border-white/10 my-1 mb-1.5"
+                >
+                    <div class="self-center rounded-l-xl bg-transparent">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            aria-hidden="true"
+                            stroke-width="1.5"
+                            class="size-3.5"
+                            ><path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                            ></path></svg
+                        >
+                    </div>
+                    <label class="sr-only" for="search-input-settings-modal"
+                        >Search</label
+                    >
+                    <input
+                        id="search-input-settings-modal"
+                        class="w-full py-1 text-sm bg-transparent outline-hidden"
+                        placeholder="Search"
+                    />
+                </div>
                 {#each settingsCategories as category}
                     <button
                         role="tab"
@@ -65,7 +95,26 @@
                         onclick={() => (activeCategory = category)}
                     >
                         <div class=" self-center mr-2">
-                            {#if category.id === "client"}
+                            {#if category.id === "general"}
+                                <svg
+                                    aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                    class="size-5"
+                                    stroke-width="2"
+                                    ><path
+                                        d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    ></path><path
+                                        d="M19.6224 10.3954L18.5247 7.7448L20 6L18 4L16.2647 5.48295L13.5578 4.36974L12.9353 2H10.981L10.3491 4.40113L7.70441 5.51596L6 4L4 6L5.45337 7.78885L4.3725 10.4463L2 11V13L4.40111 13.6555L5.51575 16.2997L4 18L6 20L7.79116 18.5403L10.397 19.6123L11 22H13L13.6045 19.6132L16.2551 18.5155C16.6969 18.8313 18 20 18 20L20 18L18.5159 16.2494L19.6139 13.598L21.9999 12.9772L22 11L19.6224 10.3954Z"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    ></path></svg
+                                >
+                            {:else if category.id === "client"}
                                 <svg
                                     width="100%"
                                     height="100%"
@@ -159,7 +208,9 @@
             <div
                 class="flex-1 px-3.5 md:pl-0 md:pr-4.5 md:min-h-[42rem] max-h-[42rem]"
             >
-                {#if activeCategory.id === "client"}
+                {#if activeCategory.id === "general"}
+                    <General />
+                {:else if activeCategory.id === "client"}
                     <Client />
                 {:else if activeCategory.id === "extensions"}
                     <Extensions />

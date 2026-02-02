@@ -33,6 +33,7 @@ export const playerShowEpisodes = writable<boolean>(false);
 export const fileSelectedPath = writable<string | null>(null);
 
 export const defaultSettings = {
+  language: "en-US",
   api_server: "https://hikari.animenetwork.org",
   extensions: [],
   media_storage_path: undefined,
