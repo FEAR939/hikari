@@ -88,10 +88,10 @@
                 {#each settingsCategories as category}
                     <button
                         role="tab"
-                        class="px-0.5 md:px-2.5 py-1 min-w-fit rounded-xl flex-1 md:flex-none flex text-left transition {category.id ===
+                        class="px-0.5 md:px-2.5 py-1 min-w-fit rounded-xl flex-1 md:flex-none flex text-left transition outline-hidden {category.id ===
                         activeCategory.id
                             ? ''
-                            : 'text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white cursor-pointer'}"
+                            : 'text-gray-300 dark:text-gray-600 hover:text-gray-700 dark:hover:text-white focus:text-gray-700 dark:focus:text-white cursor-pointer'}"
                         onclick={() => (activeCategory = category)}
                     >
                         <div class=" self-center mr-2">

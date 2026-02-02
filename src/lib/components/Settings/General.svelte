@@ -29,7 +29,7 @@
                 }}
             >
                 <Select.Trigger
-                    class="w-24 h-7 px-2 text-xs bg-gray-900 border border-gray-850 rounded-lg flex items-center justify-between hover:bg-[#2a2a2a] transition-colors"
+                    class="w-24 h-7 px-2 text-xs bg-gray-900 border border-gray-850 rounded-lg flex items-center justify-between hover:bg-[#2a2a2a] transition-colors outline-hidden"
                 >
                     <span class="truncate">{lang}</span>
                     <svg
