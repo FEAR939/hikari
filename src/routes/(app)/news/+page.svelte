@@ -2,19 +2,36 @@
     import Spinner from "$lib/components/common/Spinner.svelte";
     import NewsCard from "$lib/components/common/Newscard.svelte";
     import RSSClient from "$lib/rss";
-    import { onMount } from "svelte";
+    import { settings } from "$lib/stores";
 
     let isLoading = $state(true);
     let news = $state([]);
 
-    onMount(async () => {
-        const rss = new RSSClient(
-            "https://cr-news-api-service.prd.crunchyrollsvc.com/v1/en-US/rss",
-        );
+    async function load_feed() {
+        isLoading = true;
+        news = [];
+
+        const url = {
+            "en-US": {
+                chrunchyroll:
+                    "https://cr-news-api-service.prd.crunchyrollsvc.com/v1/en-US/rss",
+            },
+            "de-DE": {
+                chrunchyroll:
+                    "https://cr-news-api-service.prd.crunchyrollsvc.com/v1/de-DE/rss",
+            },
+        };
+
+        const currentLang = $state($settings["language"]);
+        const rss = new RSSClient(url[currentLang]["chrunchyroll"]);
 
         news = (await rss.getRSSFeed()) || [];
 
         isLoading = false;
+    }
+
+    $effect(() => {
+        load_feed();
     });
 </script>
 
