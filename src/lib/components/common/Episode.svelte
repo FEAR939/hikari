@@ -14,6 +14,8 @@
 
     const API = getAPIClient();
 
+    let episode_leftoff = $state(episode.leftoff ?? 0);
+
     function getTimePercentage(time1: number, time2: number) {
         return (time2 / time1) * 100;
     }
@@ -128,15 +130,20 @@
                                 <DropdownMenu.Item
                                     class="flex rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer"
                                     onclick={() => {
+                                        let to_set_leftoff =
+                                            episode.leftoff > 0
+                                                ? 0
+                                                : episode.attributes.length *
+                                                  60;
+
                                         API.setLeftoff({
                                             kitsu_id: parseInt(anime.id),
                                             episode: episode.attributes.number,
-                                            leftoff:
-                                                episode.leftoff > 0
-                                                    ? 0
-                                                    : episode.attributes
-                                                          .length * 60,
+                                            leftoff: to_set_leftoff,
                                         });
+
+                                        episode.leftoff = to_set_leftoff;
+                                        episode_leftoff = to_set_leftoff;
                                     }}
                                 >
                                     <div class="self-center truncate">
@@ -153,7 +160,7 @@
         </DropdownMenu.Root>
 
         <!-- /* Progress Bar */ -->
-        {#if episode.leftoff}
+        {#if episode_leftoff}
             <div
                 class="absolute bottom-0 left-0 right-0 h-3 bg-linear-to-t from-black/50 to-transparent"
             >
@@ -168,7 +175,7 @@
                         style:width={`${Math.min(
                             getTimePercentage(
                                 episode.attributes.length * 60,
-                                episode.leftoff,
+                                episode_leftoff,
                             ),
                             100,
                         )}%`}
