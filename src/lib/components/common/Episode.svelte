@@ -4,9 +4,15 @@
         showSource,
         sourceInitialIndex,
         currentAnimeAccentColor,
+        user,
     } from "$lib/stores";
+    import { DropdownMenu } from "bits-ui";
+    import { fade } from "svelte/transition";
+    import { getAPIClient } from "$lib/api";
 
-    let { anime, episode, index } = $props();
+    let { anime, episode, index, show = $bindable(false) } = $props();
+
+    const API = getAPIClient();
 
     function getTimePercentage(time1: number, time2: number) {
         return (time2 / time1) * 100;
@@ -87,6 +93,64 @@
                 ? `${episode.attributes.length}min`
                 : "N/A"}
         </div> -->
+
+        <DropdownMenu.Root bind:open={show}>
+            <DropdownMenu.Trigger
+                class="absolute {episode.leftoff
+                    ? 'bottom-5'
+                    : 'bottom-0'} right-0"
+            >
+                <button
+                    class="opacity-0 size-6 group-hover/episode:opacity-100 group-focus-within/episode:opacity-100 cursor-pointer"
+                    aria-label="More options"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        width="24px"
+                        fill="currentColor"
+                        class="size-5"
+                        ><path
+                            d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"
+                        /></svg
+                    >
+                </button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Portal>
+                <DropdownMenu.Content forceMount>
+                    {#if show}
+                        <div
+                            class="w-[260px] px-1 py-1 rounded-2xl border border-gray-100 dark:border-gray-900 z-50 bg-white dark:bg-black/70 dark:text-white shadow-lg text-sm backdrop-blur-2xl"
+                            transition:fade={{ duration: 100 }}
+                        >
+                            {#if user}
+                                <DropdownMenu.Item
+                                    class="flex rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer"
+                                    onclick={() => {
+                                        API.setLeftoff({
+                                            kitsu_id: parseInt(anime.id),
+                                            episode: episode.attributes.number,
+                                            leftoff:
+                                                episode.leftoff > 0
+                                                    ? 0
+                                                    : episode.attributes
+                                                          .length * 60,
+                                        });
+                                    }}
+                                >
+                                    <div class="self-center truncate">
+                                        {episode.leftoff > 0
+                                            ? "Reset Episode Progress"
+                                            : "Mark Episode as Watched"}
+                                    </div>
+                                </DropdownMenu.Item>
+                            {/if}
+                        </div>
+                    {/if}
+                </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+        </DropdownMenu.Root>
 
         <!-- /* Progress Bar */ -->
         {#if episode.leftoff}
