@@ -59,7 +59,7 @@
 >
     <!-- /* Thumbnail Section */ -->
     <div
-        class="relative w-full aspect-video bg-gray-950 rounded-lg overflow-hidden outline-white outine-offset-2 group-hover/episode:outline-2 group-focus-within/episode:outline-2"
+        class="relative w-full aspect-video bg-gray-950 rounded-lg overflow-hidden outline-white outline-offset-2 group-hover/episode:outline-2 group-focus-within/episode:outline-2"
     >
         <!-- Image -->
         <img
@@ -74,7 +74,7 @@
 
         <!-- Episode Number -->
         <div
-            class="absolute top-0 right-0 h-8 w-fit px-2 rounded-bl-md bg-black/30 backdrop-blur-lg flex items-center justify-center text-sm"
+            class="absolute top-0 right-0 h-8 w-fit px-2 rounded-bl-sm bg-black/80 flex items-center justify-center text-xs"
         >
             {`E${episode.attributes.number}`}
         </div>
@@ -94,18 +94,22 @@
                 class="absolute bottom-0 left-0 right-0 h-3 bg-linear-to-t from-black/50 to-transparent"
             >
                 <div
-                    class="absolute bottom-0 h-0.75 shadow-xl rounded-full"
-                    style:background="rgb({$currentAnimeAccentColor?.join(
-                        ',',
-                    )})"
-                    style:width={`${Math.min(
-                        getTimePercentage(
-                            episode.attributes.length * 60,
-                            episode.leftoff,
-                        ),
-                        100,
-                    )}%`}
-                ></div>
+                    class="absolute left-1.5 right-1.5 bottom-1.5 h-1 w-auto bg-black/70 rounded-full"
+                >
+                    <div
+                        class="h-full bg-gray-200 rounded-full"
+                        style:background="rgb({$currentAnimeAccentColor?.join(
+                            ',',
+                        )})"
+                        style:width={`${Math.min(
+                            getTimePercentage(
+                                episode.attributes.length * 60,
+                                episode.leftoff,
+                            ),
+                            100,
+                        )}%`}
+                    ></div>
+                </div>
             </div>
         {/if}
     </div>

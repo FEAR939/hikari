@@ -120,7 +120,7 @@
                 class="absolute bottom-0 left-0 right-0 h-6 bg-linear-to-t from-black/50 to-transparent"
             >
                 <div
-                    class="absolute left-0 right-0 bottom-0 h-0.75 w-full bg-white-30"
+                    class="absolute left-1.5 right-1.5 bottom-1.5 h-1 w-auto bg-black/70 rounded-full"
                 >
                     <div
                         class="h-full bg-gray-200 rounded-full"
