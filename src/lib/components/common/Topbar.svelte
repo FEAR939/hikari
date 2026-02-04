@@ -21,27 +21,6 @@
         class="fixed z-2222 top-0 left-16 right-0 flex gap-1 items-center justify-end h-12 [app-region:drag] [&_*]:[app-region:none]"
         transition:fade={{ duration: 100 }}
     >
-        <a
-            class="group/topbar_search rounded-full cursor-pointer transition-transform duration-150 outline-hidden"
-            aria-label="Search"
-            href="/search"
-        >
-            <div
-                class="relative p-2 bg-black/30 backdrop-blur-lg rounded-full flex items-center justify-center group-focus-within/topbar_search:outline-1 outline-white outline-offset-2 hover:bg-white hover:text-black transition-colors duration-150"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    height="24px"
-                    viewBox="0 -960 960 960"
-                    width="24px"
-                    fill="currentColor"
-                    class="size-4"
-                    ><path
-                        d="M380-320q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l224 224q11 11 11 28t-11 28q-11 11-28 11t-28-11L532-372q-30 24-69 38t-83 14Zm0-80q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"
-                    /></svg
-                >
-            </div>
-        </a>
         <UserMenu>
             <div
                 class="mx-1 rounded-full overflow-hidden cursor-pointer transition-transform duration-150 outline-white outline-offset-2 group-focus-visible/usermenu:outline-1"
