@@ -108,6 +108,10 @@ export class Client implements APIClient {
 
       const data = await response.json();
 
+      if (data.error) {
+        return [];
+      }
+
       return data.map((entry: LeftOffEntry) => ({
         kitsu_id: entry.kitsu_id,
         episode: entry.episode,
@@ -140,6 +144,11 @@ export class Client implements APIClient {
     }
 
     const data = await response.json();
+
+    if (data.error) {
+      return [];
+    }
+
     return data;
   }
 
