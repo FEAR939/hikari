@@ -136,7 +136,7 @@
             {:else if !isLoading && episodes.length}
                 {#each episodes as episode}
                     <button
-                        class="py-1.5 px-2 w-full aspect-5/1 flex text-left outline-hidden {$playerEpisode.number ===
+                        class="py-1.5 px-2 w-full aspect-[3.5/1] flex text-left outline-hidden {$playerEpisode.number ===
                         episode.attributes.number
                             ? 'bg-white/10'
                             : 'hover:bg-white/15 cursor-pointer'}"
@@ -155,33 +155,35 @@
                         <div
                             class="relative h-full aspect-video overflow-hidden rounded-md shrink-0"
                         >
+                            <div
+                                class="absolute top-0 right-0 h-8 w-fit px-2 rounded-bl-sm bg-black/80 flex items-center justify-center text-xs"
+                            >
+                                {`E${episode.attributes.number}`}
+                            </div>
                             <img
                                 class="h-full w-full object-cover"
                                 src={episode.anizip?.image ||
                                     (episode.attributes?.thumbnail &&
                                         episode.attributes?.thumbnail
                                             ?.original) ||
-                                    getSeriesBackdrop($playerAnime) ||
                                     getSeriesPoster($playerAnime)}
                                 alt=""
                             />
-                            <div
+                            <!-- <div
                                 class="absolute right-1 bottom-1 px-1 py-0.5 text-xs rounded bg-black/30 backdrop-blur-2xl"
                             >
                                 {episode.attributes?.length}Min
-                            </div>
+                            </div> -->
                         </div>
-                        <div
-                            class="h-full w-full p-2 flex flex-col justify-center truncate"
-                        >
-                            <div class="truncate">
+                        <div class="h-full w-full p-2">
+                            <div class="line-clamp-2 text-lg fold-bold!">
                                 {episode.anizip?.title?.en ||
                                     getEpisodeTitle(episode) ||
                                     `Episode ${episode.attributes.number}`}
                             </div>
-                            <div class="text-sm text-gray-400">
+                            <!-- <div class="text-sm text-gray-400">
                                 {`Episode ${episode.attributes.number}`}
-                            </div>
+                            </div> -->
                         </div>
                     </button>
                 {/each}
