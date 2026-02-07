@@ -2,7 +2,9 @@
     import { Select } from "bits-ui";
     import Modal from "../common/Modal.svelte";
 
-    let { show = $bindable(false), fileUtilPath = $bindable("") } = $props();
+    let { show = $bindable(false), files = $bindable([]) } = $props();
+
+    let currentFileIndex = $state(0);
 
     let fileMetadata = $state({});
 
@@ -18,16 +20,7 @@
 
     let outputstrat = $state<null | string>(null);
 
-    const outputStrategies = [
-        {
-            value: "static",
-            label: "Static",
-        },
-        {
-            value: "replace",
-            label: "Replace",
-        },
-    ];
+    let outputStrategies = [];
 
     let targetFilepath = $state("");
 
@@ -53,7 +46,7 @@
 
     async function transcode_file() {
         if (
-            !fileUtilPath ||
+            !files ||
             !selectedAudioCodec ||
             outputstrat === null ||
             (outputstrat === "static" && targetFilepath === "") ||
@@ -65,32 +58,73 @@
         }
 
         let savePath = "";
+        let currentIndex = 0;
 
-        switch (outputstrat) {
-            case "static":
-                savePath = targetFilepath;
-                break;
-            case "replace":
-                savePath = fileUtilPath.replace(replaceFrom, replaceTo);
-                break;
+        let run = true;
+
+        while (run) {
+            if (currentIndex >= files.length) {
+                run = false;
+                continue;
+            }
+
+            switch (outputstrat) {
+                case "static":
+                    savePath = targetFilepath;
+                    break;
+                case "replace":
+                    savePath = files[currentIndex].replace(
+                        replaceFrom,
+                        replaceTo,
+                    );
+                    break;
+            }
+
+            const audioCodec = selectedAudioCodec;
+            await window.electronAPI.convertVideoCodec(
+                files[currentIndex],
+                audioCodec,
+                savePath,
+            );
+
+            currentIndex++;
         }
-
-        const audioCodec = selectedAudioCodec;
-        await window.electronAPI.convertVideoCodec(
-            fileUtilPath,
-            audioCodec,
-            savePath,
-        );
     }
 
     $effect(() => {
-        if (fileUtilPath) {
-            load_file_metadata(fileUtilPath);
-            targetFilepath = fileUtilPath;
+        if (files[currentFileIndex] && show) {
+            load_file_metadata(files[currentFileIndex]);
+            targetFilepath = files[currentFileIndex];
             selectedAudioCodec = null;
             replaceFrom = "";
             replaceTo = "";
             outputstrat = null;
+        }
+
+        if (files.length > 1 && show) {
+            outputStrategies = [
+                {
+                    value: "replace",
+                    label: "Replace",
+                },
+            ];
+        }
+
+        if (files.length === 1 && show) {
+            outputStrategies = [
+                {
+                    value: "static",
+                    label: "Static",
+                },
+                {
+                    value: "replace",
+                    label: "Replace",
+                },
+            ];
+        }
+
+        if (!show) {
+            outputStrategies = [];
         }
     });
 </script>
@@ -130,33 +164,33 @@
         >
             <div class="pl-4.5 h-fit w-full space-y-2">
                 <div class="space-y-1">
-                    <div class="text-gray-400">Filepath</div>
-                    <div
-                        class="w-xl flex gap-1 px-3 py-2 bg-gray-950 rounded-lg"
-                    >
-                        <div class="w-auto overflow-x-scroll text-nowrap">
-                            {fileUtilPath}
-                        </div>
-                        <button
-                            class="size-5 flex items-center justify-center cursor-pointer hover:text-gray-500 focus:text-gray-500 transition-colors duration-100"
-                            onclick={() =>
-                                window.electronAPI.clipboardWriteText(
-                                    fileUtilPath,
-                                )}
-                            aria-label="Copy to clipboard"
-                            ><svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                height="24px"
-                                viewBox="0 -960 960 960"
-                                width="24px"
-                                fill="currentColor"
-                                class="size-4"
-                                ><path
-                                    d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360ZM200-80q-33 0-56.5-23.5T120-160v-520q0-17 11.5-28.5T160-720q17 0 28.5 11.5T200-680v520h400q17 0 28.5 11.5T640-120q0 17-11.5 28.5T600-80H200Z"
-                                /></svg
-                            ></button
+                    <div class="text-gray-400">Files</div>
+                    {#each files as file}
+                        <div
+                            class="w-xl flex gap-1 px-3 py-2 bg-gray-950 rounded-lg"
                         >
-                    </div>
+                            <div class="w-auto overflow-x-scroll text-nowrap">
+                                {file}
+                            </div>
+                            <button
+                                class="size-5 flex items-center justify-center cursor-pointer hover:text-gray-500 focus:text-gray-500 transition-colors duration-100"
+                                onclick={() =>
+                                    window.electronAPI.clipboardWriteText(file)}
+                                aria-label="Copy to clipboard"
+                                ><svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="24px"
+                                    viewBox="0 -960 960 960"
+                                    width="24px"
+                                    fill="currentColor"
+                                    class="size-4"
+                                    ><path
+                                        d="M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360ZM200-80q-33 0-56.5-23.5T120-160v-520q0-17 11.5-28.5T160-720q17 0 28.5 11.5T200-680v520h400q17 0 28.5 11.5T640-120q0 17-11.5 28.5T600-80H200Z"
+                                    /></svg
+                                ></button
+                            >
+                        </div>
+                    {/each}
                 </div>
 
                 <div
@@ -329,14 +363,16 @@
                                     <div class="text-sm font-bold!">
                                         Preview
                                     </div>
-                                    <div
-                                        class="w-xl flex gap-1 px-3 py-2 bg-gray-950 rounded-lg overflow-x-scroll text-nowrap"
-                                    >
-                                        {fileUtilPath.replaceAll(
-                                            replaceFrom,
-                                            replaceTo,
-                                        )}
-                                    </div>
+                                    {#each files as file}
+                                        <div
+                                            class="w-xl flex gap-1 px-3 py-2 bg-gray-950 rounded-lg overflow-x-scroll text-nowrap"
+                                        >
+                                            {file.replaceAll(
+                                                replaceFrom,
+                                                replaceTo,
+                                            )}
+                                        </div>
+                                    {/each}
                                 </div>
                             {:else}
                                 <div>No Strategy Selected</div>

@@ -6,18 +6,22 @@
     let { show = $bindable(false) } = $props();
 
     let fileUtilModalShow = $state(false);
-    let selectedFile = $state("");
 
     let episodes = $state([]);
+
+    let selectedEpisodes = $state([]);
+
+    let filesToEdit = $state([]);
 
     $effect(() => {
         if ($fileSelectedPath && show) {
             (async () => {
-                const files =
-                    await window.electronAPI?.getDir($fileSelectedPath);
+                let files = await window.electronAPI?.getDir($fileSelectedPath);
 
-                files.filter(
-                    (file) => file.endsWith(".mp4") || file.endsWith(".mkv"),
+                files = files.filter(
+                    (file) =>
+                        String(file).endsWith(".mp4") ||
+                        String(file).endsWith(".mkv"),
                 );
 
                 episodes = files || [];
@@ -35,7 +39,8 @@
     }
 </script>
 
-<FileUtilModal bind:show={fileUtilModalShow} bind:fileUtilPath={selectedFile} />
+<FileUtilModal bind:show={fileUtilModalShow} bind:files={filesToEdit}
+></FileUtilModal>
 
 <Modal bind:show>
     <div class="text-gray-700 dark:text-gray-100 mx-1">
@@ -105,6 +110,43 @@
                     <div
                         class="px-6 py-3 flex text-sm text-neutral-500 border-b border-gray-900 rounded-none!"
                     >
+                        <button
+                            class="flex items-center justify-center size-6 outline-hidden"
+                            aria-label="Select"
+                            onclick={() => {
+                                const isSelected =
+                                    selectedEpisodes.length === episodes.length;
+                                if (!isSelected) {
+                                    selectedEpisodes = episodes;
+                                } else {
+                                    selectedEpisodes = [];
+                                }
+                            }}
+                        >
+                            {#if selectedEpisodes.length === episodes.length}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="24px"
+                                    viewBox="0 -960 960 960"
+                                    width="24px"
+                                    fill="#e3e3e3"
+                                    ><path
+                                        d="m424-424-86-86q-11-11-28-11t-28 11q-11 11-11 28t11 28l114 114q12 12 28 12t28-12l226-226q11-11 11-28t-11-28q-11-11-28-11t-28 11L424-424ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Z"
+                                    /></svg
+                                >
+                            {:else}
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    height="24px"
+                                    viewBox="0 -960 960 960"
+                                    width="24px"
+                                    fill="#e3e3e3"
+                                    ><path
+                                        d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"
+                                    /></svg
+                                >
+                            {/if}
+                        </button>
                         <div class="w-1/2">Filename</div>
                         <div class="w-1/2">Mapped</div>
                         <div class="w-6"></div>
@@ -115,6 +157,47 @@
                             <div
                                 class="w-full px-6 py-3 flex hover:bg-gray-950 border-b border-gray-900"
                             >
+                                <button
+                                    class="flex items-center justify-center size-6 outline-hidden"
+                                    aria-label="Select"
+                                    onclick={() => {
+                                        const isSelected =
+                                            selectedEpisodes.includes(dir);
+                                        if (!isSelected) {
+                                            selectedEpisodes.push(dir);
+                                        } else {
+                                            selectedEpisodes =
+                                                selectedEpisodes.filter(
+                                                    (episode) =>
+                                                        episode !== dir,
+                                                );
+                                        }
+                                    }}
+                                >
+                                    {#if selectedEpisodes.includes(dir)}
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            height="24px"
+                                            viewBox="0 -960 960 960"
+                                            width="24px"
+                                            fill="#e3e3e3"
+                                            ><path
+                                                d="m424-424-86-86q-11-11-28-11t-28 11q-11 11-11 28t11 28l114 114q12 12 28 12t28-12l226-226q11-11 11-28t-11-28q-11-11-28-11t-28 11L424-424ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Z"
+                                            /></svg
+                                        >
+                                    {:else}
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            height="24px"
+                                            viewBox="0 -960 960 960"
+                                            width="24px"
+                                            fill="#e3e3e3"
+                                            ><path
+                                                d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Z"
+                                            /></svg
+                                        >
+                                    {/if}
+                                </button>
                                 <div class="truncate w-1/2">{dir}</div>
                                 {#if mapped}
                                     <div class="truncate w-1/2">
@@ -143,15 +226,28 @@
                                         <span>Failed to Map</span>
                                     </div>
                                 {/if}
-                                {#if dir.endsWith(".mkv") || dir.endsWith(".mp4")}
+                                {#if String(dir).endsWith(".mkv") || String(dir).endsWith(".mp4")}
                                     <button
                                         class="flex items-center justify-center size-6 outline-hidden rounded-full hover:bg-white hover:text-black focus:bg-white focus:text-black transition-colors duration-250 cursor-pointer"
                                         aria-label="Utility"
                                         onclick={() => {
-                                            selectedFile = [
-                                                $fileSelectedPath,
-                                                dir,
-                                            ].join("/");
+                                            if (selectedEpisodes.length === 0) {
+                                                filesToEdit = [
+                                                    [
+                                                        $fileSelectedPath,
+                                                        dir,
+                                                    ].join("/"),
+                                                ];
+                                            } else {
+                                                filesToEdit =
+                                                    selectedEpisodes.map(
+                                                        (selected) =>
+                                                            [
+                                                                $fileSelectedPath,
+                                                                selected,
+                                                            ].join("/"),
+                                                    );
+                                            }
                                             fileUtilModalShow = true;
                                         }}
                                     >
