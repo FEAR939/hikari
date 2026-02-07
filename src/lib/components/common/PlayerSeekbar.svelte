@@ -18,13 +18,28 @@
         return video.src.includes("mediaproxy://");
     });
 
-    function debounce(func, delay) {
-        let timeout: NodeJS.Timeout | undefined;
-        return function (...args) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
+    function throttle(func: Function, limit: number) {
+        let inThrottle = false;
+        let lastArgs: any[] | null = null;
+
+        return function (...args: any[]) {
+            if (!inThrottle) {
                 func.apply(this, args);
-            }, delay);
+                inThrottle = true;
+
+                setTimeout(() => {
+                    inThrottle = false;
+                    // Fire once more with the latest args so the
+                    // final position is never missed
+                    if (lastArgs) {
+                        func.apply(this, lastArgs);
+                        lastArgs = null;
+                    }
+                }, limit);
+            } else {
+                // Store latest args so we don't lose the last hover position
+                lastArgs = args;
+            }
         };
     }
 
@@ -33,7 +48,7 @@
         thumbnail = src;
     }
 
-    const debouncedGetSeekThumbnail = debounce(getSeekThumbnail, 100);
+    const throttledGetSeekThumbnail = throttle(getSeekThumbnail, 500);
 
     video.addEventListener("timeupdate", () => {
         const currentTime = video.currentTime || 0;
@@ -86,7 +101,7 @@
             (e.target === seekbarEl || e.target.parentElement === seekbarEl) &&
             seekThumbnailEnabled()
         ) {
-            debouncedGetSeekThumbnail(
+            throttledGetSeekThumbnail(
                 $playerSources![$playerSourceIndex!].file_url,
                 seekSec,
             );
