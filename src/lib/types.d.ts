@@ -66,6 +66,11 @@ export interface ElectronAPI {
     titles: string[],
   ) => Promise<LocalMediaFile[]>;
   getLocalMediaMetadata: (filePath: string) => Promise<LocalMediaMetadata>;
+  convertVideoCodec: (
+    filePath: string,
+    codec: string,
+    newfilePath: string,
+  ) => Promise<boolean>;
   getAppVersion: () => Promise<string>;
   loadExtensions: () => Promise<Extension[]>;
   installExtension: (url: string) => Promise<Extension>;

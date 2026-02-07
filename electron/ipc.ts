@@ -1,9 +1,11 @@
 import { ipcMain, app, shell, clipboard } from "electron";
+import { win } from "./main.js";
 import fs from "fs";
 import path from "path";
 // @ts-ignore
 import * as ffprobe from "ffprobe-static";
-import childProcess from "child_process";
+import ffmpegPath from "ffmpeg-static";
+import childProcess, { spawn } from "child_process";
 import { promisify } from "util";
 import extensionManager from "./services/extension.manager/index.js";
 import Store from "electron-store";
@@ -18,6 +20,92 @@ async function getVideoMetadata(filePath: string) {
   );
   const metadata = JSON.parse(stdout);
   return metadata;
+}
+
+function getFFmpegPath(): string {
+  // Replace with your actual ffmpeg path logic
+  return ffmpegPath?.replace("app.asar", "app.asar.unpacked") ?? "";
+}
+
+function convertVideoCodec(
+  filePath: string,
+  codec: string,
+  newFilePath: string,
+): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    let totalDuration = 0;
+
+    const ffmpeg = spawn(getFFmpegPath(), [
+      "-i",
+      filePath,
+      "-acodec",
+      codec,
+      "-vcodec",
+      "copy",
+      "-stats_period",
+      "0.5",
+      newFilePath,
+    ]);
+
+    ffmpeg.stderr.setEncoding("utf8");
+
+    ffmpeg.stderr.on("data", (data: string) => {
+      // Parse total duration (appears once at start)
+      const durationMatch = data.match(
+        /Duration:\s*(\d{2}):(\d{2}):(\d{2})\.(\d{2})/,
+      );
+      if (durationMatch) {
+        totalDuration =
+          parseInt(durationMatch[1]) * 3600 +
+          parseInt(durationMatch[2]) * 60 +
+          parseInt(durationMatch[3]) +
+          parseInt(durationMatch[4]) / 100;
+      }
+
+      // Parse current time progress (appears repeatedly)
+      const timeMatch = data.match(/time=(\d{2}):(\d{2}):(\d{2})\.(\d{2})/);
+      if (timeMatch) {
+        const currentTime =
+          parseInt(timeMatch[1]) * 3600 +
+          parseInt(timeMatch[2]) * 60 +
+          parseInt(timeMatch[3]) +
+          parseInt(timeMatch[4]) / 100;
+
+        const speedMatch = data.match(/speed=\s*([\d.]+)x/);
+        const speed = speedMatch ? parseFloat(speedMatch[1]) : null;
+
+        const percent =
+          totalDuration > 0 ? (currentTime / totalDuration) * 100 : 0;
+
+        const eta =
+          speed && speed > 0 && totalDuration > 0
+            ? (totalDuration - currentTime) / speed
+            : null;
+
+        win.webContents.send("transcode-progress", {
+          percent: Math.min(percent, 100),
+          currentTime,
+          totalDuration,
+          speed,
+          eta,
+        });
+      }
+    });
+
+    ffmpeg.on("close", (code) => {
+      if (code === 0) {
+        win.webContents.send("transcode-progress", {
+          percent: 100,
+          done: true,
+        });
+        resolve(true);
+      } else {
+        reject(new Error(`FFmpeg exited with code ${code}`));
+      }
+    });
+
+    ffmpeg.on("error", reject);
+  });
 }
 
 export function handleIPC() {
@@ -101,6 +189,14 @@ export function handleIPC() {
 
     return metadata;
   });
+
+  ipcMain.handle(
+    "convert-video-codec",
+    async (event, filepath, codec, newfilepath) => {
+      const conversion = await convertVideoCodec(filepath, codec, newfilepath);
+      return conversion;
+    },
+  );
 
   ipcMain.handle("get-app-version", () => {
     return app.getVersion();

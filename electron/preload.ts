@@ -38,6 +38,24 @@ contextBridge.exposeInMainWorld("electronAPI", {
     );
     return metadata;
   },
+  convertVideoCodec: async (
+    filePath: string,
+    codec: string,
+    newfilePath: string,
+  ) => {
+    const conversion = await ipcRenderer.invoke(
+      "convert-video-codec",
+      filePath,
+      codec,
+      newfilePath,
+    );
+    return conversion;
+  },
+  ontranscodeprogress: (callback: (progress: number) => void) => {
+    ipcRenderer.on("transcode-progress", (_event, progress) => {
+      callback(progress);
+    });
+  },
   getAppVersion: async () => {
     const version = await ipcRenderer.invoke("get-app-version");
     return version;
