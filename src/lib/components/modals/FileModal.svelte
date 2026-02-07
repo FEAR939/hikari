@@ -1,8 +1,12 @@
 <script lang="ts">
     import Modal from "$lib/components/common/Modal.svelte";
     import { fileSelectedPath } from "$lib/stores";
+    import FileUtilModal from "./FileUtilModal.svelte";
 
     let { show = $bindable(false) } = $props();
+
+    let fileUtilModalShow = $state(false);
+    let selectedFile = $state("");
 
     let episodes = $state([]);
 
@@ -30,6 +34,8 @@
         return false;
     }
 </script>
+
+<FileUtilModal bind:show={fileUtilModalShow} bind:fileUtilPath={selectedFile} />
 
 <Modal bind:show>
     <div class="text-gray-700 dark:text-gray-100 mx-1">
@@ -97,25 +103,26 @@
                     class="border border-gray-900 rounded-2xl [&>*:last-of-type]:rounded-b-2xl"
                 >
                     <div
-                        class="px-6 py-3 grid grid-cols-2 text-sm text-neutral-500 border-b border-gray-900"
+                        class="px-6 py-3 flex text-sm text-neutral-500 border-b border-gray-900 rounded-none!"
                     >
-                        <div>Filename</div>
-                        <div>Mapped</div>
+                        <div class="w-1/2">Filename</div>
+                        <div class="w-1/2">Mapped</div>
+                        <div class="w-6"></div>
                     </div>
                     {#if episodes.length > 0}
                         {#each episodes as dir}
                             {@const mapped = reverseMap(dir)}
                             <div
-                                class="text-sm px-6 py-3 grid grid-cols-2 hover:bg-gray-950 border-b border-gray-900"
+                                class="w-full px-6 py-3 flex hover:bg-gray-950 border-b border-gray-900"
                             >
-                                <div class="truncate">{dir}</div>
+                                <div class="truncate w-1/2">{dir}</div>
                                 {#if mapped}
-                                    <div class="truncate">
+                                    <div class="truncate w-1/2">
                                         Episode {mapped}
                                     </div>
                                 {:else}
                                     <div
-                                        class="truncate flex gap-1 text-yellow-400"
+                                        class="truncate w-1/2 flex gap-1 text-yellow-400"
                                     >
                                         <svg
                                             width="100%"
@@ -135,6 +142,38 @@
                                         </svg>
                                         <span>Failed to Map</span>
                                     </div>
+                                {/if}
+                                {#if dir.endsWith(".mkv") || dir.endsWith(".mp4")}
+                                    <button
+                                        class="flex items-center justify-center size-6 outline-hidden rounded-full hover:bg-white hover:text-black focus:bg-white focus:text-black transition-colors duration-250 cursor-pointer"
+                                        aria-label="Utility"
+                                        onclick={() => {
+                                            selectedFile = [
+                                                $fileSelectedPath,
+                                                dir,
+                                            ].join("/");
+                                            fileUtilModalShow = true;
+                                        }}
+                                    >
+                                        <svg
+                                            aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            class="size-4"
+                                            stroke-width="2"
+                                            ><path
+                                                d="M10.0503 10.6066L2.97923 17.6777C2.19818 18.4587 2.19818 19.725 2.97923 20.5061V20.5061C3.76027 21.2871 5.0266 21.2871 5.80765 20.5061L12.8787 13.435"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            ></path><path
+                                                d="M10.0502 10.6066C9.20638 8.45358 9.37134 5.6286 11.1109 3.88909C12.8504 2.14957 16.0606 1.76777 17.8284 2.82843L14.7877 5.8691L14.5051 8.98014L17.6161 8.69753L20.6568 5.65685C21.7175 7.42462 21.3357 10.6349 19.5961 12.3744C17.8566 14.1139 15.0316 14.2789 12.8786 13.435"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            ></path></svg
+                                        >
+                                    </button>
                                 {/if}
                             </div>
                         {/each}
