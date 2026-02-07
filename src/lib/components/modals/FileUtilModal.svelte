@@ -6,7 +6,7 @@
 
     let fileMetadata = $state({});
 
-    let selectedAudioCodec = $state("");
+    let selectedAudioCodec = $state<null | string>(null);
 
     // !IMPORTANT values here need to follow ffmpeg spec
     const audioCodecs = [
@@ -51,6 +51,7 @@
         if (fileUtilPath) {
             load_file_metadata(fileUtilPath);
             targetFilepath = fileUtilPath;
+            selectedAudioCodec = null;
         }
     });
 </script>
