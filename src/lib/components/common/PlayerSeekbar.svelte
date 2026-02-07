@@ -1,11 +1,39 @@
 <script lang="ts">
-    import { currentAnimeAccentColor } from "$lib/stores";
+    import {
+        currentAnimeAccentColor,
+        playerSources,
+        playerSourceIndex,
+    } from "$lib/stores";
     let { video } = $props();
     let playProgress = $state(0);
     let seekProgress = $state(0);
+    let seekSec = $state(0);
     let bufferProgress = $state(0);
     let dragging = $state(false);
     let seekbarEl: HTMLDivElement;
+
+    let thumbnail: string | null = $state(null);
+
+    let seekThumbnailEnabled = $derived(() => {
+        return video.src.includes("mediaproxy://");
+    });
+
+    function debounce(func, delay) {
+        let timeout: NodeJS.Timeout | undefined;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                func.apply(this, args);
+            }, delay);
+        };
+    }
+
+    async function getSeekThumbnail(videoPath: string, time: number) {
+        const src = await window.electronAPI.getThumbnail(videoPath, time);
+        thumbnail = src;
+    }
+
+    const debouncedGetSeekThumbnail = debounce(getSeekThumbnail, 100);
 
     video.addEventListener("timeupdate", () => {
         const currentTime = video.currentTime || 0;
@@ -37,7 +65,9 @@
         const x = e.clientX - rect.left;
         const width = rect.width;
         const progress = Math.min(Math.max(x / width, 0), 1);
+        const duration = video.duration || 0;
         seekProgress = progress * 100;
+        seekSec = progress * duration;
     }
 
     function handleMouseDown(e: MouseEvent) {
@@ -50,6 +80,16 @@
             updateSeekVisual(e);
         } else {
             seekProgress = 0;
+        }
+
+        if (
+            (e.target === seekbarEl || e.target.parentElement === seekbarEl) &&
+            seekThumbnailEnabled()
+        ) {
+            debouncedGetSeekThumbnail(
+                $playerSources![$playerSourceIndex!].file_url,
+                seekSec,
+            );
         }
         if (dragging) updateSeekProgress(e);
     }
@@ -74,7 +114,15 @@
     <div
         class="absolute top-0 left-0 flex items-center h-full bg-gray-400 rounded-full transition"
         style:width={seekProgress + "%"}
-    ></div>
+    >
+        {#if seekProgress > 0 && seekThumbnailEnabled() && thumbnail}
+            <div
+                class="absolute bottom-4 right-0 translate-x-1/2 h-32 aspect-video rounded-lg bg-black outline-offset-2 outline outline-white overflow-hidden"
+            >
+                <img src={thumbnail} class="h-full w-full object-cover" />
+            </div>
+        {/if}
+    </div>
     <div
         class="absolute top-0 left-0 flex items-center h-full shadow-xl rounded-full transition"
         style:background="rgb({$currentAnimeAccentColor?.join(',')})"

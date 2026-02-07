@@ -56,6 +56,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
       callback(progress);
     });
   },
+  getThumbnail: (videoPath: string, time: number): Promise<string | null> =>
+    ipcRenderer.invoke("get-thumbnail", videoPath, time),
   getAppVersion: async () => {
     const version = await ipcRenderer.invoke("get-app-version");
     return version;

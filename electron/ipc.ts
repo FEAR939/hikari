@@ -2,6 +2,7 @@ import { ipcMain, app, shell, clipboard } from "electron";
 import { win } from "./main.js";
 import fs from "fs";
 import path from "path";
+import os from "os";
 // @ts-ignore
 import * as ffprobe from "ffprobe-static";
 import ffmpegPath from "ffmpeg-static";
@@ -11,6 +12,7 @@ import extensionManager from "./services/extension.manager/index.js";
 import Store from "electron-store";
 
 const exec = promisify(childProcess.exec);
+const execFile = promisify(childProcess.execFile);
 
 let store = new Store();
 
@@ -108,6 +110,65 @@ function convertVideoCodec(
   });
 }
 
+const cache = new Map<string, string>(); // "path:time" -> base64
+const MAX_CACHE = 200;
+
+function cacheKey(videoPath: string, time: number): string {
+  // Round to nearest second — no need for sub-second precision
+  return `${videoPath}:${Math.floor(time)}`;
+}
+
+async function getThumbnail(videoPath: string, time: number) {
+  const key = cacheKey(videoPath, time);
+
+  if (cache.has(key)) {
+    return cache.get(key);
+  }
+
+  try {
+    const tmpFile = path.join(os.tmpdir(), `thumb_${Date.now()}.jpg`);
+
+    await execFile(
+      getFFmpegPath(),
+      [
+        "-ss",
+        String(Math.floor(time)),
+        "-i",
+        videoPath,
+        "-vframes",
+        "1",
+        "-vf",
+        "scale=192:-1",
+        "-q:v",
+        "8",
+        "-y",
+        tmpFile,
+      ],
+      {
+        timeout: 5000,
+      },
+    );
+
+    const buffer = await fs.promises.readFile(tmpFile);
+    const base64 = `data:image/jpeg;base64,${buffer.toString("base64")}`;
+
+    // Cache it
+    if (cache.size >= MAX_CACHE) {
+      // Delete oldest entry
+      const firstKey = cache.keys().next().value;
+      cache.delete(firstKey!);
+    }
+    cache.set(key, base64);
+
+    // Clean up temp file (fire and forget)
+    await fs.promises.unlink(tmpFile);
+
+    return base64;
+  } catch {
+    return null;
+  }
+}
+
 export function handleIPC() {
   ipcMain.handle(
     "get-local-media",
@@ -197,6 +258,11 @@ export function handleIPC() {
       return conversion;
     },
   );
+
+  ipcMain.handle("get-thumbnail", async (event, filePath, time) => {
+    const thumbnail = await getThumbnail(filePath, time);
+    return thumbnail;
+  });
 
   ipcMain.handle("get-app-version", () => {
     return app.getVersion();
