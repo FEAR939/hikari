@@ -79,7 +79,7 @@
         aria-modal="true"
         role="dialog"
         class={twMerge(
-            "modal fixed top-12 right-3 bottom-18 bg-black/30 backdrop-blur-lg aspect-1/2 flex flex-col h-auto z-3332 overflow-hidden rounded-2xl text-white border border-white/10",
+            "modal fixed top-12 right-3 bottom-18 bg-black/60 backdrop-blur-lg aspect-1/2 flex flex-col h-auto z-3332 overflow-hidden rounded-2xl text-white border border-white/10",
             className,
         )}
         in:slide={{ duration: 250 }}
@@ -138,8 +138,8 @@
                     <button
                         class="py-1.5 px-2 w-full aspect-[3.5/1] flex text-left outline-hidden {$playerEpisode.number ===
                         episode.attributes.number
-                            ? 'bg-white/10'
-                            : 'hover:bg-white/15 cursor-pointer'}"
+                            ? 'bg-black/50'
+                            : 'hover:bg-black/30 cursor-pointer'}"
                         onclick={() => {
                             if (
                                 $playerEpisode.number ===
