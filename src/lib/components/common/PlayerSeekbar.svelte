@@ -132,9 +132,16 @@
     >
         {#if seekProgress > 0 && seekThumbnailEnabled() && thumbnail}
             <div
-                class="absolute bottom-4 right-0 translate-x-1/2 h-32 aspect-video rounded-lg bg-black outline-offset-2 outline outline-white overflow-hidden"
+                class="absolute bottom-14 right-0 translate-x-1/2 h-32 aspect-video rounded-lg bg-black outline-offset-2 outline outline-white overflow-hidden"
             >
                 <img src={thumbnail} class="h-full w-full object-cover" />
+            </div>
+        {/if}
+        {#if seekProgress > 0}
+            <div
+                class="absolute bottom-4 right-0 translate-x-1/2 h-fit px-3 py-1 rounded-full bg-black/30 backdrop-blur-lg text-sm"
+            >
+                {new Date(seekSec * 1000).toISOString().substring(14, 19)}
             </div>
         {/if}
     </div>
