@@ -16,7 +16,24 @@
         },
     ];
 
+    let outputstrat = $state<null | string>(null);
+
+    const outputStrategies = [
+        {
+            value: "static",
+            label: "Static",
+        },
+        {
+            value: "replace",
+            label: "Replace",
+        },
+    ];
+
     let targetFilepath = $state("");
+
+    let replaceFrom = $state("");
+
+    let replaceTo = $state("");
 
     let progress = $state<null | number>(null);
 
@@ -35,15 +52,34 @@
     }
 
     async function transcode_file() {
-        if (!fileUtilPath || !targetFilepath || !selectedAudioCodec) {
+        if (
+            !fileUtilPath ||
+            !selectedAudioCodec ||
+            outputstrat === null ||
+            (outputstrat === "static" && targetFilepath === "") ||
+            (outputstrat === "replace" &&
+                replaceFrom === "" &&
+                replaceTo === "")
+        ) {
             return;
         }
-        const targetPath = targetFilepath;
+
+        let savePath = "";
+
+        switch (outputstrat) {
+            case "static":
+                savePath = targetFilepath;
+                break;
+            case "replace":
+                savePath = fileUtilPath.replace(replaceFrom, replaceTo);
+                break;
+        }
+
         const audioCodec = selectedAudioCodec;
         await window.electronAPI.convertVideoCodec(
             fileUtilPath,
             audioCodec,
-            targetPath,
+            savePath,
         );
     }
 
@@ -52,6 +88,9 @@
             load_file_metadata(fileUtilPath);
             targetFilepath = fileUtilPath;
             selectedAudioCodec = null;
+            replaceFrom = "";
+            replaceTo = "";
+            outputstrat = null;
         }
     });
 </script>
@@ -215,14 +254,94 @@
                         </div>
                     </div>
 
-                    <div>
-                        <div class="text-sm font-bold!">Target filepath</div>
-                        <input
-                            type="text"
-                            placeholder="Enter target filepath"
-                            bind:value={targetFilepath}
-                            class="outline-hidden w-xl px-3 py-2 bg-gray-950 rounded-lg"
-                        />
+                    <div
+                        class="space-y-2 p-4 border border-white/10 rounded-lg"
+                    >
+                        <div class="text-sm font-bold!">Output</div>
+                        <Select.Root
+                            type="single"
+                            onValueChange={(value) => (outputstrat = value)}
+                        >
+                            <Select.Trigger>
+                                <div class="px-3 py-2 bg-gray-950 rounded-lg">
+                                    {outputStrategies.find(
+                                        (strategy) =>
+                                            strategy.value === outputstrat,
+                                    )?.label || "Select Strategy"}
+                                </div>
+                            </Select.Trigger>
+                            <Select.Portal>
+                                <Select.Content class="z-3334">
+                                    <div
+                                        class="w-32 p-2 border border-white/10 rounded-lg text-sm translate-y-2 bg-black/70 backdrop-blur-lg text-white"
+                                    >
+                                        {#each outputStrategies as strategy}
+                                            <Select.Item
+                                                value={strategy.value}
+                                                label={strategy.label}
+                                            >
+                                                <div>{strategy.label}</div>
+                                            </Select.Item>
+                                        {/each}
+                                    </div>
+                                </Select.Content>
+                            </Select.Portal>
+                        </Select.Root>
+                        <div class="p-4 border border-white/10 rounded-lg">
+                            {#if outputstrat === "static"}
+                                <div class="space-y-2">
+                                    <div>Static</div>
+                                    <input
+                                        type="text"
+                                        placeholder="Enter target filepath"
+                                        bind:value={targetFilepath}
+                                        class="outline-hidden w-xl px-3 py-2 bg-gray-950 rounded-lg"
+                                    />
+                                </div>
+                            {:else if outputstrat === "replace"}
+                                <div class="space-y-2">
+                                    <div>Replace</div>
+                                    <div class="flex items-center gap-12">
+                                        <input
+                                            type="text"
+                                            placeholder="From"
+                                            bind:value={replaceFrom}
+                                            class="outline-hidden w-32 px-3 py-2 bg-gray-950 rounded-lg"
+                                        />
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            height="24px"
+                                            viewBox="0 -960 960 960"
+                                            width="24px"
+                                            fill="currentColor"
+                                            class="size-5 text-gray-600"
+                                            ><path
+                                                d="M367-320H120q-17 0-28.5-11.5T80-360q0-17 11.5-28.5T120-400h247l-75-75q-11-11-11-27.5t11-28.5q12-12 28.5-12t28.5 12l143 143q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L348-188q-12 12-28 11.5T292-189q-11-12-11.5-28t11.5-28l75-75Zm226-240 75 75q11 11 11 27.5T668-429q-12 12-28.5 12T611-429L468-572q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l144-144q12-12 28-11.5t28 12.5q11 12 11.5 28T668-715l-75 75h247q17 0 28.5 11.5T880-600q0 17-11.5 28.5T840-560H593Z"
+                                            /></svg
+                                        >
+                                        <input
+                                            type="text"
+                                            placeholder="To"
+                                            bind:value={replaceTo}
+                                            class="outline-hidden w-32 px-3 py-2 bg-gray-950 rounded-lg"
+                                        />
+                                    </div>
+                                    <div class="text-sm font-bold!">
+                                        Preview
+                                    </div>
+                                    <div
+                                        class="w-xl flex gap-1 px-3 py-2 bg-gray-950 rounded-lg overflow-x-scroll text-nowrap"
+                                    >
+                                        {fileUtilPath.replaceAll(
+                                            replaceFrom,
+                                            replaceTo,
+                                        )}
+                                    </div>
+                                </div>
+                            {:else}
+                                <div>No Strategy Selected</div>
+                            {/if}
+                        </div>
                     </div>
 
                     {#if progress}
