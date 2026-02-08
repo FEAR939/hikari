@@ -87,54 +87,44 @@
         />
     </div>
     <div class="absolute z-1 px-12 w-full h-fit flex items-center gap-8">
-        <div
-            class="shrink-0 w-56 aspect-[0.7/1] overflow-hidden rounded-2xl flex items-stretch justify-stretch bg-gray-800"
-        >
-            <img
-                src={getSeriesPoster(currentSlide)}
-                class="block min-h-full h-full min-w-full w-full object-cover"
-                alt="Poster"
-                loading="lazy"
-            />
-        </div>
-        <div class="w-full space-y-4 mt-8">
-            <div class="text-white md:text-4xl font-bold! max-w-3/4 truncate">
+        <div class="w-full space-y-1 mt-8">
+            <div
+                class="text-white md:text-5xl font-bold! max-w-xl line-clamp-2"
+            >
                 {getSeriesTitle(currentSlide)}
             </div>
             <div class="flex gap-4 text-xs items-center">
-                <div class="p-1.5 bg-black/50 rounded">
+                <div
+                    class="px-3 py-1 bg-black/30 backdrop-blur-lg rounded-full"
+                >
                     {currentSlide.attributes.showType.toUpperCase()}
                 </div>
                 <div class="text-gray-400">
                     {currentSlide.attributes.startDate.slice(0, 4)}
                 </div>
             </div>
+
+            <div class="text-gray-300 max-w-xl line-clamp-3">
+                {currentSlide.attributes.description}
+            </div>
+
             <a
                 href={`/anime/${currentSlide.id}`}
-                class="h-10 w-fit my-8 flex items-center justify-center space-x-2 text-black text-base pl-3.5 pr-4.5 rounded-full cursor-pointer transition-colors duration-150 outline-white outline-offset-2 focus-within:outline-2"
-                style:background="rgb({accentColor?.join(',')})"
+                class="h-10 w-fit mt-4 flex items-center justify-center space-x-1.5 bg-black/30 backdrop-blur-lg text-white text-sm pl-5.5 pr-6.5 rounded-full cursor-pointer transition-colors duration-150 outline-white outline-offset-2 focus-within:outline-2"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
+                    height="24px"
+                    viewBox="0 -960 960 960"
+                    width="24px"
                     fill="currentColor"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-play size-5"
+                    class="size-5"
+                    ><path
+                        d="M320-273v-414q0-17 12-28.5t28-11.5q5 0 10.5 1.5T381-721l326 207q9 6 13.5 15t4.5 19q0 10-4.5 19T707-446L381-239q-5 3-10.5 4.5T360-233q-16 0-28-11.5T320-273Z"
+                    /></svg
                 >
-                    <path
-                        d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"
-                    />
-                </svg>
-                <div class="h-3.25 leading-none">Watch Now</div>
+                <div class="h-3.5 leading-none">Watch Now</div>
             </a>
-            <div class="text-gray-300 max-w-2/3 line-clamp-3">
-                {currentSlide.attributes.description}
-            </div>
         </div>
     </div>
     <div class="absolute bottom-0 z-1 left-4 w-full flex justify-center gap-1">
