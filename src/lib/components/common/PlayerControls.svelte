@@ -176,7 +176,7 @@
                 <Tooltip.Root delayDuration={0}>
                     <Tooltip.Trigger>
                         <button
-                            class="relative flex items-center bg-black/30 backdrop-blur-lg text-white rounded-full p-2 outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                            class="relative flex items-center bg-black/30 backdrop-blur-lg text-white rounded-full p-2 outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
                             onclick={() =>
                                 video.paused ? video.play() : video.pause()}
                             aria-label="Play/Pause"
@@ -232,7 +232,7 @@
                         <Tooltip.Root delayDuration={0}>
                             <Tooltip.Trigger>
                                 <button
-                                    class="relative pr-0.5 py-2 outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-y-1 before:-inset-x-1.5 before:rounded-full hover:before:bg-white/10"
+                                    class="relative pr-0.5 py-2 outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-y-1 before:-inset-x-1.5 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
                                     onclick={() => {
                                         if ($playerEpisode.number === 1) return;
 
@@ -291,7 +291,7 @@
                             <Tooltip.Trigger>
                                 <button
                                     id="next"
-                                    class="relative pl-0.5 py-2 outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-y-1 before:-inset-x-1.5 before:rounded-full hover:before:bg-white/10"
+                                    class="relative pl-0.5 py-2 outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-y-1 before:-inset-x-1.5 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
                                     onclick={() => {
                                         if (
                                             $playerEpisode.number ===
@@ -361,7 +361,7 @@
                 <Tooltip.Root delayDuration={0}>
                     <Tooltip.Trigger>
                         <div
-                            class="relative flex items-center bg-black/30 backdrop-blur-lg text-white rounded-full px-2 py-2 group hover:pr-3.5 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10"
+                            class="relative flex items-center bg-black/30 backdrop-blur-lg text-white rounded-full px-2 py-2 group hover:pr-3.5 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
                         >
                             <button
                                 class="relative z-1 outline-hidden cursor-pointer size-7"
@@ -438,7 +438,7 @@
                 </Tooltip.Root>
             </Tooltip.Provider>
             <button
-                class="relative flex items-center bg-black/30 backdrop-blur-lg text-white rounded-full px-2.5 py-2 text-sm font-semibold before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 cursor-pointer outline-hidden"
+                class="relative flex items-center bg-black/30 backdrop-blur-lg text-white rounded-full px-2.5 py-2 text-sm font-semibold before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 cursor-pointer outline-hidden before:transition-colors before:duration-150"
                 onclick={() => (toggleRemainingTime = !toggleRemainingTime)}
             >
                 <span class="relative z-1 px-2">
@@ -474,7 +474,7 @@
                     <Tooltip.Root delayDuration={0}>
                         <Tooltip.Trigger class="flex items-center">
                             <button
-                                class="relative px-1 outline-hidden cursor-pointer before:content-[''] before:absolute before:-inset-1 before:rounded-full hover:before:bg-white/10"
+                                class="relative px-1 outline-hidden cursor-pointer before:content-[''] before:absolute before:-inset-1 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
                                 onclick={() =>
                                     playerShowEpisodes.set(
                                         !$playerShowEpisodes,
@@ -508,7 +508,7 @@
                     <Tooltip.Root delayDuration={0}>
                         <Tooltip.Trigger class="flex items-center">
                             <button
-                                class="relative px-1 outline-hidden cursor-pointer before:content-[''] before:absolute before:-inset-1 before:rounded-full hover:before:bg-white/10"
+                                class="relative px-1 outline-hidden cursor-pointer before:content-[''] before:absolute before:-inset-1 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
                                 onclick={() => (isMiniPlayer = !isMiniPlayer)}
                             >
                                 {#if isMiniPlayer}
@@ -558,7 +558,7 @@
                     <Tooltip.Root delayDuration={0}>
                         <Tooltip.Trigger class="flex items-center">
                             <button
-                                class="relative px-1 outline-hidden cursor-pointer before:content-[''] before:absolute before:-inset-1 before:rounded-full hover:before:bg-white/10"
+                                class="relative px-1 outline-hidden cursor-pointer before:content-[''] before:absolute before:-inset-1 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
                                 onclick={handleFullscreen}
                             >
                                 {#if isFullscreen}

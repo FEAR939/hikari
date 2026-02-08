@@ -110,7 +110,7 @@
 
             <a
                 href={`/anime/${currentSlide.id}`}
-                class="h-10 w-fit mt-4 flex items-center justify-center space-x-1.5 bg-black/30 backdrop-blur-lg text-white text-sm pl-5.5 pr-6.5 rounded-full cursor-pointer transition-colors duration-150 outline-white outline-offset-2 focus-within:outline-2"
+                class="h-10 w-fit mt-4 flex items-center justify-center space-x-1.5 bg-black/30 backdrop-blur-lg text-white text-sm pl-5.5 pr-6.5 rounded-full cursor-pointer transition-colors duration-150 outline-white outline-offset-2 focus-within:outline-2 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
