@@ -46,7 +46,7 @@
 >
     <div class="h-full w-full slideIn">
         <div
-            class="relative w-full aspect-video overflow-hidden rounded-lg flex items-stretch justify-stretch bg-gray-800 outline-white outline-offset-2 group-hover/card:outline-2 group-focus-within/card:outline-2"
+            class="relative w-full aspect-video overflow-hidden rounded-xl flex items-stretch justify-stretch bg-gray-800 outline-white outline-offset-2 group-hover/card:outline-2 group-focus-within/card:outline-2"
         >
             <img
                 src={(Anizip?.episodes?.[episode?.episode?.attributes.number] &&
