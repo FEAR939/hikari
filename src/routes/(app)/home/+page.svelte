@@ -208,13 +208,13 @@
                                     episode={item}
                                     onclick={() =>
                                         goto(`/anime/${item.anime.anime.id}`)}
-                                    class="snap-start"
+                                    class="snap-start w-[calc((100%/4)-(3*4px))]!"
                                 />
                             {:else}
                                 <Card
                                     {item}
                                     onclick={() => goto(`/anime/${item.id}`)}
-                                    class="snap-start"
+                                    class="snap-start w-[calc((100%/8)-(7*2px))]!"
                                 />
                             {/if}
                         {/each}

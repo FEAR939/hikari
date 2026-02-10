@@ -38,7 +38,7 @@
 <!-- Main Card -->
 <button
     class={clsx(
-        "group/card h-fit w-[calc((100%/4)-(3*4px))] cursor-pointer shrink-0 block outline-hidden text-left",
+        "group/card h-fit w-96 cursor-pointer shrink-0 block outline-hidden text-left",
         className,
     )}
     style="--delay: 250ms"
