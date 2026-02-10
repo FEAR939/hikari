@@ -303,6 +303,14 @@
                                     >{data.animeObj.anime.attributes
                                         .episodeCount} Episodes</span
                                 >
+                                <span class="text-gray-400"
+                                    >{`${data.animeObj.genres
+                                        .slice(0, 2)
+                                        .map((genre) => genre.attributes.title)
+                                        .join(
+                                            ", ",
+                                        )} ${data.animeObj.genres.length > 2 ? "and more" : ""}`}</span
+                                >
                             </div>
 
                             <!-- Button Row -->
@@ -415,25 +423,6 @@
                         <div class="relative h-full w-full"></div>
                         {#each new Array(15) as _}
                             <Star />
-                        {/each}
-                    </div>
-
-                    <!-- Genres -->
-                    <div
-                        class="w-full inline-flex flex-nowrap mt-8 mask-l-from-98% mask-r-from-98% mask-x-[#080808]"
-                    >
-                        {#each Array.from({ length: minRepeats }) as _}
-                            <div
-                                class="flex items-center [&_span]:mx-1 infinite-scroll"
-                            >
-                                {#each data.animeObj.genres as genre}
-                                    <span
-                                        class="px-2 md:px-4 py-1 md:py-2 text-sm rounded-full text-white text-nowrap"
-                                    >
-                                        {genre.attributes.title}
-                                    </span>
-                                {/each}
-                            </div>
                         {/each}
                     </div>
 
