@@ -7,109 +7,136 @@
     import ColorThief from "colorthief";
 
     let { slides } = $props();
-
     let currentIndex = $state(0);
     let currentSlide = $derived(slides[currentIndex]);
-
     let accentColor = $state(null);
+    let transitioning = $state(false);
+    let displayedSlide = $state(slides[0]);
+    let displayedAccentColor = $state(null);
 
-    let slideInterval = setInterval(() => {
+    let slideInterval = setInterval(advance, 10000);
+
+    function advance() {
         currentIndex = (currentIndex + 1) % slides.length;
-    }, 10000);
+    }
+
+    // When currentIndex changes, trigger a crossfade
+    $effect(() => {
+        // Access currentIndex to track it
+        const newSlide = slides[currentIndex];
+        if (newSlide === displayedSlide) return;
+
+        transitioning = true;
+
+        // After fade out completes, swap content and fade back in
+        setTimeout(() => {
+            displayedSlide = newSlide;
+            displayedAccentColor = null; // Reset until new image loads
+            transitioning = false;
+        }, 500); // matches the CSS transition duration
+    });
+
+    function extractAccentColor(img: HTMLImageElement) {
+        if (!img) return;
+        const colorThief = new ColorThief();
+        const palette = colorThief.getPalette(img, 8);
+        let bestColor = palette[0];
+        let bestScore = -1;
+
+        for (const [r, g, b] of palette) {
+            const { s, l } = rgbToHsl(r, g, b);
+            const score = s * (1 - Math.abs(l - 0.5) * 2);
+            if (score > bestScore) {
+                bestScore = score;
+                bestColor = [r, g, b];
+            }
+        }
+
+        function rgbToHsl(r: number, g: number, b: number) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            const l = (max + min) / 2;
+            let h = 0;
+            let s = 0;
+            if (max !== min) {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r:
+                        h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+                        break;
+                    case g:
+                        h = ((b - r) / d + 2) / 6;
+                        break;
+                    case b:
+                        h = ((r - g) / d + 4) / 6;
+                        break;
+                }
+            }
+            return { h, s, l };
+        }
+
+        displayedAccentColor = bestColor;
+        accentColor = bestColor;
+    }
+
+    function resetInterval() {
+        clearInterval(slideInterval);
+        slideInterval = setInterval(advance, 10000);
+    }
 </script>
 
 <div class="relative w-full max-w-full aspect-[3.5/1] flex items-center">
+    <!-- Backdrop Image with crossfade -->
     <div
         class="absolute top-0 w-full aspect-[2.5/1] mask-b-from-60% bg-black overflow-hidden"
     >
         <img
-            src={getSeriesBackdrop(currentSlide) ||
-                getSeriesPoster(currentSlide, "original")}
+            src={getSeriesBackdrop(displayedSlide) ||
+                getSeriesPoster(displayedSlide, "original")}
             alt=""
-            class="min-w-full w-fit min-h-full h-fit object-cover brightness-50"
+            class="min-w-full w-fit min-h-full h-fit object-cover brightness-50 transition-opacity duration-500 ease-in-out"
+            class:opacity-0={transitioning}
+            class:opacity-100={!transitioning}
             crossorigin="anonymous"
             onload={(e) => {
-                const img = e.target;
-
-                if (!img) return;
-
-                const colorThief = new ColorThief();
-
-                const palette = colorThief.getPalette(img, 8);
-
-                let bestColor = palette[0];
-                let bestScore = -1;
-
-                for (const [r, g, b] of palette) {
-                    const { s, l } = rgbToHsl(r, g, b);
-                    const score = s * (1 - Math.abs(l - 0.5) * 2);
-
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestColor = [r, g, b];
-                    }
-                }
-
-                function rgbToHsl(r, g, b) {
-                    r /= 255;
-                    g /= 255;
-                    b /= 255;
-
-                    const max = Math.max(r, g, b);
-                    const min = Math.min(r, g, b);
-                    const l = (max + min) / 2;
-
-                    let h = 0;
-                    let s = 0;
-
-                    if (max !== min) {
-                        const d = max - min;
-                        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-
-                        switch (max) {
-                            case r:
-                                h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
-                                break;
-                            case g:
-                                h = ((b - r) / d + 2) / 6;
-                                break;
-                            case b:
-                                h = ((r - g) / d + 4) / 6;
-                                break;
-                        }
-                    }
-
-                    return { h, s, l };
-                }
-
-                accentColor = bestColor;
+                extractAccentColor(e.target);
             }}
         />
     </div>
-    <div class="absolute z-1 px-12 w-full h-fit flex items-center gap-8">
+
+    <!-- Content overlay with crossfade -->
+    <div
+        class="absolute z-1 px-12 w-full h-fit flex items-center gap-8 transition-all duration-500 ease-in-out"
+        class:opacity-0={transitioning}
+        class:translate-y-2={transitioning}
+        class:opacity-100={!transitioning}
+        class:translate-y-0={!transitioning}
+    >
         <div class="w-full space-y-1 mt-8">
             <div
                 class="text-white md:text-5xl font-bold! max-w-xl line-clamp-2"
             >
-                {getSeriesTitle(currentSlide)}
+                {getSeriesTitle(displayedSlide)}
             </div>
             <div class="flex gap-4 text-xs items-center">
                 <div
                     class="px-3 py-1 bg-black/30 backdrop-blur-lg rounded-full"
                 >
-                    {currentSlide.attributes.showType.toUpperCase()}
+                    {displayedSlide.attributes.showType.toUpperCase()}
                 </div>
                 <div class="text-gray-400">
-                    {currentSlide.attributes.startDate.slice(0, 4)}
+                    {displayedSlide.attributes.startDate.slice(0, 4)}
                 </div>
             </div>
-
             <div class="text-gray-300 max-w-xl line-clamp-3">
-                {currentSlide.attributes.description}
+                {displayedSlide.attributes.description}
             </div>
-
             <a
-                href={`/anime/${currentSlide.id}`}
+                href={`/anime/${displayedSlide.id}`}
                 class="h-10 w-fit mt-4 flex items-center justify-center space-x-1.5 bg-black/30 backdrop-blur-lg text-white text-sm pl-5.5 pr-6.5 rounded-full cursor-pointer transition-colors duration-150 outline-white outline-offset-2 focus-within:outline-2 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
             >
                 <svg
@@ -119,33 +146,34 @@
                     width="24px"
                     fill="currentColor"
                     class="size-5"
-                    ><path
-                        d="M320-273v-414q0-17 12-28.5t28-11.5q5 0 10.5 1.5T381-721l326 207q9 6 13.5 15t4.5 19q0 10-4.5 19T707-446L381-239q-5 3-10.5 4.5T360-233q-16 0-28-11.5T320-273Z"
-                    /></svg
                 >
+                    <path
+                        d="M320-273v-414q0-17 12-28.5t28-11.5q5 0 10.5 1.5T381-721l326 207q9 6 13.5 15t4.5 19q0 10-4.5 19T707-446L381-239q-5 3-10.5 4.5T360-233q-16 0-28-11.5T320-273Z"
+                    />
+                </svg>
                 <div class="h-3.5 leading-none">Watch Now</div>
             </a>
         </div>
     </div>
+
+    <!-- Progress indicators -->
     <div class="absolute bottom-0 z-1 left-4 w-full flex justify-center gap-1">
         {#each slides as slide, index}
             <button
-                class="{currentIndex === index
-                    ? 'w-16'
-                    : 'w-8'} h-1 rounded-full bg-gray-800 outline-none cursor-pointer transition-all duration-300"
+                class="w-12 h-1.5 rounded-full bg-white/10 backdrop-blur-lg outline-none cursor-pointer transition-all duration-300 overflow-hidden"
                 onclick={() => {
+                    if (index === currentIndex) return;
                     currentIndex = index;
-                    clearInterval(slideInterval);
-                    slideInterval = setInterval(() => {
-                        currentIndex = (currentIndex + 1) % slides.length;
-                    }, 10000);
+                    resetInterval();
                 }}
                 tabindex="-1"
             >
                 {#if index === currentIndex}
                     <div
-                        class="w-full h-full animate-progress transform-gpu rounded-full"
-                        style:background="rgb({accentColor?.join(',')})"
+                        class="w-full h-full animate-progress transform-gpu transition-colors duration-500"
+                        style:background={displayedAccentColor
+                            ? `rgb(${displayedAccentColor.join(",")})`
+                            : "rgb(255,255,255)"}
                         style="--duration: 10s; transform-origin: left;"
                     ></div>
                 {/if}
