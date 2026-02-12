@@ -27,9 +27,9 @@
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "@tailwindcss/vite": "^4.1.18",
     "electron-builder": "^26.7.0",
-    "electron": "^40.2.1",
+    "electron": "^40.4.0",
     "rolldown-vite": "^7.3.1",
-    "svelte": "^5.50.1",
+    "svelte": "^5.50.2",
     "svelte-check": "^4.3.6",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
