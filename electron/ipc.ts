@@ -3,9 +3,6 @@ import { win } from "./main.js";
 import fs from "fs";
 import path from "path";
 import os from "os";
-// @ts-ignore
-import * as ffprobe from "ffprobe-static";
-import ffmpegPath from "ffmpeg-static";
 import childProcess, { spawn } from "child_process";
 import { promisify } from "util";
 import extensionManager from "./services/extension.manager/index.js";
@@ -18,15 +15,10 @@ let store = new Store();
 
 async function getVideoMetadata(filePath: string) {
   const { stdout } = await exec(
-    `"${ffprobe.path.replace("app.asar", "app.asar.unpacked")}" -v quiet -print_format json -show_format -show_streams -show_chapters "${filePath}"`,
+    `ffprobe -v quiet -print_format json -show_format -show_streams -show_chapters "${filePath}"`,
   );
   const metadata = JSON.parse(stdout);
   return metadata;
-}
-
-function getFFmpegPath(): string {
-  // Replace with your actual ffmpeg path logic
-  return ffmpegPath?.replace("app.asar", "app.asar.unpacked") ?? "";
 }
 
 function convertVideoCodec(
@@ -37,7 +29,7 @@ function convertVideoCodec(
   return new Promise((resolve, reject) => {
     let totalDuration = 0;
 
-    const ffmpeg = spawn(getFFmpegPath(), [
+    const ffmpeg = spawn("ffmpeg", [
       "-i",
       filePath,
       "-acodec",
@@ -129,7 +121,7 @@ async function getThumbnail(videoPath: string, time: number) {
     const tmpFile = path.join(os.tmpdir(), `thumb_${Date.now()}.jpg`);
 
     await execFile(
-      getFFmpegPath(),
+      "ffmpeg",
       [
         "-ss",
         String(Math.floor(time)),
