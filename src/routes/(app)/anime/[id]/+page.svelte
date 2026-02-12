@@ -293,12 +293,14 @@
                                 >
                                     {data.animeObj.anime.attributes.showType.toUpperCase()}
                                 </span>
-                                <span class="text-gray-400"
-                                    >{data.animeObj.anime.attributes.startDate.slice(
-                                        0,
-                                        4,
-                                    )}</span
-                                >
+                                {#if data.animeObj.anime.attributes.startDate}
+                                    <span class="text-gray-400"
+                                        >{data.animeObj.anime.attributes.startDate.slice(
+                                            0,
+                                            4,
+                                        )}</span
+                                    >
+                                {/if}
                                 <span class="text-gray-400"
                                     >{data.animeObj.anime.attributes
                                         .episodeCount} Episodes</span
@@ -460,12 +462,10 @@
                         </div>
                         <div class="w-full h-fit">
                             {#if currentTab === 0}
-                                {#key animeId}
-                                    <EpisodeView
-                                        anime={data.animeObj.anime}
-                                        anizip={data.anizip}
-                                    />
-                                {/key}
+                                <EpisodeView
+                                    anime={data.animeObj.anime}
+                                    anizip={data.anizip}
+                                />
                             {/if}
                         </div>
                     </div>
