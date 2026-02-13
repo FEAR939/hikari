@@ -76,8 +76,6 @@
         } else {
             selectedFiles = new Set(files.map((_, i) => i));
         }
-
-        console.log(allSelected);
     }
 
     function toggleFile(index: number) {
