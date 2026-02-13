@@ -298,10 +298,14 @@
                         >
                             <Select.Trigger>
                                 <div class="px-3 py-2 bg-gray-950 rounded-lg">
-                                    {outputStrategies.find(
-                                        (strategy) =>
-                                            strategy.value === outputstrat,
-                                    )?.label || "Select Strategy"}
+                                    {#if outputstrat}
+                                        {outputStrategies.find(
+                                            (strategy) =>
+                                                outputstrat === strategy.value,
+                                        )?.label}
+                                    {:else}
+                                        Select Strategy
+                                    {/if}
                                 </div>
                             </Select.Trigger>
                             <Select.Portal>
