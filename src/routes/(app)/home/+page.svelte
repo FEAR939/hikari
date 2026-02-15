@@ -208,13 +208,21 @@
                                     episode={item}
                                     onclick={() =>
                                         goto(`/anime/${item.anime.anime.id}`)}
-                                    class="snap-start w-[calc((100%/4)-(3*4px))]!"
+                                    class="snap-start
+                                        xl:w-[calc((100%/3)-(2*6px))]!
+                                        2xl:w-[calc(100%/4-3*4px)]!
+                                        min-[112rem]:w-[calc(100%/5-4*2px)]!
+                                        min-[128rem]:w-[calc(100%/6-5*2px)]!"
                                 />
                             {:else}
                                 <Card
                                     {item}
                                     onclick={() => goto(`/anime/${item.id}`)}
-                                    class="snap-start w-[calc((100%/8)-(7*2px))]!"
+                                    class="snap-start
+                                        xl:w-[calc((100%/7)-(6*2.25px))]!
+                                        2xl:w-[calc((100%/8)-(7*2px))]!
+                                        min-[112rem]:w-[calc(100%/10-(9*2px))]!
+                                        min-[128rem]:w-[calc((100%/11)-(10*1.5px))]!"
                                 />
                             {/if}
                         {/each}
