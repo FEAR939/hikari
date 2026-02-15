@@ -12,6 +12,8 @@ export const showTrailer = writable(false);
 
 export const showPlayer = writable(false);
 
+export const searchQuery = writable("");
+
 export const visibleEpisodes = writable<[]>([]);
 
 export const sourceInitialIndex = writable(0);

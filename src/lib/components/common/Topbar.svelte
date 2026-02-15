@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { user } from "$lib/stores";
+    import { user, searchQuery } from "$lib/stores";
     import { fade } from "svelte/transition";
     import UserMenu from "./UserMenu.svelte";
+    import { goto } from "$app/navigation";
 
     let { show = $bindable(true) } = $props();
 
@@ -21,6 +22,39 @@
         class="fixed z-2222 top-0 left-14 right-0 flex gap-1 items-center justify-end h-12 [app-region:drag] [&_*]:[app-region:none]"
         transition:fade={{ duration: 100 }}
     >
+        <div
+            class="absolute left-0 right-0 mx-auto h-8 w-sm px-3 bg-black/30 outline outline-white/10 backdrop-blur-lg rounded-full flex items-center gap-x-2"
+        >
+            <svg
+                width="100%"
+                height="100%"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="size-4"
+            >
+                <path
+                    d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+            </svg>
+            <input
+                type="text"
+                placeholder="Search"
+                class="outline-hidden text-sm leading-none w-full"
+                bind:value={$searchQuery}
+                onkeyup={(e) => {
+                    if (e.target.value.length === 0) return;
+
+                    if (e.key === "Enter") {
+                        goto("/search?q=" + encodeURIComponent($searchQuery));
+                    }
+                }}
+            />
+        </div>
         <a
             href="/watchlist"
             class="hover:bg-white hover:text-black focus:bg-white focus:text-black size-8 rounded-full flex items-center justify-center transition-colors duration-250 outline-hidden"
