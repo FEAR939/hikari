@@ -2,7 +2,16 @@
     import { defaultSettings, settings } from "$lib/stores";
     import { Select } from "bits-ui";
 
-    const languages = ["en-US", "de-DE"];
+    const languages = [
+        {
+            value: "en-US",
+            label: "English",
+        },
+        {
+            value: "de-DE",
+            label: "Deutsch",
+        },
+    ];
 
     let lang = $state($settings["language"]);
 </script>
@@ -31,7 +40,9 @@
                 <Select.Trigger
                     class="w-24 h-7 px-2 text-xs bg-gray-900 border border-gray-850 rounded-lg flex items-center justify-between hover:bg-[#2a2a2a] transition-colors outline-hidden"
                 >
-                    <span class="truncate">{lang}</span>
+                    <span class="truncate"
+                        >{languages.find((l) => l.value === lang)?.label}</span
+                    >
                     <svg
                         class="size-3 shrink-0 ml-1"
                         viewBox="0 0 24 24"
@@ -51,12 +62,12 @@
                     class="z-50 bg-gray-900 border border-gray-850 rounded-lg overflow-hidden shadow-lg"
                     sideOffset={4}
                 >
-                    {#each languages as value}
+                    {#each languages as lang}
                         <Select.Item
-                            {value}
+                            value={lang.value}
                             class="px-3 py-1.5 text-xs cursor-pointer text-white hover:bg-[#252525] data-[highlighted]:bg-[#252525] outline-none"
                         >
-                            {value}
+                            {lang.label}
                         </Select.Item>
                     {/each}
                 </Select.Content>
