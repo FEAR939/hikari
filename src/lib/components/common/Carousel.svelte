@@ -118,13 +118,13 @@
     >
         <div class="w-full space-y-1 mt-8">
             <div
-                class="text-white md:text-5xl font-bold! max-w-xl line-clamp-2"
+                class="text-white text-xl md:text-6xl tracking-[-4px] font-semibold! break-keep truncate"
             >
                 {getSeriesTitle(displayedSlide)}
             </div>
             <div class="flex gap-4 text-xs items-center">
                 <div
-                    class="px-3 py-1 bg-black/30 backdrop-blur-lg rounded-full"
+                    class="px-4 py-1.5 bg-black/30 backdrop-blur-lg rounded-full"
                 >
                     {displayedSlide.attributes.showType.toUpperCase()}
                 </div>
@@ -132,7 +132,7 @@
                     {displayedSlide.attributes.startDate.slice(0, 4)}
                 </div>
             </div>
-            <div class="text-gray-300 max-w-xl line-clamp-3">
+            <div class="text-white text-sm font-normal max-w-xl line-clamp-3">
                 {displayedSlide.attributes.description}
             </div>
             <a

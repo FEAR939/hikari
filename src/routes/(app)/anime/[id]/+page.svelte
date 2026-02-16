@@ -279,7 +279,7 @@
                             class="relative flex-1 p-4 pt-20 space-y-2 md:space-y-4 overflow-hidden"
                         >
                             <h1
-                                class="w-full text-white text-shadow-2xl text-xl md:text-4xl font-bold! flex items-center space-x-4 leading-none truncate"
+                                class="w-full text-white text-shadow-2xl text-xl md:text-6xl tracking-[-4px] font-semibold! flex items-center space-x-4 leading-none truncate"
                             >
                                 {getSeriesTitle(data.animeObj.anime)}
                             </h1>
@@ -289,7 +289,7 @@
                                 class="w-full flex items-center gap-4 text-xs overflow-hidden"
                             >
                                 <span
-                                    class="px-3 py-1 rounded-full bg-black/30 backdrop-blur-lg text-white"
+                                    class="px-4 py-1.5 rounded-full bg-black/30 backdrop-blur-lg text-white"
                                 >
                                     {data.animeObj.anime.attributes.showType.toUpperCase()}
                                 </span>
@@ -414,8 +414,8 @@
 
                     <!-- Description -->
                     <div class="relative z-1 h-fit w-full space-y-1 py-12">
-                        <h3 class="text-xl font-bold!">Overview</h3>
-                        <div class="text-base text-gray-200">
+                        <h3 class="text-2xl font-semibold!">Overview</h3>
+                        <div class="text-sm font-normal text-white">
                             {data.animeObj.anime.attributes.description}
                         </div>
                     </div>
@@ -433,7 +433,7 @@
                         <div
                             class="w-full h-fit space-y-4 pt-8 mt-8 border-t border-white/10"
                         >
-                            <h2 class="text-2xl font-bold">Relations</h2>
+                            <h2 class="text-2xl font-semibold!">Relations</h2>
                             <div class="flex gap-4">
                                 {#each data.animeObj.relations as relation}
                                     <Card
@@ -475,7 +475,7 @@
                         <div
                             class="w-full h-fit space-y-4 pt-8 mt-8 border-t border-white/10"
                         >
-                            <h2 class="text-2xl font-bold">Trailer</h2>
+                            <h2 class="text-2xl font-semibold!">Trailer</h2>
                             <div class="flex gap-4">
                                 <Trailer
                                     youtubeId={data.animeObj.anime.attributes
