@@ -146,24 +146,24 @@
 
         <!-- Hover Navigation Button - Left -->
         <button
-            class="absolute left-4 top-1/2 -translate-y-full rounded-full bg-white text-black flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:opacity-0 opacity-0 group-hover:opacity-100 hover:scale-125 transition-all duration-150"
+            class="absolute left-14 top-1/2 -translate-y-full size-8 rounded-full bg-white/5 backdrop-blur-lg text-white flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:opacity-0 opacity-0 group-hover:opacity-100 hover:scale-125 transition-all duration-150"
             onclick={() => scroll("left")}
             disabled={!canScrollLeft}
             aria-label="Scroll left"
         >
-            <svg class="size-8" viewBox="0 0 24 24" fill="currentColor">
+            <svg class="size-7" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
             </svg>
         </button>
 
         <!-- Hover Navigation Button - Right -->
         <button
-            class="absolute right-4 top-1/2 -translate-y-full rounded-full bg-white text-black flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:opacity-0 opacity-0 group-hover:opacity-100 hover:scale-125 transition-all duration-150"
+            class="absolute right-14 top-1/2 -translate-y-full size-8 rounded-full bg-white/5 backdrop-blur-lg text-white flex items-center justify-center outline-hidden disabled:text-gray-700 disabled:cursor-not-allowed cursor-pointer z-20 disabled:opacity-0 opacity-0 group-hover:opacity-100 hover:scale-125 transition-all duration-150"
             onclick={() => scroll("right")}
             disabled={!canScrollRight}
             aria-label="Scroll right"
         >
-            <svg class="size-8" viewBox="0 0 24 24" fill="currentColor">
+            <svg class="size-7" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z" />
             </svg>
         </button>
