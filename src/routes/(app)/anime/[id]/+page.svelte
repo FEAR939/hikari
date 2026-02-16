@@ -279,7 +279,7 @@
                             class="relative flex-1 p-4 pt-20 space-y-2 md:space-y-4 overflow-hidden"
                         >
                             <h1
-                                class="w-full text-white text-shadow-2xl text-xl md:text-6xl tracking-[-4px] font-semibold! flex items-center space-x-4 leading-none truncate"
+                                class="w-full text-white text-shadow-2xl text-xl md:text-6xl tracking-[-4px] font-semibold! flex items-center space-x-4 truncate leading-tight"
                             >
                                 {getSeriesTitle(data.animeObj.anime)}
                             </h1>

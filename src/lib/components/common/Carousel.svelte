@@ -118,7 +118,7 @@
     >
         <div class="w-full space-y-1 mt-8">
             <div
-                class="text-white text-xl md:text-6xl tracking-[-4px] font-semibold! break-keep truncate"
+                class="text-white text-xl md:text-6xl tracking-[-4px] font-semibold! break-keep truncate leading-tight"
             >
                 {getSeriesTitle(displayedSlide)}
             </div>
