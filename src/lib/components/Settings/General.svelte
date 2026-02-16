@@ -38,34 +38,31 @@
                 }}
             >
                 <Select.Trigger
-                    class="w-24 h-7 px-2 text-xs bg-gray-900 border border-gray-850 rounded-lg flex items-center justify-between hover:bg-[#2a2a2a] transition-colors outline-hidden"
+                    class="w-48 px-5 py-2 text-xs bg-white/5 border border-white/10 rounded-full flex items-center justify-between hover:bg-[#2a2a2a] transition-colors outline-hidden"
                 >
                     <span class="truncate"
                         >{languages.find((l) => l.value === lang)?.label}</span
                     >
                     <svg
-                        class="size-3 shrink-0 ml-1"
-                        viewBox="0 0 24 24"
-                        fill="none"
                         xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        width="24px"
+                        fill="currentColor"
+                        class="size-6"
+                        ><path
+                            d="M459-381 314-526q-3-3-4.5-6.5T308-540q0-8 5.5-14t14.5-6h304q9 0 14.5 6t5.5 14q0 2-6 14L501-381q-5 5-10 7t-11 2q-6 0-11-2t-10-7Z"
+                        /></svg
                     >
-                        <path
-                            d="M6 9L12 15L18 9"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                    </svg>
                 </Select.Trigger>
                 <Select.Content
-                    class="z-50 bg-gray-900 border border-gray-850 rounded-lg overflow-hidden shadow-lg"
+                    class="w-48 py-2 z-50 bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-lg"
                     sideOffset={4}
                 >
                     {#each languages as lang}
                         <Select.Item
                             value={lang.value}
-                            class="px-3 py-1.5 text-xs cursor-pointer text-white hover:bg-[#252525] data-[highlighted]:bg-[#252525] outline-none"
+                            class="px-5 py-2 text-xs cursor-pointer text-white hover:bg-[#252525] data-[highlighted]:bg-[#252525] outline-none"
                         >
                             {lang.label}
                         </Select.Item>
