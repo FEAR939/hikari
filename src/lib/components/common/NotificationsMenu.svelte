@@ -9,7 +9,7 @@
 
     let { show = $bindable(false), children } = $props();
 
-    let notificationsToDisplay = [];
+    let notificationsToDisplay = $state([]);
     let batch = 10;
     let page = 1;
 
@@ -19,55 +19,62 @@
             page * batch,
         );
 
-        let kitsuIdsToFetch = currentBatch
-            .filter((notification) => notification.type === "episode.aired")
-            .map((notification) => notification.kitsu_id);
+        // Deduplicate kitsu IDs
+        let episodeNotifications = currentBatch.filter(
+            (n) => n.type === "episode.aired",
+        );
+        let uniqueKitsuIds = [
+            ...new Set(episodeNotifications.map((n) => n.kitsu_id)),
+        ];
 
-        let kitsuDataFromIds = await Promise.all(
-            kitsuIdsToFetch.map((id) =>
-                kitsu.getAnimeAndEpisodesByNumber([
-                    {
-                        episode: currentBatch.find(
-                            (notification) => notification.kitsu_id === id,
-                        ).episode_number,
-                        kitsu_id: id,
-                    },
-                ]),
+        // Build the query array once (one entry per unique ID)
+        let kitsuQueries = uniqueKitsuIds.map((id) => ({
+            kitsu_id: id,
+            episode: episodeNotifications.find((n) => n.kitsu_id === id)
+                .episode_number,
+        }));
+
+        // Fetch kitsu and anizip data in parallel
+        let [kitsuResults, anizipResults] = await Promise.all([
+            Promise.all(
+                kitsuQueries.map((q) => kitsu.getAnimeAndEpisodesByNumber([q])),
             ),
-        );
+            Promise.all(
+                uniqueKitsuIds.map(async (id) => ({
+                    kitsu_id: id,
+                    data: await anizip.getAnimeById(id),
+                })),
+            ),
+        ]);
 
-        let anizipDataFromIds = await Promise.all(
-            kitsuIdsToFetch.map(async (id) => {
-                return { kitsu_id: id, data: await anizip.getAnimeById(id) };
-            }),
-        );
+        // Build lookup maps for O(1) access
+        let kitsuMap = new Map();
+        for (let result of kitsuResults) {
+            let entry = result[0];
+            kitsuMap.set(entry.anime.anime.id, entry);
+        }
 
+        let anizipMap = new Map();
+        for (let result of anizipResults) {
+            anizipMap.set(result.kitsu_id, result.data);
+        }
+
+        // Enrich notifications
         currentBatch = currentBatch.map((notification) => {
-            switch (notification.type) {
-                case "episode.aired":
-                    const title = getSeriesTitle(
-                        kitsuDataFromIds.find(
-                            (data) =>
-                                data[0].anime.anime.id ===
-                                notification.kitsu_id,
-                        )[0].anime.anime,
-                    );
-                    const kitsuImage = kitsuDataFromIds.find(
-                        (data) =>
-                            data[0].anime.anime.id === notification.kitsu_id,
-                    )[0].episode.attributes.thumbnail?.original;
-                    const anizipImage = anizipDataFromIds.find(
-                        (data) => data.kitsu_id === notification.kitsu_id,
-                    ).data.episodes?.[String(notification.episode_number)]
+            if (notification.type === "episode.aired") {
+                let kitsuData = kitsuMap.get(notification.kitsu_id);
+                let anizipData = anizipMap.get(notification.kitsu_id);
+
+                let title = getSeriesTitle(kitsuData.anime.anime);
+                let kitsuImage =
+                    kitsuData.episode.attributes.thumbnail?.original;
+                let anizipImage =
+                    anizipData?.episodes?.[String(notification.episode_number)]
                         ?.image;
 
-                    notification.title = `Episode ${notification.episode_number} of ${title} just aired!`;
-                    notification.image_url = anizipImage || kitsuImage || "";
-                    break;
-                default:
-                    break;
+                notification.title = `Episode ${notification.episode_number} of ${title} just aired!`;
+                notification.image_url = anizipImage || kitsuImage || "";
             }
-
             return notification;
         });
 
@@ -75,7 +82,9 @@
     }
 
     $effect(() => {
-        processNotifications();
+        if (show) {
+            processNotifications();
+        }
     });
 </script>
 
@@ -95,6 +104,9 @@
                 class="w-sm px-1 py-1 rounded-2xl border border-gray-100 dark:border-gray-900 z-50 bg-white dark:bg-black/70 dark:text-white shadow-lg text-sm backdrop-blur-2xl"
                 transition:fade={{ duration: 100 }}
             >
+                <DropdownMenu.Item class="py-1.5 px-3">
+                    <div class="text-lg font-semibold!">Notifications</div>
+                </DropdownMenu.Item>
                 {#each notificationsToDisplay as notification}
                     <DropdownMenu.Item
                         class="flex items-center gap-x-4 rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-white/10 focus:bg-white/10 transition cursor-pointer outline-hidden"
