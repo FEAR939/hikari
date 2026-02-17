@@ -3,6 +3,7 @@ import { initAPIClient } from "$lib/api";
 import { get } from "svelte/store";
 import { user, settings } from "$lib/stores";
 import { toast } from "svelte-sonner";
+import { get_notifications } from "$lib/notifications";
 
 export const prerender = false;
 
@@ -20,6 +21,14 @@ export const load = async () => {
   if (session && !error) {
     user.set(session.user);
   }
+
+  await get_notifications();
+  setInterval(
+    async () => {
+      await get_notifications();
+    },
+    10 * 60 * 1000,
+  ); // 10mins
 
   return;
 };

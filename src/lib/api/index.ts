@@ -219,12 +219,27 @@ export class Client implements APIClient {
 
     return data.path;
   }
+
+  async getNotifications(): Promise<[]> {
+    const response = await fetch(`${this.baseurl}/get-notifications`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      console.error("Failed to fetch notifications");
+      return [];
+    }
+
+    const data = await response.json();
+    return data;
+  }
 }
 
 let client: Client;
 
-export function initAPIClient(baseUrl: string, authService: AuthService) {
-  client = new Client(baseUrl, authService);
+export function initAPIClient(baseUrl: string) {
+  client = new Client(baseUrl);
   return client;
 }
 

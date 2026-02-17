@@ -3,6 +3,8 @@ import type { MediaSource } from "../types";
 
 export const user = writable<null | {}>(null);
 
+export const notifications = writable<[]>([]);
+
 export const showTopbar = writable(true);
 
 export const showSettings = writable(false);

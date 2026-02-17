@@ -1,8 +1,9 @@
 <script lang="ts">
-    import { user, searchQuery } from "$lib/stores";
+    import { user, searchQuery, notifications } from "$lib/stores";
     import { fade } from "svelte/transition";
     import UserMenu from "./UserMenu.svelte";
     import { goto } from "$app/navigation";
+    import NotificationsMenu from "./NotificationsMenu.svelte";
 
     let { show = $bindable(true) } = $props();
 
@@ -66,30 +67,41 @@
                 viewBox="0 -960 960 960"
                 width="24px"
                 fill="currentColor"
-                class="size-5"
+                class="size-6"
                 ><path
                     d="m400-200-182 91q-20 10-39-1.5T160-145v-495q0-33 23.5-56.5T240-720h320q33 0 56.5 23.5T640-640v495q0 23-19 34.5t-39 1.5l-182-91Zm-160-1 122-66q18-10 38-10t38 10l122 66v-439H240v439Zm491.5-50.5Q720-263 720-280v-520H320q-17 0-28.5-11.5T280-840q0-17 11.5-28.5T320-880h400q33 0 56.5 23.5T800-800v520q0 17-11.5 28.5T760-240q-17 0-28.5-11.5ZM240-640h320-320Z"
                 /></svg
             >
         </a>
-        <a
-            class="size-8 flex items-center justify-center rounded-full hover:bg-white/5 border-white/10 hover:border transition-colors duration-100 cursor-pointer"
-            aria-label="Notifications"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="24"
-                viewBox="0 0 24 24"
-                width="24"
-                focusable="false"
-                aria-hidden="true"
-                fill="currentColor"
-                class="size-5"
-                ><path
-                    d="M16 19a4 4 0 11-8 0H4.765C3.21 19 2.25 17.304 3.05 15.97l1.806-3.01A1 1 0 005 12.446V8a7 7 0 0114 0v4.446c0 .181.05.36.142.515l1.807 3.01c.8 1.333-.161 3.029-1.716 3.029H16ZM12 3a5 5 0 00-5 5v4.446a3 3 0 01-.428 1.543L4.765 17h14.468l-1.805-3.01A3 3 0 0117 12.445V8a5 5 0 00-5-5Zm-2 16a2 2 0 104 0h-4Z"
-                ></path></svg
+        <NotificationsMenu>
+            <div
+                class="relative size-8 flex items-center justify-center rounded-full hover:bg-white/5 ring-white/10 hover:ring transition-colors duration-100 cursor-pointer"
+                aria-label="Notifications"
             >
-        </a>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    focusable="false"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    class="size-6"
+                    ><path
+                        d="M16 19a4 4 0 11-8 0H4.765C3.21 19 2.25 17.304 3.05 15.97l1.806-3.01A1 1 0 005 12.446V8a7 7 0 0114 0v4.446c0 .181.05.36.142.515l1.807 3.01c.8 1.333-.161 3.029-1.716 3.029H16ZM12 3a5 5 0 00-5 5v4.446a3 3 0 01-.428 1.543L4.765 17h14.468l-1.805-3.01A3 3 0 0117 12.445V8a5 5 0 00-5-5Zm-2 16a2 2 0 104 0h-4Z"
+                    ></path></svg
+                >
+                {#if $notifications.length > 0}
+                    <div
+                        class="absolute top-0.25 left-4 size-4 px-1 rounded-full text-xs font-normal leading-none flex items-center justify-center bg-[#e1002d] drop-shadow-xs"
+                    >
+                        {$notifications.length > 10
+                            ? "9+"
+                            : $notifications.length}
+                    </div>
+                {/if}
+            </div>
+        </NotificationsMenu>
         <UserMenu>
             <div
                 class="mx-1 rounded-full overflow-hidden cursor-pointer transition-transform duration-150 outline-white outline-offset-2 group-focus-visible/usermenu:outline-1"
