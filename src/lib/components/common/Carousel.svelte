@@ -89,7 +89,9 @@
     }
 </script>
 
-<div class="relative w-full max-w-full aspect-[3.5/1] flex items-center">
+<div
+    class="relative w-full max-w-full h-112 min-[128rem]:h-196! flex items-center"
+>
     <!-- Backdrop Image with crossfade -->
     <div
         class="absolute top-0 w-full aspect-[2.5/1] mask-b-from-60% bg-black overflow-hidden"
@@ -118,7 +120,7 @@
     >
         <div class="w-full space-y-1 mt-8">
             <div
-                class="text-white text-xl md:text-6xl tracking-[-4px] font-semibold! break-keep truncate leading-tight"
+                class="text-white text-xl md:text-6xl min-[128rem]:text-8xl! tracking-[-4px] min-[128rem]:tracking-[-6px]! font-semibold! break-keep truncate leading-tight"
             >
                 {getSeriesTitle(displayedSlide)}
             </div>
