@@ -4,6 +4,7 @@
     "name": "F E A R",
     "email": "rogronin8877@gmail.com"
   },
+  "description": "Rune is an anime media app with focus on local media",
   "homepage": "https://hikari.app",
   "private": true,
   "version": "2.7.1",
