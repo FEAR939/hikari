@@ -55,6 +55,26 @@
                     }
                 }}
             />
+            {#if $searchQuery.length > 0}
+                <button
+                    class="absolute right-3 outline-hidden size-4 rounded-full bg-white text-black flex items-center justify-center cursor-pointer"
+                    transition:fade={{ duration: 100 }}
+                    onclick={() => ($searchQuery = "")}
+                    aria-label="Clear search"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        width="24px"
+                        fill="currentColor"
+                        class="size-4"
+                        ><path
+                            d="M480-424 364-308q-11 11-28 11t-28-11q-11-11-11-28t11-28l116-116-116-115q-11-11-11-28t11-28q11-11 28-11t28 11l116 116 115-116q11-11 28-11t28 11q12 12 12 28.5T651-595L535-480l116 116q11 11 11 28t-11 28q-12 12-28.5 12T595-308L480-424Z"
+                        /></svg
+                    >
+                </button>
+            {/if}
         </div>
         <a
             href="/watchlist"
