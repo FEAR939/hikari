@@ -14,6 +14,7 @@
                 src={news.thumbnail}
                 alt={news.title}
                 class="h-full w-full object-cover transition-transform duration-300 group-hover/newscard:scale-105 group-focus-within/newscard:scale-105"
+                loading="lazy"
             />
         </div>
         <div class="p-4">
