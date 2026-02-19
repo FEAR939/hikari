@@ -123,7 +123,7 @@ transition-opacity duration-500 ease-in-out"
         class:opacity-100={!transitioning}
         class:translate-y-0={!transitioning}
     >
-        <div class="w-full space-y-1 mt-8">
+        <div class="w-full space-y-3">
             <div
                 class="text-white text-xl md:text-6xl min-[128rem]:text-8xl! tracking-[-4px] min-[128rem]:tracking-[-6px]! font-semibold! break-keep truncate leading-tight"
             >
@@ -144,7 +144,7 @@ transition-opacity duration-500 ease-in-out"
             </div>
             <a
                 href={`/anime/${displayedSlide.id}`}
-                class="h-10 w-fit mt-4 flex items-center justify-center space-x-1.5 bg-black/30 backdrop-blur-lg text-white text-sm pl-5.5 pr-6.5 rounded-full cursor-pointer transition-colors duration-150 outline-white outline-offset-2 focus-within:outline-2 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
+                class="h-10 w-fit flex items-center justify-center space-x-1.5 bg-black/30 backdrop-blur-lg text-white text-sm pl-5.5 pr-6.5 rounded-full cursor-pointer transition-colors duration-150 outline-white outline-offset-2 focus-within:outline-2 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
