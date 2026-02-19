@@ -117,10 +117,10 @@
                 }}
             />
             <div
-                class="absolute bottom-0 left-0 right-0 h-6 bg-linear-to-t from-black/50 to-transparent"
+                class="absolute bottom-0 left-0 right-0 h-10 bg-linear-to-t from-black/90 to-transparent"
             >
                 <div
-                    class="absolute left-1.5 right-1.5 bottom-1.5 h-1 w-auto bg-black/70 rounded-full overflow-hidden"
+                    class="absolute left-2 right-2 bottom-2 h-1 w-auto bg-white/10 rounded-full overflow-hidden"
                 >
                     <div
                         class="h-full bg-gray-200 rounded-full"
