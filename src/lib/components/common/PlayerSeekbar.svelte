@@ -51,6 +51,8 @@
     const throttledGetSeekThumbnail = throttle(getSeekThumbnail, 500);
 
     video.addEventListener("timeupdate", () => {
+        if (video.ended) return;
+
         const currentTime = video.currentTime || 0;
         const duration = video.duration || 0;
 
