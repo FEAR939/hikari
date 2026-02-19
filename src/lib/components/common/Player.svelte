@@ -76,6 +76,7 @@
 
         // Only Sync with visible Episodes in EpisodeView if it's still the same anime
         if ($playerAnime?.id !== $currentAnime?.anime.id) return;
+
         visibleEpisodes.update((episodes) => {
             const updatedEpisodes = episodes.map((episode) => {
                 if (episode.attributes.number === $playerEpisode?.number) {
@@ -83,6 +84,7 @@
                 }
                 return episode;
             });
+
             return updatedEpisodes;
         });
     }

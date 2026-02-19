@@ -14,7 +14,7 @@
 
     const API = getAPIClient();
 
-    let episode_leftoff = $state(episode.leftoff ?? 0);
+    let episode_leftoff = $derived(episode.leftoff ?? 0);
 
     function getTimePercentage(time1: number, time2: number) {
         return (time2 / time1) * 100;
