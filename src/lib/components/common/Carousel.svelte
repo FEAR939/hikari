@@ -117,7 +117,7 @@ transition-opacity duration-500 ease-in-out"
 
     <!-- Content overlay with crossfade -->
     <div
-        class="absolute z-1 px-12 w-full h-fit flex items-center gap-8 transition-all duration-500 ease-in-out"
+        class="absolute z-1 px-12 h-full w-full flex items-center gap-8 transition-all duration-500 ease-in-out"
         class:opacity-0={transitioning}
         class:translate-y-2={transitioning}
         class:opacity-100={!transitioning}
