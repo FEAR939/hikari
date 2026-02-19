@@ -15,6 +15,7 @@ export const showFile = writable(false);
 export const showTrailer = writable(false);
 
 export const showPlayer = writable(false);
+export const miniPlayer = writable(false);
 
 export const searchQuery = writable("");
 

@@ -7,6 +7,7 @@
         playerShowEpisodes,
         settings,
         sourceInitialIndex,
+        miniPlayer,
     } from "$lib/stores";
     import InputSlider from "./InputSlider.svelte";
     import PlayerSeekbar from "./PlayerSeekbar.svelte";
@@ -19,7 +20,6 @@
         episodeNumber,
         episodeTitle,
         show = $bindable(false),
-        isMiniPlayer = $bindable(false),
     } = $props();
 
     let playTime = $state("");
@@ -59,7 +59,7 @@
         } else {
             window.electronAPI.enterFullscreen();
         }
-        isMiniPlayer = false;
+        miniPlayer.set(false);
         isFullscreen = !isFullscreen;
     }
 
@@ -107,7 +107,7 @@
                 break;
             case "t":
                 if (!video) return;
-                isMiniPlayer = !isMiniPlayer;
+                miniPlayer.set(!$miniPlayer);
                 break;
             case "P":
                 if (!e.shiftKey || $playerEpisode.number === 1) return;
@@ -224,7 +224,7 @@
                     </Tooltip.Portal>
                 </Tooltip.Root>
             </Tooltip.Provider>
-            {#if !isMiniPlayer}
+            {#if !$miniPlayer}
                 <div
                     class="flex items-center gap-2.5 bg-black/30 backdrop-blur-lg text-white rounded-full px-2.5"
                 >
@@ -509,9 +509,9 @@
                         <Tooltip.Trigger class="flex items-center">
                             <button
                                 class="relative px-1 outline-hidden cursor-pointer before:content-[''] before:absolute before:-inset-1 before:rounded-full hover:before:bg-white/10 before:transition-colors before:duration-150"
-                                onclick={() => (isMiniPlayer = !isMiniPlayer)}
+                                onclick={() => miniPlayer.set(!$miniPlayer)}
                             >
-                                {#if isMiniPlayer}
+                                {#if $miniPlayer}
                                     <svg
                                         xmlns="http://www.w3.org/2000/svg"
                                         height="24px"

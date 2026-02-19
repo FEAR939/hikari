@@ -9,6 +9,7 @@
         user,
         showTopbar,
         playerShowEpisodes,
+        miniPlayer,
     } from "$lib/stores";
     import PlayerControls from "./PlayerControls.svelte";
     import { getAPIClient } from "$lib/api";
@@ -23,7 +24,6 @@
     let videoElement: HTMLVideoElement | null = $state(null);
 
     let showOverlay = $state(true);
-    let isMiniPlayer = $state(false);
 
     $effect(() => {
         if (show && playerElement!) {
@@ -100,7 +100,7 @@
             if (!show || videoElement?.paused || !playerElement) return;
             showOverlay = false;
             playerElement.style.cursor = "none";
-            if (isMiniPlayer) return;
+            if ($miniPlayer) return;
             showTopbar.set(false);
         }, 3000);
     }
@@ -113,7 +113,7 @@
         bind:this={playerElement}
         aria-modal="true"
         role="dialog"
-        class={!isMiniPlayer
+        class={!$miniPlayer
             ? "fixed bottom-0 right-0 bg-black w-full h-screen max-h-[100dvh] z-1111 transition-all duration-250 transform-gpu"
             : "fixed bottom-4 right-4 w-lg h-[calc(32rem*(9/16))] bg-black z-1111 rounded-2xl overflow-hidden transition-all duration-250 transform-gpu"}
     >
@@ -156,7 +156,6 @@
                     episodeNumber={$playerEpisode?.number}
                     episodeTitle={$playerEpisode?.title}
                     bind:show={showOverlay}
-                    bind:isMiniPlayer
                 />
                 <PlayerEpisodeView bind:show={$playerShowEpisodes} />
             {/if}
