@@ -5,8 +5,9 @@
         getSeriesPoster,
     } from "$lib/kitsu";
     import ColorThief from "colorthief";
+    import { pageScrollPosition } from "$lib/stores";
 
-    let { slides } = $props();
+    let { slides, hasScrolled = $bindable(false) } = $props();
     let currentIndex = $state(0);
     let currentSlide = $derived(slides[currentIndex]);
     let accentColor = $state(null);
@@ -90,17 +91,21 @@
 </script>
 
 <div
-    class="relative w-full max-w-full h-112 min-[128rem]:h-196! flex items-center"
+    class="relative w-full max-w-full h-112 min-[128rem]:h-196! flex items-center overflow-visible"
 >
     <!-- Backdrop Image with crossfade -->
     <div
-        class="absolute top-0 w-full aspect-[2.5/1] mask-b-from-60% bg-black overflow-hidden"
+        class="fixed top-0 left-0 right-0 w-screen aspect-[2.5/1] {$pageScrollPosition <
+        100
+            ? 'mask-b-from-60% brightness-50'
+            : 'mask-b-from-60% brightness-10'} bg-black transition-all duration-250"
     >
         <img
             src={getSeriesBackdrop(displayedSlide) ||
                 getSeriesPoster(displayedSlide, "original")}
             alt=""
-            class="min-w-full w-fit min-h-full h-fit object-cover brightness-50 transition-opacity duration-500 ease-in-out"
+            class="min-w-full w-fit h-full object-cover
+transition-opacity duration-500 ease-in-out"
             class:opacity-0={transitioning}
             class:opacity-100={!transitioning}
             crossorigin="anonymous"

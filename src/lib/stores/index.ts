@@ -1,6 +1,8 @@
 import { writable } from "svelte/store";
 import type { MediaSource } from "../types";
 
+export const pageScrollPosition = writable(0);
+
 export const user = writable<null | {}>(null);
 
 export const notifications = writable<[]>([]);

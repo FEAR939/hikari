@@ -7,6 +7,7 @@
         currentAnime,
         currentAnimeAccentColor,
         showTrailer,
+        pageScrollPosition,
     } from "$lib/stores";
     import {
         getSeriesBackdrop,
@@ -160,7 +161,10 @@
         <div class="h-full w-full">
             <!-- Banner -->
             <div
-                class="w-screen aspect-[2.5/1] mask-b-from-70% bg-black overflow-hidden"
+                class="fixed top-0 left-0 w-screen aspect-[2.5/1] {$pageScrollPosition <
+                100
+                    ? 'mask-b-from-60% brightness-50'
+                    : 'mask-b-from-60% brightness-10'} bg-black overflow-hidden transition-all duration-250"
             >
                 <img
                     class="min-w-full w-fit min-h-full h-fit object-cover brightness-50"
