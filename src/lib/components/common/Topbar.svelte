@@ -94,7 +94,7 @@
 
                 goto("/watchlist");
             }}
-            class="hover:bg-white/5 border-white/10 hover:border size-8 rounded-full flex items-center justify-center transition-colors duration-100 outline-hidden"
+            class="hover:bg-white/5 border-white/10 hover:border size-8 rounded-full flex items-center justify-center transition-colors duration-100 outline-hidden cursor-pointer"
             aria-label="Watchlist"
         >
             <svg
