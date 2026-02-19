@@ -1,10 +1,11 @@
 <script lang="ts">
     import "./layout.css";
     import Sidebar from "$lib/components/common/Sidebar.svelte";
-    import { showPlayer } from "$lib/stores";
+    import { showPlayer, user } from "$lib/stores";
     import { goto } from "$app/navigation";
     import Player from "$lib/components/common/Player.svelte";
     import { Toaster, toast } from "svelte-sonner";
+    import { get_notifications } from "$lib/notifications";
 
     let { children } = $props();
 
@@ -30,6 +31,23 @@
     });
 
     goto("/home");
+
+    $effect(() => {
+        if ($user) {
+            notificationHandler();
+        }
+    });
+
+    async function notificationHandler() {
+        await get_notifications();
+        let interval = setInterval(
+            async () => {
+                if (!user) return clearInterval(interval);
+                await get_notifications();
+            },
+            10 * 60 * 1000,
+        ); // 10mins
+    }
 </script>
 
 <svelte:head></svelte:head>
