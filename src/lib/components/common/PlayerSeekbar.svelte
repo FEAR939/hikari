@@ -121,8 +121,10 @@
 <div
     bind:this={seekbarEl}
     onmousedown={handleMouseDown}
-    role="seekbar"
-    class="relative w-full h-1 rounded-full bg-gray-900/50 cursor-pointer"
+    role="slider"
+    aria-valuenow={seekSec}
+    tabindex="-1"
+    class="group/seekbar relative w-full h-1 rounded-full bg-gray-900/50 cursor-pointer hover:h-2 hover:translate-y-1/4 transition-all duration-250"
 >
     <div
         class="absolute top-0 left-0 flex items-center h-full bg-gray-600 rounded-full transition"
@@ -153,7 +155,7 @@
         style:width={playProgress + "%"}
     >
         <div
-            class="absolute left-[100%] -translate-x-1/2 size-2.5 rounded-full shrink-0"
+            class="absolute left-[100%] -translate-x-1/2 size-2.5 rounded-full shrink-0 group-hover/seekbar:size-5 transition-all duration-250"
             style:background="rgb({$currentAnimeAccentColor?.join(',')})"
         ></div>
     </div>
