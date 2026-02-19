@@ -162,7 +162,7 @@
             <!-- Banner -->
             <div
                 class="fixed top-0 left-0 w-screen aspect-[2.5/1] {$pageScrollPosition <
-                100
+                250
                     ? 'mask-b-from-60% brightness-50'
                     : 'mask-b-from-60% brightness-10'} bg-black overflow-hidden transition-all duration-250"
             >
