@@ -113,6 +113,10 @@
                         onclick={async () => {
                             // show = false;
                             // TODO!
+
+                            if (notification.type === "episode.aired") {
+                                await goto(`/anime/${notification.kitsu_id}`);
+                            }
                         }}
                     >
                         <div class="self-center line-clamp-2">
