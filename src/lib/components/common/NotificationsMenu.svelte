@@ -6,6 +6,7 @@
     import { fade } from "svelte/transition";
     import { getSeriesTitle, kitsu } from "$lib/kitsu";
     import { anizip } from "$lib/anizip";
+    import Notification from "./Notification.svelte";
 
     let { show = $bindable(false), children } = $props();
 
@@ -72,7 +73,7 @@
                     anizipData?.episodes?.[String(notification.episode_number)]
                         ?.image;
 
-                notification.title = `Episode ${notification.episode_number} of ${title} just aired!`;
+                notification.title = `${title} episode ${notification.episode_number} just aired!`;
                 notification.image_url = anizipImage || kitsuImage || "";
             }
             return notification;
@@ -104,33 +105,12 @@
                 class="w-sm px-1 py-1 rounded-2xl border border-gray-100 dark:border-gray-900 z-50 bg-white dark:bg-black/70 dark:text-white shadow-lg text-sm backdrop-blur-2xl"
                 transition:fade={{ duration: 100 }}
             >
-                <DropdownMenu.Item class="py-1.5 px-3">
+                <div class="py-1.5 px-3 mb-1 border-b border-white/10">
                     <div class="text-lg font-semibold!">Notifications</div>
-                </DropdownMenu.Item>
+                </div>
                 {#each notificationsToDisplay as notification}
-                    <DropdownMenu.Item
-                        class="flex items-center gap-x-4 rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-white/10 focus:bg-white/10 transition cursor-pointer outline-hidden"
-                        onclick={async () => {
-                            // show = false;
-                            // TODO!
-
-                            if (notification.type === "episode.aired") {
-                                await goto(`/anime/${notification.kitsu_id}`);
-                            }
-                        }}
-                    >
-                        <div class="self-center line-clamp-2">
-                            {notification.title}
-                        </div>
-                        {#if notification.type === "episode.aired"}
-                            <div>
-                                <img
-                                    src={notification.image_url}
-                                    alt="Episode Aired"
-                                    class="w-32 aspect-video rounded-md"
-                                />
-                            </div>
-                        {/if}
+                    <DropdownMenu.Item class="outline-hidden">
+                        <Notification {notification}></Notification>
                     </DropdownMenu.Item>
                 {/each}
             </div>
