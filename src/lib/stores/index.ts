@@ -6,6 +6,8 @@ export const pageScrollPosition = writable(0);
 export const user = writable<null | {}>(null);
 
 export const notifications = writable<[]>([]);
+export const notificationsToDisplay = writable<[]>([]);
+export const notificationsSyncPoint = writable<string | null>(null);
 
 export const showTopbar = writable(true);
 

@@ -1,91 +1,57 @@
 <script lang="ts">
     import { DropdownMenu } from "bits-ui";
-    import { goto } from "$app/navigation";
-
-    import { notifications } from "$lib/stores";
+    import { user, notifications, notificationsToDisplay } from "$lib/stores";
     import { fade } from "svelte/transition";
-    import { getSeriesTitle, kitsu } from "$lib/kitsu";
-    import { anizip } from "$lib/anizip";
     import Notification from "./Notification.svelte";
+    import {
+        loadNextPage,
+        markNotificationsRead,
+        resetPagination,
+        loading,
+        hasMore,
+    } from "$lib/notifications";
+    import { untrack } from "svelte";
 
     let { show = $bindable(false), children } = $props();
+    let wasOpen = false;
+    let sentinel: HTMLDivElement;
 
-    let notificationsToDisplay = $state([]);
-    let batch = 10;
-    let page = 1;
-
-    async function processNotifications() {
-        let currentBatch = $notifications.slice(
-            (page - 1) * batch,
-            page * batch,
-        );
-
-        // Deduplicate kitsu IDs
-        let episodeNotifications = currentBatch.filter(
-            (n) => n.type === "episode.aired",
-        );
-        let uniqueKitsuIds = [
-            ...new Set(episodeNotifications.map((n) => n.kitsu_id)),
-        ];
-
-        // Build the query array once (one entry per unique ID)
-        let kitsuQueries = uniqueKitsuIds.map((id) => ({
-            kitsu_id: id,
-            episode: episodeNotifications.find((n) => n.kitsu_id === id)
-                .episode_number,
-        }));
-
-        // Fetch kitsu and anizip data in parallel
-        let [kitsuResults, anizipResults] = await Promise.all([
-            Promise.all(
-                kitsuQueries.map((q) => kitsu.getAnimeAndEpisodesByNumber([q])),
-            ),
-            Promise.all(
-                uniqueKitsuIds.map(async (id) => ({
-                    kitsu_id: id,
-                    data: await anizip.getAnimeById(id),
-                })),
-            ),
-        ]);
-
-        // Build lookup maps for O(1) access
-        let kitsuMap = new Map();
-        for (let result of kitsuResults) {
-            let entry = result[0];
-            kitsuMap.set(entry.anime.anime.id, entry);
-        }
-
-        let anizipMap = new Map();
-        for (let result of anizipResults) {
-            anizipMap.set(result.kitsu_id, result.data);
-        }
-
-        // Enrich notifications
-        currentBatch = currentBatch.map((notification) => {
-            if (notification.type === "episode.aired") {
-                let kitsuData = kitsuMap.get(notification.kitsu_id);
-                let anizipData = anizipMap.get(notification.kitsu_id);
-
-                let title = getSeriesTitle(kitsuData.anime.anime);
-                let kitsuImage =
-                    kitsuData.episode.attributes.thumbnail?.original;
-                let anizipImage =
-                    anizipData?.episodes?.[String(notification.episode_number)]
-                        ?.image;
-
-                notification.title = `${title} episode ${notification.episode_number} just aired!`;
-                notification.image_url = anizipImage || kitsuImage || "";
-            }
-            return notification;
-        });
-
-        notificationsToDisplay = currentBatch;
-    }
+    const unread = $derived($notifications.filter((n) => !n.read).length);
 
     $effect(() => {
-        if (show) {
-            processNotifications();
-        }
+        const isOpen = show;
+
+        untrack(() => {
+            if (isOpen && !wasOpen) {
+                resetPagination();
+                loadNextPage();
+            }
+
+            if (!isOpen && wasOpen && $user && unread > 0) {
+                markNotificationsRead();
+            }
+
+            wasOpen = isOpen;
+        });
+    });
+
+    // Intersection observer to detect when user scrolls to bottom
+    $effect(() => {
+        if (!show || !sentinel) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !$loading && $hasMore) {
+                    console.log("Sentinel visible, loading next page");
+                    loadNextPage();
+                }
+            },
+            { threshold: 0.1 },
+        );
+
+        observer.observe(sentinel);
+
+        return () => observer.disconnect();
     });
 </script>
 
@@ -93,7 +59,6 @@
     <DropdownMenu.Trigger class="group/notificationsmenu outline-hidden">
         {@render children()}
     </DropdownMenu.Trigger>
-
     <DropdownMenu.Content
         sideOffset={4}
         align="center"
@@ -102,17 +67,42 @@
     >
         {#if show}
             <div
-                class="w-sm px-1 py-1 rounded-2xl border border-gray-100 dark:border-gray-900 z-50 bg-white dark:bg-black/70 dark:text-white shadow-lg text-sm backdrop-blur-2xl"
+                class="w-sm rounded-2xl border border-gray-100 dark:border-gray-900 z-50 bg-white dark:bg-black/70 dark:text-white shadow-lg text-sm backdrop-blur-2xl"
                 transition:fade={{ duration: 100 }}
             >
-                <div class="py-1.5 px-3 mb-1 border-b border-white/10">
+                <div class="py-1.5 px-3 border-b border-white/10">
                     <div class="text-lg font-semibold!">Notifications</div>
                 </div>
-                {#each notificationsToDisplay as notification}
-                    <DropdownMenu.Item class="outline-hidden">
-                        <Notification {notification}></Notification>
-                    </DropdownMenu.Item>
-                {/each}
+
+                <div class="max-h-96 overflow-y-auto px-1 py-1">
+                    {#each $notificationsToDisplay as notification (notification.id)}
+                        <DropdownMenu.Item class="outline-hidden">
+                            <Notification {notification} />
+                        </DropdownMenu.Item>
+                    {/each}
+
+                    <!-- Sentinel element at the bottom -->
+                    {#if $hasMore}
+                        <div
+                            bind:this={sentinel}
+                            class="py-3 text-center text-gray-400 text-xs"
+                        >
+                            {$loading ? "Loading..." : ""}
+                        </div>
+                    {/if}
+
+                    {#if !$hasMore && $notificationsToDisplay.length > 0}
+                        <div class="py-3 text-center text-gray-400 text-xs">
+                            No more notifications
+                        </div>
+                    {/if}
+
+                    {#if !$loading && $notificationsToDisplay.length === 0}
+                        <div class="py-6 text-center text-gray-400">
+                            No notifications yet
+                        </div>
+                    {/if}
+                </div>
             </div>
         {/if}
     </DropdownMenu.Content>

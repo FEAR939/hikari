@@ -220,19 +220,47 @@ export class Client implements APIClient {
     return data.path;
   }
 
-  async getNotifications(): Promise<[]> {
-    const response = await fetch(`${this.baseurl}/get-notifications`, {
+  // Fetches only notifications NEWER than the sync point (for polling)
+  async getNewNotifications(since?: string | null) {
+    const params = new URLSearchParams();
+    if (since) params.set("since", since);
+
+    const response = await fetch(
+      `${this.baseurl}/notifications/new?${params}`,
+      {
+        credentials: "include",
+      },
+    );
+    return response.json();
+  }
+
+  // Fetches older notifications with cursor (for pagination in the panel)
+  async getNotifications(limit: number, cursor?: string | null) {
+    const params = new URLSearchParams({ limit: String(limit) });
+    if (cursor) params.set("cursor", cursor);
+
+    const response = await fetch(`${this.baseurl}/notifications?${params}`, {
+      credentials: "include",
+    });
+    return response.json();
+  }
+
+  async markNotificationsRead(syncPoint: string): Promise<boolean> {
+    const formData = new FormData();
+    formData.append("lastsync", syncPoint);
+
+    const response = await fetch(`${this.baseurl}/mark-notifications-read`, {
       method: "POST",
       credentials: "include",
+      body: formData,
     });
 
     if (!response.ok) {
-      console.error("Failed to fetch notifications");
-      return [];
+      console.error("Failed to mark notifications as read");
+      return false;
     }
 
-    const data = await response.json();
-    return data;
+    return true;
   }
 }
 

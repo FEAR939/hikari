@@ -1,13 +1,21 @@
 <script lang="ts">
     import "./layout.css";
     import Sidebar from "$lib/components/common/Sidebar.svelte";
-    import { showPlayer, user } from "$lib/stores";
+    import {
+        showPlayer,
+        user,
+        notifications,
+        notificationsSyncPoint,
+    } from "$lib/stores";
     import { goto } from "$app/navigation";
     import Player from "$lib/components/common/Player.svelte";
     import { Toaster, toast } from "svelte-sonner";
-    import { get_notifications } from "$lib/notifications";
+    import { getAPIClient } from "$lib/api";
+    import { untrack } from "svelte";
 
     let { children } = $props();
+
+    const API = getAPIClient();
 
     let updatePromise: Promise<void> | null = null;
     let resolveUpdate: (() => void) | null = null;
@@ -32,22 +40,42 @@
 
     goto("/home");
 
-    $effect(() => {
-        if ($user) {
-            notificationHandler();
-        }
-    });
+    let interval: ReturnType<typeof setInterval> | null = null;
 
-    async function notificationHandler() {
-        await get_notifications();
-        let interval = setInterval(
-            async () => {
-                if (!user) return clearInterval(interval);
-                await get_notifications();
-            },
-            10 * 60 * 1000,
-        ); // 10mins
+    async function pollNewNotifications() {
+        if (!$user) return;
+        const API = getAPIClient();
+        const result = await API.getNewNotifications($notificationsSyncPoint);
+
+        if (result.notifications.length > 0) {
+            notifications.update((current) => {
+                const existingIds = new Set(current.map((n) => n.id));
+                const newOnly = result.notifications.filter(
+                    (n) => !existingIds.has(n.id),
+                );
+                return [...newOnly, ...current];
+            });
+        }
+
+        notificationsSyncPoint.set(result.syncedAt);
     }
+
+    $effect(() => {
+        const currentUser = $user; // only reactive dependency
+
+        untrack(() => {
+            if (interval) clearInterval(interval);
+
+            if (currentUser) {
+                pollNewNotifications();
+                interval = setInterval(pollNewNotifications, 10 * 60 * 1000);
+            }
+        });
+
+        return () => {
+            if (interval) clearInterval(interval);
+        };
+    });
 </script>
 
 <svelte:head></svelte:head>
