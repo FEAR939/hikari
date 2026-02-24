@@ -13,8 +13,8 @@ import { anizip } from "$lib/anizip";
 const BATCH_SIZE = 10;
 let nextCursor: string | null = null;
 
-export const loading = writable(false);
-export const hasMore = writable(true);
+export let loading = writable(false);
+export let hasMore = writable(true);
 
 export function resetPagination() {
   nextCursor = null;
