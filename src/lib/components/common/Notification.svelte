@@ -67,11 +67,11 @@
     </div>
 
     {#if notification.type === "episode.aired"}
-        <div>
+        <div class="h-fit w-24 shrink-0 aspect-video">
             <img
                 src={notification.image_url}
                 alt="Episode Aired"
-                class="w-32 aspect-video rounded-md"
+                class="h-full w-full rounded-md"
             />
         </div>
     {/if}
