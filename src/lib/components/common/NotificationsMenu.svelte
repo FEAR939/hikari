@@ -87,35 +87,38 @@
                 </div>
 
                 <div class="max-h-96 overflow-y-auto px-1 py-1">
-                    {#each $notificationsToDisplay as notification (notification.id)}
-                        <DropdownMenu.Item class="outline-hidden">
-                            <Notification {notification} />
-                        </DropdownMenu.Item>
-                    {/each}
-
-                    <!-- Sentinel element at the bottom -->
-                    {#if $hasMore && $user}
-                        <div
-                            bind:this={sentinel}
-                            class="py-3 text-center text-gray-400 text-xs"
-                        >
-                            {#if $loading}
-                                <Spinner />
-                            {:else}
-                                No more notifications
-                            {/if}
+                    {#if $loading && $notificationsToDisplay.length === 0}
+                        <div class="py-6 flex justify-center">
+                            <Spinner />
                         </div>
-                    {:else if !$hasMore && $notificationsToDisplay.length > 0 && $user}
-                        <div class="py-3 text-center text-gray-400 text-xs">
-                            No more notifications
-                        </div>
-                    {:else if !$loading && $notificationsToDisplay.length === 0 && $user}
+                    {:else if $notificationsToDisplay.length === 0 && !$loading && $user}
                         <div class="py-6 text-center text-gray-400">
                             No notifications yet
                         </div>
                     {:else if !$user}
                         <div class="py-6 text-center text-gray-400">
                             Please log in to view notifications
+                        </div>
+                    {/if}
+
+                    {#each $notificationsToDisplay as notification (notification.id)}
+                        <DropdownMenu.Item class="outline-hidden">
+                            <Notification {notification} />
+                        </DropdownMenu.Item>
+                    {/each}
+
+                    {#if $user}
+                        <div
+                            bind:this={sentinel}
+                            class="py-3 flex justify-center"
+                        >
+                            {#if $loading && $notificationsToDisplay.length > 0}
+                                <Spinner />
+                            {:else if !$hasMore && $notificationsToDisplay.length > 0}
+                                <span class="text-gray-400 text-xs"
+                                    >No more notifications</span
+                                >
+                            {/if}
                         </div>
                     {/if}
                 </div>
