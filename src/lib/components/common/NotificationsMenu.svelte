@@ -23,7 +23,13 @@
         const isOpen = show;
 
         untrack(() => {
-            if (isOpen && !wasOpen) {
+            if (!$user) {
+                resetPagination();
+                notifications.set([]);
+                notificationsToDisplay.set([]);
+            }
+
+            if (isOpen && !wasOpen && $user) {
                 resetPagination();
                 loadNextPage();
             }
@@ -42,7 +48,12 @@
 
         const observer = new IntersectionObserver(
             (entries) => {
-                if (entries[0].isIntersecting && !$loading && $hasMore) {
+                if (
+                    entries[0].isIntersecting &&
+                    !$loading &&
+                    $hasMore &&
+                    $user
+                ) {
                     console.log("Sentinel visible, loading next page");
                     loadNextPage();
                 }
@@ -83,7 +94,7 @@
                     {/each}
 
                     <!-- Sentinel element at the bottom -->
-                    {#if $hasMore}
+                    {#if $hasMore && $user}
                         <div
                             bind:this={sentinel}
                             class="py-3 text-center text-gray-400 text-xs"
@@ -94,17 +105,17 @@
                                 No more notifications
                             {/if}
                         </div>
-                    {/if}
-
-                    {#if !$hasMore && $notificationsToDisplay.length > 0}
+                    {:else if !$hasMore && $notificationsToDisplay.length > 0 && $user}
                         <div class="py-3 text-center text-gray-400 text-xs">
                             No more notifications
                         </div>
-                    {/if}
-
-                    {#if !$loading && $notificationsToDisplay.length === 0}
+                    {:else if !$loading && $notificationsToDisplay.length === 0 && $user}
                         <div class="py-6 text-center text-gray-400">
                             No notifications yet
+                        </div>
+                    {:else if !$user}
+                        <div class="py-6 text-center text-gray-400">
+                            Please log in to view notifications
                         </div>
                     {/if}
                 </div>
