@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { settings, user } from "$lib/stores";
+    import { settings, showSettings, user } from "$lib/stores";
     import { getAPIClient } from "$lib/api";
+    import { goto } from "$app/navigation";
 
     const API = getAPIClient();
 
@@ -100,7 +101,7 @@
                 </div>
             {:else}
                 <div
-                    class="w-full h-fit p-4 grid place-items-center border border-gray-800 rounded-md text-neutral-500 space-y-2"
+                    class="w-full h-fit mt-48 p-4 grid place-items-center text-neutral-500 space-y-2"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -118,7 +119,18 @@
                         <path d="M12 16v-4" />
                         <path d="M12 8h.01" />
                     </svg>
-                    <div>You will need to log in to access these settings.</div>
+                    <div>
+                        You will need to sign in to access these settings.
+                    </div>
+                    <button
+                        class="bg-white hover:bg-gray-300 text-black font-bold py-2 px-4 rounded-full cursor-pointer"
+                        onclick={() => {
+                            goto("/auth");
+                            showSettings.set(false);
+                        }}
+                    >
+                        Sign In
+                    </button>
                 </div>
             {/if}
         </div>
