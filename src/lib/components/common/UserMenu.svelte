@@ -84,7 +84,9 @@
                 </DropdownMenu.Item>
 
                 <DropdownMenu.Item
-                    class="flex rounded-xl py-1.5 px-3 w-full text-red-400 hover:bg-gray-50 dark:hover:bg-white/10 focus:bg-white/10 transition cursor-pointer outline-hidden"
+                    class="flex rounded-xl py-1.5 px-3 w-full {$user
+                        ? 'text-red-400'
+                        : 'text-white'} hover:bg-gray-50 dark:hover:bg-white/10 focus:bg-white/10 transition cursor-pointer outline-hidden"
                     onclick={async () => {
                         if ($user) {
                             await authClient.signOut();
