@@ -18,7 +18,7 @@
 
 <div class="h-full w-full space-y-4 overflow-y-scroll">
     <div class="text-xl font-bold!">General Settings</div>
-    <div class="h-fit w-full p-4 space-y-2 border border-white/10 rounded-2xl">
+    <div class="h-fit w-full space-y-2 flex">
         <div class="h-fit w-full space-y-1">
             <div class="text-white text-sm font-bold!">Language</div>
             <div class="text-neutral-400 text-xs">

@@ -34,9 +34,7 @@
 <div class="h-full w-full space-y-4 overflow-y-scroll">
     <div class="text-xl font-bold!">Developer Settings</div>
     {#each developerSettings as setting}
-        <div
-            class="h-fit w-full gap-y-2 p-4 border border-white/10 rounded-2xl flex"
-        >
+        <div class="h-fit w-full gap-y-2 flex">
             <div class="h-fit w-full space-y-1">
                 <div class="text-white font-bold! text-sm">{setting.name}</div>
                 <div class="text-neutral-500 text-xs">
