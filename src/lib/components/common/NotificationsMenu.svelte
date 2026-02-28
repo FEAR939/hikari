@@ -11,10 +11,11 @@
         hasMore,
     } from "$lib/notifications";
     import { untrack } from "svelte";
+    import Spinner from "./Spinner.svelte";
 
     let { show = $bindable(false), children } = $props();
     let wasOpen = false;
-    let sentinel: HTMLDivElement;
+    let sentinel: HTMLDivElement = $state(null);
 
     const unread = $derived($notifications.filter((n) => !n.read).length);
 
@@ -87,7 +88,11 @@
                             bind:this={sentinel}
                             class="py-3 text-center text-gray-400 text-xs"
                         >
-                            {$loading ? "Loading..." : ""}
+                            {#if $loading}
+                                <Spinner />
+                            {:else}
+                                No more notifications
+                            {/if}
                         </div>
                     {/if}
 
