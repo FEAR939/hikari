@@ -12,7 +12,7 @@
     />
     <div class="space-y-2">
         <a
-            class={`block p-2 rounded-full cursor-pointer ${page.url.pathname === "/home/" ? "text-white" : "text-neutral-500"} hover:bg-white/5 focus-within:bg-white/5 transition-colors duration-150 outline-hidden`}
+            class={`block p-2 rounded-full cursor-pointer ${page.url.pathname === "/home/" ? "text-white" : "text-neutral-400"} hover:bg-white/5 focus-within:bg-white/5 transition-colors duration-150 outline-hidden`}
             href="/home/"
             aria-label="home"
         >
@@ -35,7 +35,7 @@
         </a>
 
         <a
-            class={`block p-2 rounded-full cursor-pointer ${page.url.pathname === "/files/" ? "text-white" : "text-neutral-500"} hover:bg-white/5 focus-within:bg-white/5 transition-colors duration-150 outline-hidden`}
+            class={`block p-2 rounded-full cursor-pointer ${page.url.pathname === "/files/" ? "text-white" : "text-neutral-400"} hover:bg-white/5 focus-within:bg-white/5 transition-colors duration-150 outline-hidden`}
             href="/files"
             aria-label="files"
         >
@@ -58,7 +58,7 @@
         </a>
 
         <a
-            class={`block p-2 rounded-full cursor-pointer ${page.url.pathname === "/news/" ? "text-white" : "text-neutral-500"} hover:bg-white/5 focus-within:bg-white/5 transition-colors duration-150 outline-hidden`}
+            class={`block p-2 rounded-full cursor-pointer ${page.url.pathname === "/news/" ? "text-white" : "text-neutral-400"} hover:bg-white/5 focus-within:bg-white/5 transition-colors duration-150 outline-hidden`}
             href="/news"
             aria-label="news"
         >
