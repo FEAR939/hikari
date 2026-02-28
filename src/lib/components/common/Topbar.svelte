@@ -144,7 +144,7 @@
         </NotificationsMenu>
         <UserMenu>
             <div
-                class="mx-1 rounded-full overflow-hidden cursor-pointer transition-transform duration-150 outline-white outline-offset-2 group-focus-visible/usermenu:outline-1"
+                class="relative size-8 flex items-center justify-center rounded-full hover:bg-white/5 ring-white/10 hover:ring transition-colors duration-100 cursor-pointer"
             >
                 {#if $user}
                     <img
@@ -153,21 +153,22 @@
                         alt="User Avatar"
                     />
                 {:else}
-                    <div
-                        class="relative p-2 bg-black/30 before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 rounded-full flex items-center justify-center"
+                    <svg
+                        width="100%"
+                        height="100%"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="size-6"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            height="24px"
-                            viewBox="0 -960 960 960"
-                            width="24px"
-                            fill="currentColor"
-                            class="size-4"
-                            ><path
-                                d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"
-                            /></svg
-                        >
-                    </div>
+                        <path
+                            d="M5.3163 19.4384C5.92462 18.0052 7.34492 17 9 17H15C16.6551 17 18.0754 18.0052 18.6837 19.4384M16 9.5C16 11.7091 14.2091 13.5 12 13.5C9.79086 13.5 8 11.7091 8 9.5C8 7.29086 9.79086 5.5 12 5.5C14.2091 5.5 16 7.29086 16 9.5ZM22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                    </svg>
                 {/if}
             </div>
         </UserMenu>
