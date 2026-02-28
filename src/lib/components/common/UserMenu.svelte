@@ -49,7 +49,50 @@
                 {/if}
 
                 <DropdownMenu.Item
-                    class="flex rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-white/10 focus:bg-white/10 transition cursor-pointer outline-hidden"
+                    class="group flex rounded-xl py-1.5 px-3 w-full {$user
+                        ? 'hover:bg-gray-50 dark:hover:bg-white/10 focus:bg-white/10  cursor-pointer'
+                        : 'text-gray-500'} outline-hidden transition"
+                    onclick={async () => {
+                        show = false;
+
+                        if ($user === null) {
+                            return;
+                        }
+
+                        goto("/watchlist");
+                    }}
+                >
+                    <div class="self-center mr-3">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="24px"
+                            viewBox="0 -960 960 960"
+                            width="24px"
+                            fill="currentColor"
+                            class="size-4"
+                            ><path
+                                d="m400-200-182 91q-20 10-39-1.5T160-145v-495q0-33 23.5-56.5T240-720h320q33 0 56.5 23.5T640-640v495q0 23-19 34.5t-39 1.5l-182-91Zm-160-1 122-66q18-10 38-10t38 10l122 66v-439H240v439Zm491.5-50.5Q720-263 720-280v-520H320q-17 0-28.5-11.5T280-840q0-17 11.5-28.5T320-880h400q33 0 56.5 23.5T800-800v520q0 17-11.5 28.5T760-240q-17 0-28.5-11.5ZM240-640h320-320Z"
+                            /></svg
+                        >
+                    </div>
+                    <div class=" self-center truncate">Watchlist</div>
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="24px"
+                        viewBox="0 -960 960 960"
+                        width="24px"
+                        fill="currentColor"
+                        class="absolute right-0 size-5 opacity-0 {$user
+                            ? 'group-hover:opacity-100 group-hover:right-4'
+                            : ''} transition-all duration-100"
+                        ><path
+                            d="M646-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h446L532-634q-12-12-11.5-28t11.5-28q12-12 28.5-12.5T589-691l183 183q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L589-269q-12 12-28.5 11.5T532-270q-11-12-11.5-28t11.5-28l114-114Z"
+                        /></svg
+                    >
+                </DropdownMenu.Item>
+
+                <DropdownMenu.Item
+                    class="group flex rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-white/10 focus:bg-white/10 transition cursor-pointer outline-hidden"
                     onclick={async () => {
                         show = false;
 
@@ -76,7 +119,7 @@
                         viewBox="0 -960 960 960"
                         width="24px"
                         fill="currentColor"
-                        class="absolute right-4 size-5"
+                        class="absolute right-0 size-5 opacity-0 group-hover:opacity-100 group-hover:right-4 transition-all duration-100"
                         ><path
                             d="M646-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h446L532-634q-12-12-11.5-28t11.5-28q12-12 28.5-12.5T589-691l183 183q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L589-269q-12 12-28.5 11.5T532-270q-11-12-11.5-28t11.5-28l114-114Z"
                         /></svg

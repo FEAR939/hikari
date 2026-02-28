@@ -90,29 +90,6 @@
                 </button>
             {/if}
         </div>
-        <button
-            onclick={() => {
-                if ($showPlayer && !$miniPlayer) {
-                    miniPlayer.set(true);
-                }
-
-                goto("/watchlist");
-            }}
-            class="hover:bg-white/5 border-white/10 hover:border size-8 backdrop-blur-lg rounded-full flex items-center justify-center transition-colors duration-100 outline-hidden cursor-pointer"
-            aria-label="Watchlist"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                height="24px"
-                viewBox="0 -960 960 960"
-                width="24px"
-                fill="currentColor"
-                class="size-6"
-                ><path
-                    d="m400-200-182 91q-20 10-39-1.5T160-145v-495q0-33 23.5-56.5T240-720h320q33 0 56.5 23.5T640-640v495q0 23-19 34.5t-39 1.5l-182-91Zm-160-1 122-66q18-10 38-10t38 10l122 66v-439H240v439Zm491.5-50.5Q720-263 720-280v-520H320q-17 0-28.5-11.5T280-840q0-17 11.5-28.5T320-880h400q33 0 56.5 23.5T800-800v520q0 17-11.5 28.5T760-240q-17 0-28.5-11.5ZM240-640h320-320Z"
-                /></svg
-            >
-        </button>
         <NotificationsMenu>
             <div
                 class="relative size-8 backdrop-blur-lg flex items-center justify-center rounded-full hover:bg-white/5 ring-white/10 hover:ring transition-colors duration-100 cursor-pointer"
