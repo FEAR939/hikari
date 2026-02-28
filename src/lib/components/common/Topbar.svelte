@@ -98,7 +98,7 @@
 
                 goto("/watchlist");
             }}
-            class="hover:bg-white/5 border-white/10 hover:border size-8 rounded-full flex items-center justify-center transition-colors duration-100 outline-hidden cursor-pointer"
+            class="hover:bg-white/5 border-white/10 hover:border size-8 backdrop-blur-lg rounded-full flex items-center justify-center transition-colors duration-100 outline-hidden cursor-pointer"
             aria-label="Watchlist"
         >
             <svg
@@ -115,7 +115,7 @@
         </button>
         <NotificationsMenu>
             <div
-                class="relative size-8 flex items-center justify-center rounded-full hover:bg-white/5 ring-white/10 hover:ring transition-colors duration-100 cursor-pointer"
+                class="relative size-8 backdrop-blur-lg flex items-center justify-center rounded-full hover:bg-white/5 ring-white/10 hover:ring transition-colors duration-100 cursor-pointer"
                 aria-label="Notifications"
             >
                 <svg
@@ -144,7 +144,7 @@
         </NotificationsMenu>
         <UserMenu>
             <div
-                class="relative size-8 flex items-center justify-center rounded-full hover:bg-white/5 ring-white/10 hover:ring transition-colors duration-100 cursor-pointer"
+                class="relative size-8 backdrop-blur-lg flex items-center justify-center rounded-full hover:bg-white/5 ring-white/10 hover:ring transition-colors duration-100 cursor-pointer"
             >
                 {#if $user}
                     <img
