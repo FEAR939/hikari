@@ -56,17 +56,13 @@
 </script>
 
 <div class="h-full w-full bg-black">
-    <img
-        src="/background.jpg"
-        class="absolute h-full w-full object-cover object-center"
-        alt="Background"
-    />
     <div class="absolute inset-0 h-fit w-96 m-auto space-y-4">
-        <div class="mb-12">
-            <img src="/icon.png" class="mx-auto size-24" alt="Hikari Logo" />
-            <div class="w-fit text-2xl mx-auto">Welcome</div>
+        <div class="mb-12 space-y-2">
+            <div class="w-fit text-3xl font-semibold!">
+                {signState === "signup" ? "Sign Up" : "Sign In"}
+            </div>
 
-            <div class="flex gap-2 text-sm w-fit mx-auto">
+            <div class="flex gap-2 text-sm w-fit">
                 {#if signState === "signup"}
                     <span class="text-gray-500">Already have an account?</span>
                     <button
@@ -93,7 +89,7 @@
                 out:slide={{ duration: 300, easing: quintOut }}
             >
                 <div
-                    class="relative bg-black/30 px-4 py-3 rounded-xl w-full before:content-[''] before:absolute before:inset-1 before:rounded-lg hover:before:bg-white/10 focus-within:before:bg-white/10"
+                    class="relative bg-white/5 backdrop-blur-lg px-6 py-3 rounded-full w-full before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 focus-within:before:bg-white/10"
                 >
                     <input
                         bind:value={username}
@@ -106,7 +102,7 @@
         {/if}
         {#if ["signup", "signin"].includes(signState)}
             <div
-                class="relative bg-black/30 px-4 py-3 rounded-xl w-full before:content-[''] before:absolute before:inset-1 before:rounded-lg hover:before:bg-white/10 focus-within:before:bg-white/10"
+                class="relative bg-white/5 backdrop-blur-lg px-6 py-3 rounded-full w-full before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 focus-within:before:bg-white/10"
             >
                 <input
                     bind:value={email}
@@ -118,7 +114,7 @@
         {/if}
         {#if ["signup", "signin"].includes(signState)}
             <div
-                class="relative bg-black/30 px-4 py-3 rounded-xl w-full before:content-[''] before:absolute before:inset-1 before:rounded-lg hover:before:bg-white/10 focus-within:before:bg-white/10"
+                class="relative bg-white/5 backdrop-blur-lg px-6 py-3 rounded-full w-full before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 focus-within:before:bg-white/10"
             >
                 <input
                     bind:value={password}
@@ -158,6 +154,46 @@
                 </button>
             </div>
         {/if}
+        {#if ["signup"].includes(signState)}
+            <div
+                class="px-4 flex flex-wrap gap-x-4 text-xs"
+                in:slide={{ duration: 300, easing: quintOut }}
+                out:slide={{ duration: 300, easing: quintOut }}
+            >
+                <div
+                    class="flex items-center {password.trim().length >= 8
+                        ? 'text-green-500'
+                        : 'text-red-500'}"
+                >
+                    {#if password.trim().length >= 8}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="24px"
+                            viewBox="0 -960 960 960"
+                            width="24px"
+                            fill="currentColor"
+                            class="size-4"
+                            ><path
+                                d="m382-354 339-339q12-12 28-12t28 12q12 12 12 28.5T777-636L410-268q-12 12-28 12t-28-12L182-440q-12-12-11.5-28.5T183-497q12-12 28.5-12t28.5 12l142 143Z"
+                            /></svg
+                        >
+                    {:else}
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="24px"
+                            viewBox="0 -960 960 960"
+                            width="24px"
+                            fill="currentColor"
+                            class="size-4"
+                            ><path
+                                d="M480-424 284-228q-11 11-28 11t-28-11q-11-11-11-28t11-28l196-196-196-196q-11-11-11-28t11-28q11-11 28-11t28 11l196 196 196-196q11-11 28-11t28 11q11 11 11 28t-11 28L536-480l196 196q11 11 11 28t-11 28q-11 11-28 11t-28-11L480-424Z"
+                            /></svg
+                        >
+                    {/if}
+                    <span class="ml-2">Must be at least 8 characters long</span>
+                </div>
+            </div>
+        {/if}
         <button
             onclick={() => {
                 switch (signState) {
@@ -169,9 +205,9 @@
                         break;
                 }
             }}
-            class="text-black px-4 py-3 mt-8 rounded-xl w-full cursor-pointer outline-hidden {hasValues
-                ? 'bg-white hover:bg-gray-300 focus:bg-gray-300'
-                : 'bg-gray-500'}"
+            class="text-black px-4 py-3 mt-8 rounded-full w-full outline-hidden backdrop-blur-lg transition-colors duration-250 {hasValues
+                ? 'bg-white/90 hover:bg-gray-300/90 focus:bg-gray-300/90 cursor-pointer'
+                : 'bg-gray-500/90'}"
         >
             {signState === "signup" ? "Sign Up" : "Sign In"}
         </button>
