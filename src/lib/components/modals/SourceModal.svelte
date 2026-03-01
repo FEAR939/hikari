@@ -24,6 +24,7 @@
     import SourceMenu from "../common/SourceMenu.svelte";
     import Source from "../common/Source.svelte";
     import { toast } from "svelte-sonner";
+    import Spinner from "../common/Spinner.svelte";
 
     let currentIndex = $derived<number>($sourceInitialIndex);
     let currentEpisode = $state<null | KitsuEpisode>(null);
@@ -261,13 +262,18 @@
         playerSourceIndex.set(sourceIndex);
     }
 
+    let loading = $state(false);
+
     $effect(() => {
         if (currentIndex !== null && show) {
             (async () => {
                 sources = [];
+                loading = true;
                 await prepareLoad();
                 await loadLocal();
                 await loadExternal();
+
+                loading = false;
 
                 // This is for navigating the episodes in the player
 
@@ -498,6 +504,15 @@
                         }}
                     />
                 {/each}
+                {#if loading}
+                    <div class="py-6 flex justify-center">
+                        <Spinner />
+                    </div>
+                {:else if !loading && sources.length === 0}
+                    <div class="py-6 w-full text-center text-gray-500">
+                        No sources found
+                    </div>
+                {/if}
             </div>
         </div>
     </div></Modal
