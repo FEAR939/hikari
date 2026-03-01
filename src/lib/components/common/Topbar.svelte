@@ -92,7 +92,7 @@
         </div>
         <NotificationsMenu>
             <div
-                class="relative size-8 flex items-center justify-center rounded-full hover:bg-white/5 hover:ring-white/10 hover:backdrop-blur-lg hover:ring transition-all duration-100 cursor-pointer"
+                class="relative size-8 flex items-center justify-center rounded-full hover:bg-black/30 hover:ring-white/10 hover:backdrop-blur-lg hover:ring transition-all duration-100 cursor-pointer"
                 aria-label="Notifications"
             >
                 <svg
