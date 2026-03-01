@@ -47,7 +47,7 @@
                         </div>
                     </div>
 
-                    <DropdownMenu.Separator />
+                    <hr class=" border-white/10 my-1 p-0" />
                 {/if}
 
                 <DropdownMenu.Item
@@ -104,7 +104,7 @@
                     <div class=" self-center truncate">Settings</div>
                 </DropdownMenu.Item>
 
-                <DropdownMenu.Separator />
+                <hr class=" border-white/10 my-1 p-0" />
 
                 <DropdownMenu.Item
                     class="flex rounded-xl py-1.5 px-3 w-full text-white hover:bg-gray-50 dark:hover:bg-white/10 focus:bg-white/10 transition cursor-pointer outline-hidden"
