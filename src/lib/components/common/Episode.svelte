@@ -98,7 +98,7 @@
 
         <DropdownMenu.Root bind:open={show}>
             <DropdownMenu.Trigger
-                class="absolute {episode.leftoff !== 0
+                class="absolute z-100 {episode.leftoff !== 0
                     ? 'bottom-5'
                     : 'bottom-0'} right-0"
             >
