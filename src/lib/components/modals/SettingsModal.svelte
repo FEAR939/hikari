@@ -9,16 +9,56 @@
 
     let { show = $bindable(false) } = $props();
 
+    let query = $state("");
+
     const settingsCategories = [
-        { id: "general", label: "General" },
-        { id: "client", label: "Client" },
-        { id: "extensions", label: "Extensions" },
-        { id: "developer", label: "Developer" },
-        { id: "account", label: "Account" },
-        { id: "about", label: "About" },
+        {
+            id: "general",
+            label: "General",
+            keywords: ["language"],
+        },
+        {
+            id: "client",
+            label: "Client",
+            keywords: ["local", "media", "api", "server"],
+        },
+        {
+            id: "extensions",
+            label: "Extensions",
+            keywords: ["install", "update", "remove"],
+        },
+        {
+            id: "developer",
+            label: "Developer",
+            keywords: ["dev", "devtools", "debug", "cache"],
+        },
+        {
+            id: "account",
+            label: "Account",
+            keywords: ["profile"],
+        },
+        {
+            id: "about",
+            label: "About",
+            keywords: ["version", "github"],
+        },
     ];
 
-    let activeCategory = $state(settingsCategories[0]);
+    let filteredCategories = $state([]);
+
+    let activeCategory = $derived(
+        filteredCategories[0] ?? settingsCategories[0],
+    );
+
+    $effect(() => {
+        filteredCategories = settingsCategories.filter(
+            (category) =>
+                category.label.toLowerCase().includes(query.toLowerCase()) ||
+                category.keywords.some((keyword) =>
+                    keyword.toLowerCase().includes(query.toLowerCase()),
+                ),
+        );
+    });
 </script>
 
 <Modal bind:show class="z-3333">
@@ -83,9 +123,10 @@
                         id="search-input-settings-modal"
                         class="w-full py-1 text-sm bg-transparent outline-hidden"
                         placeholder="Search"
+                        bind:value={query}
                     />
                 </div>
-                {#each settingsCategories as category}
+                {#each filteredCategories as category}
                     <button
                         role="tab"
                         class="px-0.5 md:px-2.5 py-1 min-w-fit rounded-xl flex-1 md:flex-none flex text-left transition outline-hidden {category.id ===
@@ -206,6 +247,13 @@
                         <div class=" self-center">{category.label}</div>
                     </button>
                 {/each}
+                {#if filteredCategories.length === 0}
+                    <div
+                        class="p-4 text-center text-gray-500 dark:text-gray-400"
+                    >
+                        No results found
+                    </div>
+                {/if}
             </div>
             <div
                 class="flex-1 px-3.5 md:pl-0 md:pr-4.5 md:min-h-[42rem] max-h-[42rem]"
