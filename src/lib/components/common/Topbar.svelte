@@ -34,7 +34,7 @@
         transition:fade={{ duration: 100 }}
     >
         <div
-            class="absolute left-0 right-0 mx-auto h-8 w-sm px-3 bg-white/5 outline outline-white/10 backdrop-blur-lg rounded-full flex items-center gap-x-2"
+            class="absolute left-0 right-0 mx-auto h-8 w-sm px-3 bg-black/30 outline outline-white/10 backdrop-blur-lg rounded-full flex items-center gap-x-2"
         >
             <svg
                 width="100%"
@@ -92,7 +92,7 @@
         </div>
         <NotificationsMenu>
             <div
-                class="relative size-8 backdrop-blur-lg flex items-center justify-center rounded-full hover:bg-white/5 ring-white/10 hover:ring transition-colors duration-100 cursor-pointer"
+                class="relative size-8 flex items-center justify-center rounded-full hover:bg-white/5 hover:ring-white/10 hover:backdrop-blur-lg hover:ring transition-all duration-100 cursor-pointer"
                 aria-label="Notifications"
             >
                 <svg
@@ -121,7 +121,7 @@
         </NotificationsMenu>
         <UserMenu>
             <div
-                class="relative size-8 backdrop-blur-lg flex items-center justify-center rounded-full hover:bg-white/5 ring-white/10 hover:ring transition-colors duration-100 cursor-pointer"
+                class="relative size-8 backdrop-blur-lg flex items-center justify-center rounded-full hover:bg-black/30 ring-white/10 hover:ring transition-colors duration-100 cursor-pointer"
             >
                 {#if $user}
                     <img
