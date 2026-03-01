@@ -30,7 +30,7 @@
 
 {#if show}
     <div
-        class="fixed z-2222 top-0 left-14 right-0 flex gap-1 items-center justify-end h-12 [app-region:drag] [&_*]:[app-region:none]"
+        class="fixed z-2222 top-0 left-14 right-0 flex gap-2 items-center justify-end h-12 [app-region:drag] [&_*]:[app-region:none]"
         transition:fade={{ duration: 100 }}
     >
         <div
