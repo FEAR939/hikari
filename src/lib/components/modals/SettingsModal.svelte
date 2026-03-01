@@ -6,6 +6,7 @@
     import Account from "../Settings/Account.svelte";
     import About from "../Settings/About.svelte";
     import General from "../Settings/General.svelte";
+    import { fade } from "svelte/transition";
 
     let { show = $bindable(false) } = $props();
 
@@ -98,7 +99,7 @@
                 class="tabs flex flex-row overflow-x-auto gap-2.5 mx-3 md:pr-4 md:gap-1 md:flex-col flex-1 md:flex-none md:w-50 md:min-h-[42rem] md:max-h-[42rem] dark:text-gray-200 text-sm text-left mb-1 md:mb-0 -translate-y-1"
             >
                 <div
-                    class="hidden md:flex w-full rounded-full px-2.5 gap-2 border border-white/10 my-1 mb-1.5"
+                    class="relative flex items-center w-full rounded-full px-2.5 gap-2 border border-white/10 my-1 mb-1.5"
                 >
                     <div class="self-center rounded-l-xl bg-transparent">
                         <svg
@@ -125,6 +126,26 @@
                         placeholder="Search"
                         bind:value={query}
                     />
+                    {#if query.length > 0}
+                        <button
+                            class="absolute right-1.5 outline-hidden size-4 rounded-full bg-white text-black flex items-center justify-center cursor-pointer"
+                            transition:fade={{ duration: 100 }}
+                            onclick={() => (query = "")}
+                            aria-label="Clear search"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                height="24px"
+                                viewBox="0 -960 960 960"
+                                width="24px"
+                                fill="currentColor"
+                                class="size-4"
+                                ><path
+                                    d="M480-424 364-308q-11 11-28 11t-28-11q-11-11-11-28t11-28l116-116-116-115q-11-11-11-28t11-28q11-11 28-11t28 11l116 116 115-116q11-11 28-11t28 11q12 12 12 28.5T651-595L535-480l116 116q11 11 11 28t-11 28q-12 12-28.5 12T595-308L480-424Z"
+                                /></svg
+                            >
+                        </button>
+                    {/if}
                 </div>
                 {#each filteredCategories as category}
                     <button
