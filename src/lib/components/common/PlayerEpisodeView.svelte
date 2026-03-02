@@ -42,7 +42,9 @@
         const episodesPerPage = 15;
 
         const [episodesObj, episodesProgress] = await Promise.all([
-            await kitsu.getEpisodesPagination(anime.id, page, episodesPerPage),
+            await kitsu
+                .getEpisodesPagination(anime.id, page, episodesPerPage)
+                .sort((a, b) => a.attributes.number - b.attributes.number),
             $user && false
                 ? await API.getAnimeProgress(
                       anime.id,
