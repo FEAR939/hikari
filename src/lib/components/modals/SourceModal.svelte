@@ -394,7 +394,7 @@
                                     getEpisodeTitle(currentEpisode)) ||
                                 `Episode ${currentEpisode?.attributes.number}`}
                         </div>
-                        <div class="w-full text-sm text-gray-300">
+                        <div class="w-full text-sm text-gray-300 line-clamp-3">
                             {currentEpisode?.anizip?.overview ||
                                 currentEpisode?.attributes?.description ||
                                 ""}
