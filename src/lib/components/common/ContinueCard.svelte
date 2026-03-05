@@ -148,12 +148,12 @@
             </div>
             <div class="flex divide-x divide-gray-700">
                 <div
-                    class="text-gray-400 max-w-2/3 text-sm truncate pr-2"
+                    class="text-gray-400 max-w-full text-sm truncate pr-2"
                     title={getSeriesTitle(episode.anime.anime)}
                 >
                     {getSeriesTitle(episode.anime.anime)}
                 </div>
-                <div class="text-gray-400 max-w-1/3 text-sm truncate px-2">
+                <div class="text-gray-400 min-w-fit text-sm truncate px-2">
                     {`Episode ${episode.episode.attributes.number}`}
                 </div>
             </div>
