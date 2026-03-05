@@ -15,6 +15,14 @@
     let Anizip = $state({});
     let accentColor = $state([]);
 
+    const title = $derived(
+        (Anizip?.episodes?.[episode?.episode?.attributes.number] &&
+            Anizip?.episodes?.[episode?.episode?.attributes.number].title
+                ?.en) ||
+            getEpisodeTitle(episode.episode) ||
+            `Episode ${episode.episode.attributes.number}`,
+    );
+
     function getTimePercentage(time1: number, time2: number) {
         return (time2 / time1) * 100;
     }
@@ -135,15 +143,14 @@
         </div>
 
         <div class="mt-2 font-medium space-y-1">
-            <div class="text-white truncate">
-                {(Anizip?.episodes?.[episode?.episode?.attributes.number] &&
-                    Anizip?.episodes?.[episode?.episode?.attributes.number]
-                        .title?.en) ||
-                    getEpisodeTitle(episode.episode) ||
-                    `Episode ${episode.episode.attributes.number}`}
+            <div class="text-white truncate" {title}>
+                {title}
             </div>
             <div class="flex divide-x divide-gray-700">
-                <div class="text-gray-400 max-w-2/3 text-sm truncate pr-2">
+                <div
+                    class="text-gray-400 max-w-2/3 text-sm truncate pr-2"
+                    title={getSeriesTitle(episode.anime.anime)}
+                >
                     {getSeriesTitle(episode.anime.anime)}
                 </div>
                 <div class="text-gray-400 max-w-1/3 text-sm truncate px-2">

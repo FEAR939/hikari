@@ -141,7 +141,10 @@
 
         {#if options.showTitle}
             <div class="mt-2 font-medium space-y-1">
-                <div class="text-white line-clamp-2">
+                <div
+                    class="text-white line-clamp-2"
+                    title={getSeriesTitle(item)}
+                >
                     {getSeriesTitle(item)}
                 </div>
                 {#if options.showRelationType && item.relationType}
