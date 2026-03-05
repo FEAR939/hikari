@@ -283,7 +283,8 @@
                             class="relative flex-1 p-4 pt-20 space-y-2 md:space-y-4 overflow-hidden"
                         >
                             <h1
-                                class="w-full text-white text-shadow-2xl text-xl md:text-6xl tracking-[-4px] font-semibold! flex items-center space-x-4 truncate leading-tight"
+                                class="flex-1 text-white text-shadow-2xl text-xl md:text-6xl tracking-[-4px] font-semibold! truncate leading-tight"
+                                title={getSeriesTitle(data.animeObj.anime)}
                             >
                                 {getSeriesTitle(data.animeObj.anime)}
                             </h1>
