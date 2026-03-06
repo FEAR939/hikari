@@ -47,7 +47,7 @@
       "category": "Utility"
     },
     "directories": {
-      "output": "binary"
+      "output": "bin"
     },
     "publish": [
       {

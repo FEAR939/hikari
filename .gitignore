@@ -10,7 +10,7 @@ package-lock.json
 .wrangler
 /.svelte-kit
 /build
-/binary
+/bin
 /electron-dist
 
 # OS
