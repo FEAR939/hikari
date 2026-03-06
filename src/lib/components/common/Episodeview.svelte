@@ -19,7 +19,7 @@
 
     async function episodeHandler(anime: KitsuAnime, page: number) {
         isLoading = true;
-        const episodesPerPage = 15;
+        const episodesPerPage = Math.min(15, anime.attributes.episodeCount!);
 
         const [episodesObj, episodesProgress] = await Promise.all([
             (

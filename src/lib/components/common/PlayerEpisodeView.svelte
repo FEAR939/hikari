@@ -16,6 +16,7 @@
         getSeriesBackdrop,
         getSeriesPoster,
     } from "$lib/kitsu";
+    import type { KitsuAnime } from "$lib/kitsu";
     import { getAPIClient } from "$lib/api";
     import Pagecontrols from "./Pagecontrols.svelte";
     import Spinner from "./Spinner.svelte";
@@ -39,7 +40,7 @@
 
     async function episodeHandler(anime: KitsuAnime, page: number) {
         isLoading = true;
-        const episodesPerPage = 15;
+        const episodesPerPage = Math.min(15, anime.attributes.episodeCount!);
 
         const [episodesObj, episodesProgress] = await Promise.all([
             await kitsu
