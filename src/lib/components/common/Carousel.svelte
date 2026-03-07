@@ -4,7 +4,7 @@
         getSeriesBackdrop,
         getSeriesPoster,
     } from "$lib/kitsu";
-    import ColorThief from "colorthief";
+    import { getPalette } from "colorthief";
     import { pageScrollPosition } from "$lib/stores";
 
     let { slides, hasScrolled = $bindable(false) } = $props();
@@ -39,8 +39,7 @@
 
     function extractAccentColor(img: HTMLImageElement) {
         if (!img) return;
-        const colorThief = new ColorThief();
-        const palette = colorThief.getPalette(img, 8);
+        const palette = getPalette(img, 8);
         let bestColor = palette[0];
         let bestScore = -1;
 

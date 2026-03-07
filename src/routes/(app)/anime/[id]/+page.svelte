@@ -24,7 +24,7 @@
     import { fade } from "svelte/transition";
     import Star from "$lib/components/common/Star.svelte";
     import { goto } from "$app/navigation";
-    import ColorThief from "colorthief";
+    import { getPalette } from "colorthief";
     import Trailer from "$lib/components/common/Trailer.svelte";
     import TrailerModal from "$lib/components/modals/TrailerModal.svelte";
     import { anizip } from "$lib/anizip";
@@ -197,12 +197,7 @@
 
                                         if (!img) return;
 
-                                        const colorThief = new ColorThief();
-
-                                        const palette = colorThief.getPalette(
-                                            img,
-                                            8,
-                                        );
+                                        const palette = getPalette(img, 8);
 
                                         let bestColor = palette[0];
                                         let bestScore = -1;

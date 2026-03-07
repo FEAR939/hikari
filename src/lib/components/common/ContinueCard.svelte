@@ -8,7 +8,7 @@
     import { anizip } from "$lib/anizip";
     import { onMount } from "svelte";
     import { cache } from "$lib/cache/cache";
-    import ColorThief from "colorthief";
+    import { getPalette } from "colorthief";
 
     let { episode, onclick = () => {}, class: className = "" } = $props();
 
@@ -72,9 +72,7 @@
 
                     if (!img) return;
 
-                    const colorThief = new ColorThief();
-
-                    const palette = colorThief.getPalette(img, 8);
+                    const palette = getPalette(img, 8);
 
                     let bestColor = palette[0];
                     let bestScore = -1;

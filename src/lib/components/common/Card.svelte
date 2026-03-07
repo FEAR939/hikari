@@ -11,7 +11,6 @@
         getSeriesTitle,
         type KitsuAnime,
     } from "$lib/kitsu";
-    import ColorThief from "colorthief";
 
     let API = getAPIClient();
 
