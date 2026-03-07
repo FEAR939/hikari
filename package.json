@@ -21,16 +21,16 @@
   "devDependencies": {
     "@types/colorthief": "^2.6.1",
     "@types/mime-types": "^3.0.1",
-    "@types/node": "^25.3.2",
+    "@types/node": "^25.3.5",
     "@sveltejs/adapter-auto": "^7.0.1",
     "@sveltejs/adapter-static": "^3.0.10",
-    "@sveltejs/kit": "^2.53.2",
+    "@sveltejs/kit": "^2.53.4",
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "@tailwindcss/vite": "^4.2.1",
     "electron-builder": "^26.8.1",
-    "electron": "^40.6.1",
+    "electron": "^40.8.0",
     "rolldown-vite": "^7.3.1",
-    "svelte": "^5.53.5",
+    "svelte": "^5.53.7",
     "svelte-check": "^4.4.4",
     "tailwindcss": "^4.2.1",
     "typescript": "^5.9.3"
@@ -81,15 +81,15 @@
     ]
   },
   "dependencies": {
-    "better-auth": "^1.4.19",
-    "bits-ui": "^2.16.2",
+    "better-auth": "^1.5.4",
+    "bits-ui": "^2.16.3",
     "clsx": "^2.1.1",
-    "colorthief": "^2.6.0",
+    "colorthief": "^3.3.1",
     "electron-store": "^11.0.2",
     "electron-updater": "^6.8.3",
     "jszip": "^3.10.1",
     "mime-types": "^3.0.2",
-    "svelte-sonner": "^1.0.7",
+    "svelte-sonner": "^1.0.8",
     "tailwind-merge": "^3.5.0"
   }
 }
