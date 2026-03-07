@@ -54,7 +54,6 @@
                     $hasMore &&
                     $user
                 ) {
-                    console.log("Sentinel visible, loading next page");
                     loadNextPage();
                 }
             },
