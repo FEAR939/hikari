@@ -19,6 +19,7 @@
         video,
         episodeNumber,
         episodeTitle,
+        chapters,
         show = $bindable(false),
     } = $props();
 
@@ -29,6 +30,16 @@
     let isFullscreen = $state(false);
     let toggleRemainingTime = $state(false);
 
+    let intro = $derived(
+        chapters.find((chapter) => chapter.title === "Opening"),
+    );
+    let outro = $derived(
+        chapters.find((chapter) => chapter.title === "Ending"),
+    );
+
+    let intro_active = $state(false);
+    let outro_active = $state(false);
+
     video.addEventListener("pause", () => {
         isPaused = true;
     });
@@ -37,8 +48,65 @@
         isPaused = false;
     });
 
+    let skiptimeout = null;
+    let preventSkip = false;
+
     video.addEventListener("timeupdate", () => {
         playTime = video.currentTime;
+
+        if (
+            intro &&
+            !preventSkip &&
+            parseFloat(intro.start_time) < parseFloat(playTime) &&
+            parseFloat(intro.start_time) + 5 > parseFloat(playTime)
+        ) {
+            intro_active = true;
+
+            if (skiptimeout === null) {
+                if (preventSkip || video.paused) {
+                    preventSkip = false;
+                    skiptimeout = null;
+                    return;
+                }
+                skiptimeout = setTimeout(() => {
+                    video.currentTime = parseInt(intro.end_time);
+                    skiptimeout = null;
+                    intro_active = false;
+                }, 5000);
+            }
+        } else {
+            intro_active = false;
+        }
+
+        if (
+            outro &&
+            !preventSkip &&
+            parseFloat(outro.start_time) < parseFloat(playTime) &&
+            parseFloat(outro.start_time) + 5 > parseFloat(playTime)
+        ) {
+            outro_active = true;
+
+            if (skiptimeout === null) {
+                skiptimeout = setTimeout(() => {
+                    if (preventSkip || video.paused) {
+                        preventSkip = false;
+                        skiptimeout = null;
+                        return;
+                    }
+                    if (
+                        $playerEpisode.number ===
+                        $playerAnime.attributes.episodeCount
+                    )
+                        return;
+
+                    sourceInitialIndex.set($playerEpisode.number);
+                    skiptimeout = null;
+                    outro_active = false;
+                }, 5000);
+            }
+        } else {
+            outro_active = false;
+        }
     });
 
     function handleVolumeChange(value: number) {
@@ -163,13 +231,35 @@
 
 <svelte:window onkeydown={handleKeyDown} />
 
+{#if intro_active || outro_active}
+    <button
+        class="absolute outline-hidden px-4 py-2 bg-white rounded-full overflow-hidden {show
+            ? 'bottom-24'
+            : 'bottom-12'} right-4 flex items-center gap-2 z-9999 cursor-pointer"
+        transition:fade={{ duration: 100 }}
+        onclick={() => {
+            preventSkip = true;
+        }}
+    >
+        <div
+            class="absolute left-0 -z-1 h-full bg-gray-300 animate-grow-right"
+        ></div>
+        {#if intro_active}
+            <span class="text-sm">Skip Ahead</span>
+        {/if}
+        {#if outro_active}
+            <span class="text-sm">Next Episode</span>
+        {/if}
+    </button>
+{/if}
+
 {#if show}
     <div
         class="absolute left-0 right-0 bottom-0 h-fit p-3 space-y-2 text-white"
         transition:fade={{ duration: 100 }}
     >
         {#if video}
-            <PlayerSeekbar {video} />
+            <PlayerSeekbar {video} {chapters} />
         {/if}
         <div class="flex gap-2">
             <Tooltip.Provider>
@@ -611,3 +701,18 @@
         </div>
     </div>
 {/if}
+
+<style>
+    @keyframes grow-right {
+        from {
+            width: 0%;
+        }
+        to {
+            width: 100%;
+        }
+    }
+
+    .animate-grow-right {
+        animation: grow-right 5s linear forwards;
+    }
+</style>

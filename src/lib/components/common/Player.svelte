@@ -25,6 +25,8 @@
 
     let showOverlay = $state(true);
 
+    let chapters = $state([]);
+
     $effect(() => {
         if (show && playerElement!) {
             document.body.appendChild(playerElement);
@@ -53,6 +55,14 @@
 
             currentSource = proxiedUrl;
 
+            // load chapters for local files only
+            if (
+                !source?.file_url.startsWith("http") &&
+                !source?.file_url.startsWith("https")
+            ) {
+                loadChapters(source);
+            }
+
             return () => {
                 syncProgress();
                 showTopbar.set(true);
@@ -62,6 +72,16 @@
             };
         }
     });
+
+    async function loadChapters(source) {
+        const metadata = await window.electronAPI.getLocalMediaMetadata(
+            source.file_url,
+        );
+
+        chapters = metadata.chapters;
+
+        console.log(chapters);
+    }
 
     async function syncProgress() {
         if (!$user || !videoElement!) return;
@@ -157,6 +177,7 @@
                     video={videoElement}
                     episodeNumber={$playerEpisode?.number}
                     episodeTitle={$playerEpisode?.title}
+                    {chapters}
                     bind:show={showOverlay}
                 />
                 <PlayerEpisodeView bind:show={$playerShowEpisodes} />

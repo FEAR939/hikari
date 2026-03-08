@@ -4,8 +4,9 @@
         playerSources,
         playerSourceIndex,
     } from "$lib/stores";
-    let { video } = $props();
+    let { video, chapters } = $props();
     let playProgress = $state(0);
+    let playSeconds = $state(0);
     let seekProgress = $state(0);
     let seekSec = $state(0);
     let bufferProgress = $state(0);
@@ -57,6 +58,7 @@
         const duration = video.duration || 0;
 
         playProgress = (currentTime / duration) * 100;
+        playSeconds = currentTime;
     });
 
     video.addEventListener("progress", () => {
@@ -124,39 +126,86 @@
     role="slider"
     aria-valuenow={seekSec}
     tabindex="-1"
-    class="group/seekbar relative w-full h-1 rounded-full bg-gray-900/50 cursor-pointer hover:h-2 hover:translate-y-1/4 transition-all duration-250"
+    class="group/seekbar relative w-full h-1 cursor-pointer {chapters.length < 0
+        ? 'rounded-full bg-gray-900/50 hover:h-2 hover:translate-y-1/4'
+        : ''} transition-all duration-250"
 >
-    <div
-        class="absolute top-0 left-0 flex items-center h-full bg-gray-600 rounded-full transition"
-        style:width={bufferProgress + "%"}
-    ></div>
-    <div
-        class="absolute top-0 left-0 flex items-center h-full bg-gray-400 rounded-full transition"
-        style:width={seekProgress + "%"}
-    >
-        {#if seekProgress > 0 && seekThumbnailEnabled() && thumbnail}
-            <div
-                class="absolute bottom-14 right-0 translate-x-1/2 h-32 aspect-video rounded-lg bg-black outline-offset-2 outline outline-white overflow-hidden"
-            >
-                <img src={thumbnail} class="h-full w-full object-cover" />
-            </div>
-        {/if}
-        {#if seekProgress > 0}
-            <div
-                class="absolute bottom-4 right-0 translate-x-1/2 h-fit px-3 py-1 rounded-full bg-black/30 backdrop-blur-lg text-sm"
-            >
-                {new Date(seekSec * 1000).toISOString().substring(14, 19)}
-            </div>
-        {/if}
-    </div>
-    <div
-        class="absolute top-0 left-0 flex items-center h-full shadow-xl rounded-full transition"
-        style:background="rgb({$currentAnimeAccentColor?.join(',')})"
-        style:width={playProgress + "%"}
-    >
+    {#if chapters < 0}
         <div
-            class="absolute left-[100%] -translate-x-1/2 size-2.5 rounded-full shrink-0 group-hover/seekbar:size-5 transition-all duration-250"
-            style:background="rgb({$currentAnimeAccentColor?.join(',')})"
+            class="absolute top-0 left-0 flex items-center h-full bg-gray-600 rounded-full transition"
+            style:width={bufferProgress + "%"}
         ></div>
-    </div>
+        <div
+            class="absolute top-0 left-0 flex items-center h-full bg-gray-400 rounded-full transition"
+            style:width={seekProgress + "%"}
+        >
+            {#if seekProgress > 0 && seekThumbnailEnabled() && thumbnail}
+                <div
+                    class="absolute bottom-14 right-0 translate-x-1/2 h-32 aspect-video rounded-lg bg-black outline-offset-2 outline outline-white overflow-hidden"
+                >
+                    <img src={thumbnail} class="h-full w-full object-cover" />
+                </div>
+            {/if}
+            {#if seekProgress > 0}
+                <div
+                    class="absolute bottom-4 right-0 translate-x-1/2 h-fit px-3 py-1 rounded-full bg-black/30 backdrop-blur-lg text-sm"
+                >
+                    {new Date(seekSec * 1000).toISOString().substring(14, 19)}
+                </div>
+            {/if}
+        </div>
+        <div
+            class="absolute top-0 left-0 flex items-center h-full shadow-xl rounded-full transition"
+            style:background="rgb({$currentAnimeAccentColor?.join(',')})"
+            style:width={playProgress + "%"}
+        >
+            <div
+                class="absolute left-[100%] -translate-x-1/2 size-2.5 rounded-full shrink-0 group-hover/seekbar:size-5 transition-all duration-250"
+                style:background="rgb({$currentAnimeAccentColor?.join(',')})"
+            ></div>
+        </div>
+    {:else}
+        <div class="relative h-full w-full flex gap-1">
+            {#each chapters as chapter, idx}
+                <div
+                    class="h-1 hover:h-2 hover:-translate-y-1/4 transition-all {idx ===
+                    0
+                        ? 'rounded-l-full'
+                        : ''} {idx === chapters.length - 1
+                        ? 'rounded-r-full'
+                        : ''} bg-gray-900/50"
+                    style:width={((chapter.end_time - chapter.start_time) /
+                        video.duration) *
+                        100 +
+                        "%"}
+                >
+                    <div
+                        class="h-full"
+                        style:background="rgb({$currentAnimeAccentColor?.join(
+                            ',',
+                        )})"
+                        style:width={playSeconds >= chapter.end_time
+                            ? 100 + "%"
+                            : playSeconds <= chapter.start_time
+                              ? 0 + "%"
+                              : ((playSeconds - chapter.start_time) /
+                                    (chapter.end_time - chapter.start_time)) *
+                                    100 +
+                                "%"}
+                    ></div>
+                </div>
+            {/each}
+            <div
+                class="absolute top-0 left-0 flex items-center h-full"
+                style:width={playProgress + "%"}
+            >
+                <div
+                    class="absolute left-[100%] -translate-x-1/2 size-2.5 rounded-full shrink-0 group-hover/seekbar:size-5 transition-all duration-250"
+                    style:background="rgb({$currentAnimeAccentColor?.join(
+                        ',',
+                    )})"
+                ></div>
+            </div>
+        </div>
+    {/if}
 </div>
