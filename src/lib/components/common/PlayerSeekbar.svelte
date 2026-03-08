@@ -10,6 +10,7 @@
     let seekProgress = $state(0);
     let seekSec = $state(0);
     let bufferProgress = $state(0);
+    let bufferSec = $state(0);
     let dragging = $state(false);
     let seekbarEl: HTMLDivElement;
 
@@ -67,6 +68,7 @@
             const duration = video.duration || 0;
 
             bufferProgress = (buffered / duration) * 100;
+            bufferSec = buffered;
         }
     });
 
@@ -95,14 +97,21 @@
     }
 
     function handleMouseMove(e: MouseEvent) {
-        if (e.target === seekbarEl || e.target.parentElement === seekbarEl) {
+        if (
+            e.target === seekbarEl ||
+            e.target.parentElement === seekbarEl ||
+            seekbarEl.contains(e.target)
+        ) {
             updateSeekVisual(e);
         } else {
             seekProgress = 0;
+            seekSec = 0;
         }
 
         if (
-            (e.target === seekbarEl || e.target.parentElement === seekbarEl) &&
+            (e.target === seekbarEl ||
+                e.target.parentElement === seekbarEl ||
+                seekbarEl.contains(e.target)) &&
             seekThumbnailEnabled()
         ) {
             throttledGetSeekThumbnail(
@@ -168,7 +177,7 @@
         <div class="relative h-full w-full flex gap-1">
             {#each chapters as chapter, idx}
                 <div
-                    class="h-1 hover:h-2 hover:-translate-y-1/4 transition-all {idx ===
+                    class="relative h-1 hover:h-2 hover:-translate-y-1/4 transition-all {idx ===
                     0
                         ? 'rounded-l-full'
                         : ''} {idx === chapters.length - 1
@@ -180,7 +189,29 @@
                         "%"}
                 >
                     <div
-                        class="h-full"
+                        class="absolute h-full bg-gray-600 transition"
+                        style:width={bufferSec >= chapter.end_time
+                            ? 100 + "%"
+                            : bufferSec <= chapter.start_time
+                              ? 0 + "%"
+                              : ((bufferSec - chapter.start_time) /
+                                    (chapter.end_time - chapter.start_time)) *
+                                    100 +
+                                "%"}
+                    ></div>
+                    <div
+                        class="absolute h-full bg-gray-400 transition"
+                        style:width={seekSec >= chapter.end_time
+                            ? 100 + "%"
+                            : seekSec <= chapter.start_time
+                              ? 0 + "%"
+                              : ((seekSec - chapter.start_time) /
+                                    (chapter.end_time - chapter.start_time)) *
+                                    100 +
+                                "%"}
+                    ></div>
+                    <div
+                        class="absolute h-full"
                         style:background="rgb({$currentAnimeAccentColor?.join(
                             ',',
                         )})"
@@ -195,6 +226,30 @@
                     ></div>
                 </div>
             {/each}
+            <div
+                class="absolute top-0 left-0 flex items-center h-full"
+                style:width={seekProgress + "%"}
+            >
+                {#if seekProgress > 0 && seekThumbnailEnabled() && thumbnail}
+                    <div
+                        class="absolute bottom-14 right-0 translate-x-1/2 h-32 aspect-video rounded-lg bg-black outline-offset-2 outline outline-white overflow-hidden"
+                    >
+                        <img
+                            src={thumbnail}
+                            class="h-full w-full object-cover"
+                        />
+                    </div>
+                {/if}
+                {#if seekProgress > 0}
+                    <div
+                        class="absolute bottom-4 right-0 translate-x-1/2 h-fit px-3 py-1 rounded-full bg-black/30 backdrop-blur-lg text-sm"
+                    >
+                        {new Date(seekSec * 1000)
+                            .toISOString()
+                            .substring(14, 19)}
+                    </div>
+                {/if}
+            </div>
             <div
                 class="absolute top-0 left-0 flex items-center h-full"
                 style:width={playProgress + "%"}
