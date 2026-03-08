@@ -79,8 +79,6 @@
         );
 
         chapters = metadata.chapters;
-
-        console.log(chapters);
     }
 
     async function syncProgress() {
