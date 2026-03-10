@@ -135,11 +135,12 @@
     role="slider"
     aria-valuenow={seekSec}
     tabindex="-1"
-    class="group/seekbar relative w-full h-1 cursor-pointer {chapters.length < 0
+    class="group/seekbar relative w-full h-1 cursor-pointer {chapters.length ===
+    0
         ? 'rounded-full bg-gray-900/50 hover:h-2 hover:translate-y-1/4'
         : ''} transition-all duration-250"
 >
-    {#if chapters < 0}
+    {#if chapters.length === 0}
         <div
             class="absolute top-0 left-0 flex items-center h-full bg-gray-600 rounded-full transition"
             style:width={bufferProgress + "%"}
