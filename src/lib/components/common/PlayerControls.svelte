@@ -49,47 +49,49 @@
     });
 
     let skiptimeout = null;
+    let skiptime = 10000; // cancel time in milliseconds
     let preventSkip = false;
 
     video.addEventListener("timeupdate", () => {
         playTime = video.currentTime;
 
+        if (video.paused) return;
+
         if (
             intro &&
             !preventSkip &&
             parseFloat(intro.start_time) < parseFloat(playTime) &&
-            parseFloat(intro.start_time) + 5 > parseFloat(playTime)
+            parseFloat(intro.start_time) + 1 > parseFloat(playTime)
         ) {
             intro_active = true;
 
             if (skiptimeout === null) {
-                if (preventSkip || video.paused) {
-                    preventSkip = false;
-                    skiptimeout = null;
-                    return;
-                }
                 skiptimeout = setTimeout(() => {
+                    if (video.paused) {
+                        // Also guard inside the callback
+                        skiptimeout = null;
+                        return;
+                    }
                     video.currentTime = parseInt(intro.end_time);
+                    clearTimeout(skiptimeout);
                     skiptimeout = null;
                     intro_active = false;
-                }, 5000);
+                }, skiptime);
             }
-        } else {
-            intro_active = false;
         }
 
         if (
             outro &&
             !preventSkip &&
             parseFloat(outro.start_time) < parseFloat(playTime) &&
-            parseFloat(outro.start_time) + 5 > parseFloat(playTime)
+            parseFloat(outro.start_time) + 1 > parseFloat(playTime)
         ) {
             outro_active = true;
 
             if (skiptimeout === null) {
                 skiptimeout = setTimeout(() => {
-                    if (preventSkip || video.paused) {
-                        preventSkip = false;
+                    if (video.paused) {
+                        // Also guard inside the callback
                         skiptimeout = null;
                         return;
                     }
@@ -100,11 +102,35 @@
                         return;
 
                     sourceInitialIndex.set($playerEpisode.number);
+                    clearTimeout(skiptimeout);
                     skiptimeout = null;
                     outro_active = false;
-                }, 5000);
+                }, skiptime);
             }
-        } else {
+        }
+
+        if (video.ended) {
+            if ($playerEpisode.number === $playerAnime.attributes.episodeCount)
+                return;
+
+            sourceInitialIndex.set($playerEpisode.number);
+        }
+    });
+
+    video.addEventListener("pause", () => {
+        if (video.paused) {
+            clearTimeout(skiptimeout);
+            skiptimeout = null;
+            intro_active = false;
+            outro_active = false;
+        }
+    });
+
+    video.addEventListener("play", () => {
+        if (!video.paused) {
+            clearTimeout(skiptimeout);
+            skiptimeout = null;
+            intro_active = false;
             outro_active = false;
         }
     });
@@ -239,10 +265,15 @@
         transition:fade={{ duration: 100 }}
         onclick={() => {
             preventSkip = true;
+            clearTimeout(skiptimeout);
+            skiptimeout = null;
+            intro_active = false;
+            outro_active = false;
         }}
     >
         <div
             class="absolute left-0 -z-1 h-full bg-gray-300 animate-grow-right"
+            style="--grow-duration: {isPaused ? 0 : skiptime}ms"
         ></div>
         {#if intro_active}
             <span class="text-sm">Skip Ahead</span>
@@ -713,6 +744,6 @@
     }
 
     .animate-grow-right {
-        animation: grow-right 5s linear forwards;
+        animation: grow-right var(--grow-duration) linear forwards;
     }
 </style>
