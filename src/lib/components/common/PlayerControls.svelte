@@ -55,6 +55,14 @@
     video.addEventListener("timeupdate", () => {
         playTime = video.currentTime;
 
+        if (video.ended) {
+            if ($playerEpisode.number === $playerAnime.attributes.episodeCount)
+                return;
+
+            sourceInitialIndex.set($playerEpisode.number);
+            return;
+        }
+
         if (video.paused) return;
 
         if (
@@ -107,13 +115,6 @@
                     outro_active = false;
                 }, skiptime);
             }
-        }
-
-        if (video.ended) {
-            if ($playerEpisode.number === $playerAnime.attributes.episodeCount)
-                return;
-
-            sourceInitialIndex.set($playerEpisode.number);
         }
     });
 
