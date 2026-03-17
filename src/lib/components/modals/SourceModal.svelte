@@ -116,7 +116,9 @@
             await sanitizeTitle(anime.attributes.titles.en_cn || ""),
             await sanitizeTitle(anime.attributes.titles.ja_jp || ""),
             await sanitizeTitle(anime.attributes.titles.ch_cn || ""),
-        ].filter((title) => title !== "");
+        ]
+            .filter((title) => title !== "")
+            .map((title) => (title = `[${anime.id}] ${title}`));
 
         const stored_anime = await window.electronAPI.getLocalMedia(
             storage_path,
@@ -241,7 +243,9 @@
             await sanitizeTitle(anime.attributes.titles.en_cn || ""),
             await sanitizeTitle(anime.attributes.titles.ja_jp || ""),
             await sanitizeTitle(anime.attributes.titles.ch_cn || ""),
-        ].filter((title) => title !== "");
+        ]
+            .filter((title) => title !== "")
+            .map((title) => (title = `[${anime.id}] ${title}`));
 
         window.electronAPI?.createLocalMediaDir(
             `${storage_path}${animeTitles[0]}`,
