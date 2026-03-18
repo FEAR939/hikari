@@ -22,6 +22,7 @@
 
     let playerElement: HTMLElement | null = $state(null);
     let videoElement: HTMLVideoElement | null = $state(null);
+    let cachedVideoElement: HTMLVideoElement | null = null;
 
     let showOverlay = $state(true);
 
@@ -29,6 +30,7 @@
 
     $effect(() => {
         if (show && playerElement!) {
+            cachedVideoElement = videoElement;
             document.body.appendChild(playerElement);
 
             const source = $playerSources?.[$playerSourceIndex!];
@@ -82,8 +84,8 @@
     }
 
     async function syncProgress() {
-        if (!$user || !videoElement!) return;
-        const currentTime = videoElement.currentTime;
+        if (!$user || !cachedVideoElement) return;
+        const currentTime = cachedVideoElement.currentTime;
 
         // Sync with server
         API.setLeftoff({
