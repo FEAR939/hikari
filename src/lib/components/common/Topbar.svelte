@@ -31,12 +31,12 @@
 
 {#if show}
     <div
-        class="fixed z-2222 top-0 left-0 right-0 flex gap-2 items-center justify-end h-12 [app-region:drag] [&_*]:[app-region:none]"
+        class="fixed z-2222 top-0 left-0 right-0 flex gap-2 items-center justify-end h-12 **:[app-region:none]"
         transition:fade={{ duration: 100 }}
     >
         <div
-            class="absolute -z-1 h-full w-full {$pageScrollPosition > 250 ||
-            $showPlayer
+            class="absolute -z-1 h-full w-full [app-region:drag]! {$pageScrollPosition >
+                250 || $showPlayer
                 ? 'backdrop-blur-lg'
                 : ''} transition-background duration-100"
         ></div>
