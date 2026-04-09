@@ -5,12 +5,7 @@
 <div
     class="relative z-1 h-full w-14 bg-transparent space-y-8 flex flex-col items-center shrink-0"
 >
-    <img
-        src="/icon.png"
-        class="mt-2 size-10 object-cover rounded-full"
-        alt=""
-    />
-    <div class="space-y-2">
+    <div class="space-y-2 mt-16">
         <a
             class={`block p-2 rounded-full cursor-pointer ${page.url.pathname === "/home/" ? "text-white" : "text-neutral-400"} ring-white/10 hover:bg-black/30 hover:backdrop-blur-lg hover:ring focus-within:bg-black/30 focus-within:backdrop-blur-lg focus-within:ring transition-colors duration-150 outline-hidden`}
             href="/home/"

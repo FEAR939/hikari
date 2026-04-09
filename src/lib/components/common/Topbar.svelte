@@ -5,6 +5,7 @@
         notifications,
         showPlayer,
         miniPlayer,
+        pageScrollPosition,
     } from "$lib/stores";
     import { fade } from "svelte/transition";
     import UserMenu from "./UserMenu.svelte";
@@ -30,9 +31,20 @@
 
 {#if show}
     <div
-        class="fixed z-2222 top-0 left-14 right-0 flex gap-2 items-center justify-end h-12 [app-region:drag] [&_*]:[app-region:none]"
+        class="fixed z-2222 top-0 left-0 right-0 flex gap-2 items-center justify-end h-12 [app-region:drag] [&_*]:[app-region:none]"
         transition:fade={{ duration: 100 }}
     >
+        <div
+            class="absolute -z-1 h-full w-full {$pageScrollPosition > 250 ||
+            $showPlayer
+                ? 'backdrop-blur-lg'
+                : ''} transition-background duration-100"
+        ></div>
+        <img
+            src="/icon.png"
+            class="ml-2 mr-auto size-10 object-cover rounded-full"
+            alt=""
+        />
         <div
             class="absolute left-0 right-0 mx-auto h-8 w-sm px-3 bg-black/30 outline outline-white/10 backdrop-blur-lg rounded-full flex items-center gap-x-2"
         >

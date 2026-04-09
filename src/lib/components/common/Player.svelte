@@ -142,7 +142,7 @@
         <div class="relative h-full w-full">
             {#if showOverlay}
                 <button
-                    class="relative z-2222 top-3 left-3 p-2 bg-black/30 backdrop-blur-lg rounded-full outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 text-white before:transition-colors before:duration-150"
+                    class="relative z-2222 top-13 left-3 p-2 bg-black/30 backdrop-blur-lg rounded-full outline-hidden cursor-pointer before:content-[''] before:absolute before:inset-1 before:rounded-full hover:before:bg-white/10 text-white before:transition-colors before:duration-150"
                     aria-label="Close"
                     onclick={() => (show = false)}
                     transition:fade={{ duration: 100 }}
