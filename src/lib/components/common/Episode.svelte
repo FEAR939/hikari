@@ -99,7 +99,7 @@
         <DropdownMenu.Root bind:open={show}>
             <DropdownMenu.Trigger
                 class="absolute z-100 {episode.leftoff !== 0
-                    ? 'bottom-5'
+                    ? 'bottom-8'
                     : 'bottom-0'} right-0"
             >
                 <button
@@ -159,10 +159,20 @@
             </DropdownMenu.Portal>
         </DropdownMenu.Root>
 
-        <!-- /* Progress Bar */ -->
+        <!-- /* Progress Bar and Time remaining */ -->
         {#if episode_leftoff}
             <div
-                class="absolute bottom-0 left-0 right-0 h-10 bg-linear-to-t from-black/90 to-transparent"
+                class="absolute z-10 bottom-3.5 right-2 text-sm text-gray-400 opacity-0 translate-y-1 group-hover/episode:opacity-100 group-hover/episode:translate-y-0 transition-all duration-100"
+            >
+                {Math.max(
+                    0,
+                    Math.round(
+                        (episode.attributes.length * 60) / episode.leftoff,
+                    ),
+                )}min remaining
+            </div>
+            <div
+                class="absolute bottom-0 left-0 right-0 h-10 group-hover/episode:h-14 bg-linear-to-t from-black/90 to-transparent transition-all duration-100"
             >
                 <div
                     class="absolute left-2 right-2 bottom-2 h-1 w-auto bg-white/10 rounded-full"

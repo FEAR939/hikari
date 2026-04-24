@@ -122,7 +122,18 @@
                 }}
             />
             <div
-                class="absolute bottom-0 left-0 right-0 h-10 bg-linear-to-t from-black/90 to-transparent"
+                class="absolute z-10 bottom-3.5 right-2 text-sm text-gray-400 opacity-0 translate-y-1 group-hover/card:opacity-100 group-hover/card:translate-y-0 transition-all duration-100"
+            >
+                {Math.max(
+                    0,
+                    Math.round(
+                        (episode.episode.attributes.length * 60) /
+                            episode.leftoff,
+                    ),
+                )}min remaining
+            </div>
+            <div
+                class="absolute bottom-0 left-0 right-0 h-10 group-hover/card:h-14 bg-linear-to-t from-black/90 to-transparent transition-all duration-100"
             >
                 <div
                     class="absolute left-2 right-2 bottom-2 h-1 w-auto bg-white/10 rounded-full overflow-hidden"
