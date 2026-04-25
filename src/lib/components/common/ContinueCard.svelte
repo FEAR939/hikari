@@ -127,8 +127,8 @@
                 {Math.max(
                     0,
                     Math.round(
-                        (episode.episode.attributes.length * 60) /
-                            episode.leftoff,
+                        episode.episode.attributes.length -
+                            episode.leftoff / 60,
                     ),
                 )}min remaining
             </div>
