@@ -120,7 +120,9 @@ async function enrichNotifications(batch: any[]) {
       const kitsuData = kitsuMap.get(notification.kitsu_id);
       const anizipData = anizipMap.get(notification.kitsu_id);
       const title = getSeriesTitle(kitsuData.anime.anime);
-      const kitsuImage = kitsuData.episode.attributes.thumbnail?.original;
+      const kitsuImage =
+        kitsuData.episode.attributes.thumbnail?.original ||
+        kitsuData.anime.anime.attributes.posterImage?.original;
       const anizipImage =
         anizipData?.episodes?.[String(notification.episode_number)]?.image;
 
