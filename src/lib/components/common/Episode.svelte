@@ -96,69 +96,6 @@
                 : "N/A"}
         </div> -->
 
-        <DropdownMenu.Root bind:open={show}>
-            <DropdownMenu.Trigger
-                class="absolute z-100 {episode.leftoff !== 0
-                    ? 'bottom-8'
-                    : 'bottom-0'} right-0"
-            >
-                <button
-                    class="opacity-0 size-6 group-hover/episode:opacity-100 group-focus-within/episode:opacity-100 cursor-pointer"
-                    aria-label="More options"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        height="24px"
-                        viewBox="0 -960 960 960"
-                        width="24px"
-                        fill="currentColor"
-                        class="size-5"
-                        ><path
-                            d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"
-                        /></svg
-                    >
-                </button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Portal>
-                <DropdownMenu.Content forceMount>
-                    {#if show}
-                        <div
-                            class="w-[260px] px-1 py-1 rounded-2xl border border-gray-100 dark:border-gray-900 z-50 bg-white dark:bg-black/70 dark:text-white shadow-lg text-sm backdrop-blur-2xl"
-                            transition:fade={{ duration: 100 }}
-                        >
-                            {#if user}
-                                <DropdownMenu.Item
-                                    class="flex rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer"
-                                    onclick={() => {
-                                        let to_set_leftoff =
-                                            episode.leftoff > 0
-                                                ? 0
-                                                : episode.attributes.length *
-                                                  60;
-
-                                        API.setLeftoff({
-                                            kitsu_id: parseInt(anime.id),
-                                            episode: episode.attributes.number,
-                                            leftoff: to_set_leftoff,
-                                        });
-
-                                        episode.leftoff = to_set_leftoff;
-                                        episode_leftoff = to_set_leftoff;
-                                    }}
-                                >
-                                    <div class="self-center truncate">
-                                        {episode.leftoff > 0
-                                            ? "Reset Episode Progress"
-                                            : "Mark Episode as Watched"}
-                                    </div>
-                                </DropdownMenu.Item>
-                            {/if}
-                        </div>
-                    {/if}
-                </DropdownMenu.Content>
-            </DropdownMenu.Portal>
-        </DropdownMenu.Root>
-
         <!-- /* Progress Bar and Time remaining */ -->
         {#if episode_leftoff}
             <div
@@ -198,11 +135,72 @@
     <!-- /* Text Content */ -->
     <div class="relative w-full min-w-0 pb-1">
         <div class="flex items-center gap-2">
-            <div class="font-semibold! text-white truncate">
+            <div class="font-semibold! text-white max-w-6/7 truncate">
                 {episode.anizip?.title?.en ||
                     getEpisodeTitle(episode) ||
                     `Episode ${episode.attributes.number}`}
             </div>
+            <DropdownMenu.Root bind:open={show}>
+                <DropdownMenu.Trigger
+                    class="absolute z-100 right-0 flex items-enter justify-center"
+                >
+                    <button
+                        class="size-6 cursor-pointer"
+                        aria-label="More options"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="24px"
+                            viewBox="0 -960 960 960"
+                            width="24px"
+                            fill="currentColor"
+                            class="size-5"
+                            ><path
+                                d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"
+                            /></svg
+                        >
+                    </button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Portal>
+                    <DropdownMenu.Content forceMount>
+                        {#if show}
+                            <div
+                                class="w-[260px] px-1 py-1 rounded-2xl border border-gray-100 dark:border-gray-900 z-50 bg-white dark:bg-black/70 dark:text-white shadow-lg text-sm backdrop-blur-2xl"
+                                transition:fade={{ duration: 100 }}
+                            >
+                                {#if user}
+                                    <DropdownMenu.Item
+                                        class="flex rounded-xl py-1.5 px-3 w-full hover:bg-gray-50 dark:hover:bg-white/10 transition cursor-pointer"
+                                        onclick={() => {
+                                            let to_set_leftoff =
+                                                episode.leftoff > 0
+                                                    ? 0
+                                                    : episode.attributes
+                                                          .length * 60;
+
+                                            API.setLeftoff({
+                                                kitsu_id: parseInt(anime.id),
+                                                episode:
+                                                    episode.attributes.number,
+                                                leftoff: to_set_leftoff,
+                                            });
+
+                                            episode.leftoff = to_set_leftoff;
+                                            episode_leftoff = to_set_leftoff;
+                                        }}
+                                    >
+                                        <div class="self-center truncate">
+                                            {episode.leftoff > 0
+                                                ? "Reset Episode Progress"
+                                                : "Mark Episode as Watched"}
+                                        </div>
+                                    </DropdownMenu.Item>
+                                {/if}
+                            </div>
+                        {/if}
+                    </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+            </DropdownMenu.Root>
         </div>
 
         <p
