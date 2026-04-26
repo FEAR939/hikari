@@ -260,9 +260,9 @@
 
 {#if intro_active || outro_active}
     <button
-        class="absolute outline-hidden px-4 py-2 bg-white rounded-full overflow-hidden {show
+        class="absolute outline-hidden pl-3 pr-4 py-1 bg-white rounded-full overflow-hidden {show
             ? 'bottom-24'
-            : 'bottom-12'} right-4 flex items-center gap-2 z-9999 cursor-pointer"
+            : 'bottom-4'} right-4 flex items-center gap-1 z-9999 cursor-pointer"
         transition:fade={{ duration: 100 }}
         onclick={() => {
             preventSkip = true;
@@ -273,9 +273,20 @@
         }}
     >
         <div
-            class="absolute left-0 -z-1 h-full bg-gray-300 animate-grow-right"
+            class="absolute left-0 -z-1 h-full bg-gray-200 animate-grow-right"
             style="--grow-duration: {isPaused ? 0 : skiptime}ms"
         ></div>
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            fill="currentColor"
+            class="size-7"
+            ><path
+                d="M100-315v-330q0-18 12-29t28-11q5 0 11 1t11 5l248 166q9 6 13.5 14.5T428-480q0 10-4.5 18.5T410-447L162-281q-5 4-11 5t-11 1q-16 0-28-11t-12-29Zm400 0v-330q0-18 12-29t28-11q5 0 11 1t11 5l248 166q9 6 13.5 14.5T828-480q0 10-4.5 18.5T810-447L562-281q-5 4-11 5t-11 1q-16 0-28-11t-12-29Z"
+            /></svg
+        >
         {#if intro_active}
             <span class="text-sm">Skip Ahead</span>
         {/if}
